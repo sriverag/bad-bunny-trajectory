@@ -75,8 +75,6 @@ export function InterviewGrid({ interviews }: InterviewGridProps) {
     return text.slice(0, maxLength).trim() + "...";
   };
 
-  const [featured, ...rest] = filteredInterviews;
-
   const renderTags = (interview: Interview) => {
     const tags = interview.tags.split(",").map((t) => t.trim()).filter(Boolean);
     if (tags.length === 0) return null;
@@ -152,102 +150,50 @@ export function InterviewGrid({ interviews }: InterviewGridProps) {
       </FadeIn>
 
       {filteredInterviews.length > 0 ? (
-        <div className="space-y-10">
-          {/* Featured Interview - Hero Card */}
-          {featured && (
-            <FadeIn direction="up" delay={0.15}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <FadeIn direction="up" stagger={0.05}>
+            {filteredInterviews.map((interview) => (
               <Link
-                href={`/interviews/${featured.slug}`}
-                className="group block"
+                key={interview.id}
+                href={`/interviews/${interview.slug}`}
+                className="group block h-full"
               >
-                <Card className="overflow-hidden transition-all hover:shadow-xl hover:border-primary/50">
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-0">
-                    {/* Thumbnail - takes 3/5 width on desktop */}
-                    <div className="relative md:col-span-3 aspect-video md:aspect-auto overflow-hidden bg-muted">
-                      <img
-                        src={`https://img.youtube.com/vi/${featured.youtubeId}/maxresdefault.jpg`}
-                        alt={featured.title}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg">
-                          <Play className="h-8 w-8 fill-current" />
-                        </div>
+                <Card className="h-full overflow-hidden transition-all hover:shadow-lg hover:border-primary/50">
+                  {/* YouTube Thumbnail */}
+                  <div className="relative aspect-video overflow-hidden bg-muted">
+                    <img
+                      src={`https://img.youtube.com/vi/${interview.youtubeId}/mqdefault.jpg`}
+                      alt={interview.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg">
+                        <Play className="h-5 w-5 fill-current" />
                       </div>
-                    </div>
-                    {/* Details - takes 2/5 width on desktop */}
-                    <div className="md:col-span-2 flex flex-col justify-center p-6 md:p-8 space-y-4">
-                      <Badge variant="secondary" className="w-fit text-xs">
-                        {featured.outlet}
-                      </Badge>
-                      <h3 className="text-2xl md:text-3xl font-bold leading-tight text-foreground group-hover:text-primary transition-colors">
-                        {featured.title}
-                      </h3>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        <time dateTime={new Date(featured.date).toISOString()}>
-                          {formatDate(featured.date)}
-                        </time>
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                        {featured.description}
-                      </p>
-                      {renderTags(featured)}
                     </div>
                   </div>
+
+                  <CardHeader className="space-y-1.5 p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <Badge variant="secondary" className="w-fit text-xs shrink-0">
+                        {interview.outlet}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        {formatDate(interview.date)}
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-bold leading-snug text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+                      {interview.title}
+                    </h3>
+                  </CardHeader>
+
+                  <CardContent className="px-4 pb-4 pt-0">
+                    {renderTags(interview)}
+                  </CardContent>
                 </Card>
               </Link>
-            </FadeIn>
-          )}
-
-          {/* Remaining Interviews - Compact Grid */}
-          {rest.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <FadeIn direction="up" stagger={0.05}>
-                {rest.map((interview) => (
-                  <Link
-                    key={interview.id}
-                    href={`/interviews/${interview.slug}`}
-                    className="group block h-full"
-                  >
-                    <Card className="h-full overflow-hidden transition-all hover:shadow-lg hover:border-primary/50">
-                      {/* YouTube Thumbnail */}
-                      <div className="relative aspect-video overflow-hidden bg-muted">
-                        <img
-                          src={`https://img.youtube.com/vi/${interview.youtubeId}/mqdefault.jpg`}
-                          alt={interview.title}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg">
-                            <Play className="h-5 w-5 fill-current" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <CardHeader className="space-y-1.5 p-4">
-                        <div className="flex items-center justify-between gap-2">
-                          <Badge variant="secondary" className="w-fit text-xs shrink-0">
-                            {interview.outlet}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground whitespace-nowrap">
-                            {formatDate(interview.date)}
-                          </span>
-                        </div>
-                        <h3 className="text-sm font-bold leading-snug text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-                          {interview.title}
-                        </h3>
-                      </CardHeader>
-
-                      <CardContent className="px-4 pb-4 pt-0">
-                        {renderTags(interview)}
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-              </FadeIn>
-            </div>
-          )}
+            ))}
+          </FadeIn>
         </div>
       ) : (
         <FadeIn direction="up" delay={0.2}>
