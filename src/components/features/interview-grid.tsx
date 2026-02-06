@@ -150,8 +150,7 @@ export function InterviewGrid({ interviews }: InterviewGridProps) {
       </FadeIn>
 
       {filteredInterviews.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <FadeIn direction="up" stagger={0.05}>
+          <FadeIn direction="up" stagger={0.05} className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {filteredInterviews.map((interview) => (
               <Link
                 key={interview.id}
@@ -194,7 +193,6 @@ export function InterviewGrid({ interviews }: InterviewGridProps) {
               </Link>
             ))}
           </FadeIn>
-        </div>
       ) : (
         <FadeIn direction="up" delay={0.2}>
           <div className="flex flex-col items-center justify-center py-16 text-center">
