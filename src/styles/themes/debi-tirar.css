@@ -1,0 +1,30 @@
+/* DeBi TiRAR MaS FOToS (2025) - Nostalgic Puerto Rican (DEFAULT) */
+html[data-theme="debi-tirar"] {
+  --background: #faf8f5;
+  --foreground: #2d1f14;
+  --card: #f2ede6;
+  --card-foreground: #2d1f14;
+  --popover: #f2ede6;
+  --popover-foreground: #2d1f14;
+  --primary: #2d6a4f;
+  --primary-foreground: #faf8f5;
+  --secondary: #f2ede6;
+  --secondary-foreground: #2d1f14;
+  --muted: #e8e1d8;
+  --muted-foreground: #6b5d52;
+  --accent: #c17840;
+  --accent-foreground: #faf8f5;
+  --destructive: #b91c1c;
+  --destructive-foreground: #faf8f5;
+  --border: #ddd5c8;
+  --input: #ddd5c8;
+  --ring: #2d6a4f;
+  --radius: 0.75rem;
+
+  /* Theme-specific extras */
+  --theme-accent-1: #2d6a4f;
+  --theme-accent-2: #c17840;
+  --theme-accent-3: #b8960c;
+  --theme-glow: rgba(45, 106, 79, 0.15);
+  --theme-gradient: linear-gradient(135deg, #2d6a4f 0%, #c17840 50%, #b8960c 100%);
+}

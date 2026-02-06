@@ -1,0 +1,36 @@
+export const BAD_BUNNY_SPOTIFY_ID = "4q3ewBCX7sLwd24euuV69X";
+
+export const SITE_NAME = "Bad Bunny Trajectory";
+export const SITE_DESCRIPTION =
+  "La trayectoria completa de Bad Bunny - discografía, premios, entrevistas y más";
+export const SITE_DESCRIPTION_EN =
+  "Bad Bunny's complete career trajectory - discography, awards, interviews and more";
+
+export const NAV_LINKS = [
+  { href: "/trajectory", labelEs: "Trayectoria", labelEn: "Trajectory" },
+  { href: "/discography", labelEs: "Discografía", labelEn: "Discography" },
+  { href: "/awards", labelEs: "Premios", labelEn: "Awards" },
+  { href: "/interviews", labelEs: "Entrevistas", labelEn: "Interviews" },
+  { href: "/gallery", labelEs: "Galería", labelEn: "Gallery" },
+  { href: "/concerts", labelEs: "Conciertos", labelEn: "Concerts" },
+  { href: "/about", labelEs: "Sobre", labelEn: "About" },
+] as const;
+
+export const STREAMING_LINKS = {
+  spotify: "https://open.spotify.com/artist/4q3ewBCX7sLwd24euuV69X",
+  appleMusic: "https://music.apple.com/artist/bad-bunny/1126808565",
+  youtube: "https://www.youtube.com/@BadBunny",
+};
+
+export const SOCIAL_LINKS = {
+  instagram: "https://www.instagram.com/badbunnypr/",
+  twitter: "https://twitter.com/sanikibieber",
+};
+
+export const CACHE_TTLS = {
+  artistProfile: 3600,
+  albumCatalog: 21600,
+  audioFeatures: 86400,
+  youtubeVideos: 86400,
+  awardsTimeline: 604800,
+} as const;

@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Album {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  year          Int
+  themeId       String
+  spotifyId     String?
+  appleMusicId  String?
+  coverUrl      String
+  description   String
+  descriptionEn String
+  tracks        Track[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([slug])
+  @@index([year])
+  @@map("albums")
+}
+
+model Track {
+  id           String  @id @default(cuid())
+  title        String
+  trackNumber  Int
+  durationMs   Int
+  spotifyId    String?
+  featuring    String?
+  albumId      String
+  album        Album   @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  danceability Float?  @default(0)
+  energy       Float?  @default(0)
+  valence      Float?  @default(0)
+  tempo        Float?  @default(0)
+  acousticness Float?  @default(0)
+
+  @@index([albumId])
+  @@map("tracks")
+}
+
+model Award {
+  id       String @id @default(cuid())
+  title    String
+  ceremony String
+  category String
+  year     Int
+  result   String
+
+  @@index([ceremony])
+  @@index([year])
+  @@index([result])
+  @@map("awards")
+}
+
+model TimelineEvent {
+  id            String   @id @default(cuid())
+  title         String
+  titleEn       String
+  description   String
+  descriptionEn String
+  date          DateTime
+  era           String
+  type          String
+  importance    Int      @default(3)
+  imageUrl      String?
+
+  @@index([era])
+  @@index([type])
+  @@index([date])
+  @@map("timeline_events")
+}
+
+model Interview {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  titleEn       String
+  outlet        String
+  date          DateTime
+  youtubeId     String
+  description   String
+  descriptionEn String
+  tags          String
+  language      String
+
+  @@index([slug])
+  @@index([outlet])
+  @@map("interviews")
+}
+
+model Concert {
+  id       String   @id @default(cuid())
+  tourName String
+  venue    String
+  city     String
+  country  String
+  date     DateTime
+  lat      Float
+  lng      Float
+  soldOut  Boolean  @default(false)
+  capacity Int?
+
+  @@index([tourName])
+  @@index([date])
+  @@index([country])
+  @@map("concerts")
+}
+
+model GalleryItem {
+  id        String @id @default(cuid())
+  type      String
+  url       String
+  caption   String
+  captionEn String
+  era       String
+  tags      String
+
+  @@index([type])
+  @@index([era])
+  @@map("gallery_items")
+}
+
+model ApiCache {
+  id        String   @id @default(cuid())
+  cacheKey  String   @unique
+  provider  String
+  data      String
+  etag      String?
+  expiresAt DateTime
+
+  @@index([cacheKey])
+  @@index([provider])
+  @@index([expiresAt])
+  @@map("api_cache")
+}

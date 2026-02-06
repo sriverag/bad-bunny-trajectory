@@ -1,0 +1,30 @@
+/* Un Verano Sin Ti (2022) - Beach minimalism, summer */
+html[data-theme="verano"] {
+  --background: #faf7f2;
+  --foreground: #1a2a3a;
+  --card: #f0ebe3;
+  --card-foreground: #1a2a3a;
+  --popover: #f0ebe3;
+  --popover-foreground: #1a2a3a;
+  --primary: #4ecdc4;
+  --primary-foreground: #faf7f2;
+  --secondary: #f0ebe3;
+  --secondary-foreground: #1a2a3a;
+  --muted: #e5dfd5;
+  --muted-foreground: #3a4a5a;
+  --accent: #ff6b35;
+  --accent-foreground: #faf7f2;
+  --destructive: #ef4444;
+  --destructive-foreground: #faf7f2;
+  --border: #b8b0a4;
+  --input: #b8b0a4;
+  --ring: #4ecdc4;
+  --radius: 1.5rem;
+
+  /* Theme-specific extras */
+  --theme-accent-1: #4ecdc4;
+  --theme-accent-2: #ff6b35;
+  --theme-accent-3: #ff8a80;
+  --theme-glow: rgba(78, 205, 196, 0.2);
+  --theme-gradient: linear-gradient(135deg, #4ecdc4 0%, #ff6b35 50%, #ff8a80 100%);
+}

@@ -1,0 +1,30 @@
+/* YHLQMDLG (2020) - Retro gaming, pixel art */
+html[data-theme="yhlqmdlg"] {
+  --background: #0a0a12;
+  --foreground: #f8f8ff;
+  --card: #12121f;
+  --card-foreground: #f8f8ff;
+  --popover: #12121f;
+  --popover-foreground: #f8f8ff;
+  --primary: #ff2d95;
+  --primary-foreground: #f8f8ff;
+  --secondary: #12121f;
+  --secondary-foreground: #f8f8ff;
+  --muted: #1a1a2e;
+  --muted-foreground: #b0b0c8;
+  --accent: #a855f7;
+  --accent-foreground: #f8f8ff;
+  --destructive: #ef4444;
+  --destructive-foreground: #f8f8ff;
+  --border: rgba(255, 45, 149, 0.125);
+  --input: rgba(255, 45, 149, 0.125);
+  --ring: #ff2d95;
+  --radius: 0.25rem;
+
+  /* Theme-specific extras */
+  --theme-accent-1: #ff2d95;
+  --theme-accent-2: #a855f7;
+  --theme-accent-3: #ffd700;
+  --theme-glow: rgba(255, 45, 149, 0.3);
+  --theme-gradient: linear-gradient(135deg, #ff2d95 0%, #a855f7 50%, #ffd700 100%);
+}

@@ -1,0 +1,30 @@
+/* El Último Tour Del Mundo (2020) - Dystopian, post-apocalyptic */
+html[data-theme="ultimo-tour"] {
+  --background: #0d0907;
+  --foreground: #e8e0d8;
+  --card: #1a1410;
+  --card-foreground: #e8e0d8;
+  --popover: #1a1410;
+  --popover-foreground: #e8e0d8;
+  --primary: #e63946;
+  --primary-foreground: #e8e0d8;
+  --secondary: #1a1410;
+  --secondary-foreground: #e8e0d8;
+  --muted: #2a201a;
+  --muted-foreground: #a89888;
+  --accent: #ff8c42;
+  --accent-foreground: #0d0907;
+  --destructive: #dc2626;
+  --destructive-foreground: #e8e0d8;
+  --border: #2a201a;
+  --input: #2a201a;
+  --ring: #e63946;
+  --radius: 0.125rem;
+
+  /* Theme-specific extras */
+  --theme-accent-1: #e63946;
+  --theme-accent-2: #ff8c42;
+  --theme-accent-3: #ffba08;
+  --theme-glow: rgba(230, 57, 70, 0.25);
+  --theme-gradient: linear-gradient(135deg, #e63946 0%, #ff8c42 50%, #ffba08 100%);
+}
