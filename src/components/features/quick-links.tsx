@@ -6,8 +6,8 @@ import {
   Calendar,
   Trophy,
   Mic2,
-
   Music,
+  Gamepad2,
   ArrowRight,
 } from "lucide-react";
 import posthog from "posthog-js";
@@ -54,6 +54,14 @@ const quickLinks = [
     titleEn: "Concerts",
     descriptionEs: "Tours y presentaciones en vivo",
     descriptionEn: "Tours and live performances",
+  },
+  {
+    href: "/trivia",
+    icon: Gamepad2,
+    titleEs: "Trivia",
+    titleEn: "Trivia",
+    descriptionEs: "Prueba cuánto sabes sobre Bad Bunny",
+    descriptionEn: "Test how much you know about Bad Bunny",
   },
 ];
 

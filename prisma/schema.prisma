@@ -140,3 +140,20 @@ model ApiCache {
   @@index([expiresAt])
   @@map("api_cache")
 }
+
+model TriviaResult {
+  id             String   @id @default(uuid())
+  nickname       String
+  totalScore     Int
+  fanLevel       String
+  accuracy       Int
+  bestStreak     Int
+  totalCorrect   Int
+  totalQuestions  Int
+  modeBreakdown  String
+  completedAt    DateTime @default(now())
+
+  @@index([totalScore(sort: Desc)])
+  @@index([completedAt])
+  @@map("trivia_results")
+}
