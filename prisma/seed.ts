@@ -294,7 +294,41 @@ export async function main() {
     },
   });
 
-  console.log(`Created ${7} albums with tracks`);
+  // --- Colaboraciones (songs from other artists' albums) ---
+  const collaborations = await prisma.album.create({
+    data: {
+      slug: "collaborations",
+      title: "Colaboraciones",
+      year: 2024,
+      themeId: "debi-tirar",
+      coverUrl: "/images/albums/collaborations.jpg",
+      description:
+        "Las colaboraciones más icónicas de Bad Bunny en álbumes de otros artistas.",
+      descriptionEn:
+        "Bad Bunny's most iconic collaborations on other artists' albums.",
+      tracks: {
+        create: [
+          { title: "I Like It", trackNumber: 1, durationMs: 253000, featuring: "Cardi B, J Balvin" },
+          { title: "La Jumpa", trackNumber: 2, durationMs: 255000, featuring: "Arcángel" },
+          { title: "Un x100to", trackNumber: 3, durationMs: 214000, featuring: "Grupo Frontera" },
+          { title: "Coco Chanel", trackNumber: 4, durationMs: 222000, featuring: "Eladio Carrión" },
+          { title: "Te Boté (Remix)", trackNumber: 5, durationMs: 359000, featuring: "Nio García, Casper Mágico, Darell, Nicky Jam, Ozuna" },
+          { title: "Un Día (One Day)", trackNumber: 6, durationMs: 228000, featuring: "J Balvin, Dua Lipa, Tainy" },
+          { title: "Kemba Walker", trackNumber: 7, durationMs: 159000, featuring: "Eladio Carrión" },
+          { title: "Lo Siento BB:/", trackNumber: 8, durationMs: 218000, featuring: "Tainy, Julieta Venegas" },
+          { title: "Mojabi Ghost", trackNumber: 9, durationMs: 211000, featuring: "Tainy" },
+          { title: "Ella Baila Sola", trackNumber: 10, durationMs: 243000, featuring: "Eslabon Armado" },
+          { title: "Diles", trackNumber: 11, durationMs: 240000, featuring: "Ozuna, Farruko, Arcángel, Ñengo Flow" },
+          { title: "Pasiempre", trackNumber: 12, durationMs: 225000, featuring: "Tainy" },
+          { title: "Con Altura", trackNumber: 13, durationMs: 161000, featuring: "Rosalía, El Guincho" },
+          { title: "Contra La Pared", trackNumber: 14, durationMs: 199000, featuring: "J Balvin" },
+          { title: "Satisfacción", trackNumber: 15, durationMs: 224000, featuring: "Nicky Jam" },
+        ],
+      },
+    },
+  });
+
+  console.log(`Created ${8} albums with tracks`);
 
   // ============================================================
   // AWARDS (~50+)

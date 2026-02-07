@@ -157,3 +157,16 @@ model TriviaResult {
   @@index([completedAt])
   @@map("trivia_results")
 }
+
+model HalftimePlaylist {
+  id        String   @id @default(uuid())
+  nickname  String
+  themeId   String
+  trackIds  String   // JSON array of track IDs in order
+  totalMs   Int
+  songCount Int
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("halftime_playlists")
+}

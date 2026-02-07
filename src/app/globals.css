@@ -209,3 +209,10 @@
   letter-spacing: var(--theme-heading-tracking);
   text-transform: var(--theme-heading-transform);
 }
+
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
