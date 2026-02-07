@@ -1,6 +1,6 @@
 export const BAD_BUNNY_SPOTIFY_ID = "4q3ewBCX7sLwd24euuV69X";
 
-export const SITE_NAME = "Bad Bunny Trajectory";
+export const SITE_NAME = "This is Bad Bunny";
 export const SITE_DESCRIPTION =
   "La trayectoria completa de Bad Bunny - discografía, premios, entrevistas y más";
 export const SITE_DESCRIPTION_EN =

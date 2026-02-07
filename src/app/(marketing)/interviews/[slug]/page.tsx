@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: InterviewPageProps) {
   }
 
   return {
-    title: `${interview.title} | Bad Bunny Trajectory`,
+    title: `${interview.title} | This is Bad Bunny`,
     description: interview.description,
     openGraph: {
       title: interview.title,

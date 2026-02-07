@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Image from "next/image";
 import { FadeIn } from "@/components/animations/fade-in";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { Image, Video, Palette, Play } from "lucide-react";
+import { Image as ImageIcon, Video, Palette, Play } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 
 interface GalleryItem {
@@ -28,7 +29,7 @@ interface GalleryGridProps {
 }
 
 const typeIcons = {
-  PHOTO: Image,
+  PHOTO: ImageIcon,
   VIDEO: Video,
   ARTWORK: Palette,
 };
@@ -43,7 +44,13 @@ export function GalleryGrid({ items }: GalleryGridProps) {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedEra, setSelectedEra] = useState<string | null>(null);
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const { language, t } = useLanguage();
+
+  // Handle image load errors
+  const handleImageError = (itemId: string) => {
+    setImageErrors((prev) => new Set(prev).add(itemId));
+  };
 
   // Extract unique eras and types
   const eras = useMemo(() => {
@@ -184,38 +191,73 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                         "border-4 border-muted p-2"
                     )}
                   >
-                    {/* Placeholder Image with Gradient */}
-                    <div
-                      className="relative aspect-[4/3] overflow-hidden rounded-md"
-                      style={{
-                        background:
-                          item.type === "PHOTO"
-                            ? "linear-gradient(135deg, hsl(var(--primary) / 0.3), hsl(var(--primary) / 0.1))"
-                            : item.type === "VIDEO"
-                              ? "linear-gradient(135deg, hsl(var(--accent)) / 0.3, hsl(var(--accent)) / 0.1)"
-                              : "linear-gradient(135deg, hsl(var(--secondary)) / 0.4, hsl(var(--secondary)) / 0.15)",
-                      }}
-                    >
-                      {/* Type Icon */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Icon className="h-12 w-12 text-muted-foreground/50" />
-                      </div>
+                    {/* Image or Placeholder */}
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-muted">
+                      {!imageErrors.has(item.id) ? (
+                        <>
+                          {/* Actual Image */}
+                          <Image
+                            src={item.url}
+                            alt={item.caption}
+                            width={800}
+                            height={600}
+                            className="object-cover w-full h-full"
+                            onError={() => handleImageError(item.id)}
+                          />
 
-                      {/* Video Play Icon Overlay */}
-                      {item.type === "VIDEO" && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
-                          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg">
-                            <Play className="h-8 w-8 fill-current" />
+                          {/* Video Play Icon Overlay */}
+                          {item.type === "VIDEO" && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
+                              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg">
+                                <Play className="h-8 w-8 fill-current" />
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Caption Overlay on Hover */}
+                          <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-black/80 to-transparent p-4 transition-transform group-hover:translate-y-0">
+                            <p className="text-sm font-medium text-white line-clamp-2">
+                              {item.caption}
+                            </p>
                           </div>
-                        </div>
-                      )}
+                        </>
+                      ) : (
+                        <>
+                          {/* Fallback Placeholder with Gradient */}
+                          <div
+                            className="absolute inset-0"
+                            style={{
+                              background:
+                                item.type === "PHOTO"
+                                  ? "linear-gradient(135deg, hsl(var(--primary) / 0.3), hsl(var(--primary) / 0.1))"
+                                  : item.type === "VIDEO"
+                                    ? "linear-gradient(135deg, hsl(var(--accent)) / 0.3, hsl(var(--accent)) / 0.1)"
+                                    : "linear-gradient(135deg, hsl(var(--secondary)) / 0.4, hsl(var(--secondary)) / 0.15)",
+                            }}
+                          >
+                            {/* Type Icon */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <Icon className="h-12 w-12 text-muted-foreground/50" />
+                            </div>
 
-                      {/* Caption Overlay on Hover */}
-                      <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-black/80 to-transparent p-4 transition-transform group-hover:translate-y-0">
-                        <p className="text-sm font-medium text-white line-clamp-2">
-                          {item.caption}
-                        </p>
-                      </div>
+                            {/* Video Play Icon Overlay */}
+                            {item.type === "VIDEO" && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
+                                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg">
+                                  <Play className="h-8 w-8 fill-current" />
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Caption Overlay on Hover */}
+                            <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-black/80 to-transparent p-4 transition-transform group-hover:translate-y-0">
+                              <p className="text-sm font-medium text-white line-clamp-2">
+                                {item.caption}
+                              </p>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     {/* Type Badge */}
@@ -267,24 +309,37 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                 </DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                {/* Placeholder Image */}
-                <div
-                  className="relative aspect-video rounded-lg overflow-hidden"
-                  style={{
-                    background:
-                      lightboxItem.type === "PHOTO"
-                        ? "linear-gradient(135deg, hsl(var(--primary) / 0.3), hsl(var(--primary) / 0.1))"
-                        : lightboxItem.type === "VIDEO"
-                          ? "linear-gradient(135deg, hsl(var(--accent)) / 0.3, hsl(var(--accent)) / 0.1)"
-                          : "linear-gradient(135deg, hsl(var(--secondary)) / 0.4, hsl(var(--secondary)) / 0.15)",
-                  }}
-                >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    {(() => {
-                      const Icon = typeIcons[lightboxItem.type];
-                      return <Icon className="h-24 w-24 text-muted-foreground/50" />;
-                    })()}
-                  </div>
+                {/* Image or Placeholder */}
+                <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+                  {!imageErrors.has(lightboxItem.id) ? (
+                    <Image
+                      src={lightboxItem.url}
+                      alt={lightboxItem.caption}
+                      width={800}
+                      height={600}
+                      className="object-contain w-full h-full"
+                      onError={() => handleImageError(lightboxItem.id)}
+                    />
+                  ) : (
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          lightboxItem.type === "PHOTO"
+                            ? "linear-gradient(135deg, hsl(var(--primary) / 0.3), hsl(var(--primary) / 0.1))"
+                            : lightboxItem.type === "VIDEO"
+                              ? "linear-gradient(135deg, hsl(var(--accent)) / 0.3, hsl(var(--accent)) / 0.1)"
+                              : "linear-gradient(135deg, hsl(var(--secondary)) / 0.4, hsl(var(--secondary)) / 0.15)",
+                      }}
+                    >
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        {(() => {
+                          const Icon = typeIcons[lightboxItem.type];
+                          return <Icon className="h-24 w-24 text-muted-foreground/50" />;
+                        })()}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Metadata */}

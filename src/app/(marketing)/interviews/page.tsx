@@ -4,7 +4,7 @@ import { InterviewGrid } from "@/components/features/interview-grid";
 import { prisma } from "@/lib/prisma";
 
 export const metadata = {
-  title: "Entrevistas | Bad Bunny Trajectory",
+  title: "Entrevistas | This is Bad Bunny",
   description: "Las entrevistas más importantes de Bad Bunny a lo largo de su carrera.",
 };
 

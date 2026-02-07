@@ -108,7 +108,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="mt-8 pt-8 border-t border-border/40">
           <p className="text-xs text-center text-muted-foreground">
-            {currentYear} Bad Bunny Trajectory. {t("Un proyecto de fans para fans.", "A fan project for fans.")}
+            {currentYear} This is Bad Bunny. {t("Un proyecto de fans para fans.", "A fan project for fans.")}
           </p>
         </div>
       </div>

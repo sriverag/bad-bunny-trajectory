@@ -235,8 +235,8 @@ export default function AboutPage() {
               </h3>
               <p className="text-muted-foreground">
                 {t(
-                  "Bad Bunny Trajectory es una plataforma interactiva que celebra la carrera y el impacto cultural de Bad Bunny. Este proyecto presenta una exploración visual e interactiva de su discografía, premios, entrevistas y momentos clave que han definido su trayectoria como artista global.",
-                  "Bad Bunny Trajectory is an interactive platform that celebrates Bad Bunny's career and cultural impact. This project presents a visual and interactive exploration of his discography, awards, interviews, and key moments that have defined his trajectory as a global artist."
+                  "This is Bad Bunny es una plataforma interactiva que celebra la carrera y el impacto cultural de Bad Bunny. Este proyecto presenta una exploración visual e interactiva de su discografía, premios, entrevistas y momentos clave que han definido su trayectoria como artista global.",
+                  "This is Bad Bunny is an interactive platform that celebrates Bad Bunny's career and cultural impact. This project presents a visual and interactive exploration of his discography, awards, interviews, and key moments that have defined his trajectory as a global artist."
                 )}
               </p>
               <p className="text-sm text-muted-foreground">
