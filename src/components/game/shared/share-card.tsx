@@ -9,21 +9,26 @@ import { getFanLevelConfig } from "../lib/game-constants";
 
 interface ShareCardProps {
   result: GameResult;
+  resultId?: string;
 }
 
-export function ShareCard({ result }: ShareCardProps) {
+export function ShareCard({ result, resultId }: ShareCardProps) {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const fanLevel = getFanLevelConfig(result.fanLevel);
 
+  const shareUrl = resultId
+    ? `thisisbadbunny.com/trivia/results/${resultId}`
+    : "thisisbadbunny.com/trivia";
+
   const shareText = [
-    `${fanLevel.emoji} ${t("La Trayectoria - Bad Bunny", "La Trayectoria - Bad Bunny")}`,
+    `${fanLevel.emoji} ${t("La Prueba - Bad Bunny", "La Prueba - Bad Bunny")}`,
     `${t("Nivel", "Level")}: ${t(fanLevel.labelEs, fanLevel.labelEn)}`,
     `${t("Puntuacion", "Score")}: ${result.totalScore.toLocaleString()}`,
     `${t("Precision", "Accuracy")}: ${result.accuracy}%`,
     `${t("Mejor racha", "Best streak")}: ${result.bestStreak}`,
     "",
-    "thisisbadbunny.com/game",
+    shareUrl,
   ].join("\n");
 
   async function handleCopy() {

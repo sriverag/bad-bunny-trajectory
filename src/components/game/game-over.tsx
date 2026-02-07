@@ -2,11 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/use-language";
 import type { GameResult } from "./lib/game-types";
 import { getFanLevelConfig } from "./lib/game-constants";
 import { getHighScore } from "./lib/scoring";
+import { NicknameInput } from "./shared/nickname-input";
+import { SocialShareButtons } from "./shared/social-share-buttons";
 
 interface GameOverProps {
   result: GameResult;
@@ -57,6 +60,52 @@ export function GameOver({ result, onPlayAgain }: GameOverProps) {
   const fanConfig = getFanLevelConfig(result.fanLevel);
   const displayScore = useCountUp(result.totalScore);
   const isNewHighScore = result.totalScore > 0 && result.totalScore >= getHighScore();
+
+  const [nickname, setNickname] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [resultId, setResultId] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const nicknameValid = nickname.trim().length >= 3 && nickname.trim().length <= 20;
+
+  async function handleSubmit() {
+    if (!nicknameValid || submitting) return;
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const res = await fetch("/api/trivia/results", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nickname: nickname.trim(),
+          totalScore: result.totalScore,
+          fanLevel: result.fanLevel,
+          accuracy: result.accuracy,
+          bestStreak: result.bestStreak,
+          totalCorrect: result.totalCorrect,
+          totalQuestions: result.totalQuestions,
+          modeBreakdown: result.modeResults,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error ?? "Failed to submit");
+      }
+
+      const data = await res.json();
+      setResultId(data.id);
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : t("Error al enviar", "Failed to submit"),
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center px-4 py-12">
@@ -169,11 +218,62 @@ export function GameOver({ result, onPlayAgain }: GameOverProps) {
         </motion.div>
       )}
 
+      {/* Leaderboard submission */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1 }}
+        className="mb-6 w-full max-w-md space-y-4"
+      >
+        {!submitted ? (
+          <>
+            <NicknameInput
+              value={nickname}
+              onChange={setNickname}
+              disabled={submitting}
+            />
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleSubmit}
+              disabled={!nicknameValid || submitting}
+              className={cn(
+                "w-full rounded-xl py-3 font-semibold transition-colors",
+                nicknameValid && !submitting
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                  : "bg-muted text-muted-foreground cursor-not-allowed",
+              )}
+            >
+              {submitting
+                ? t("Enviando...", "Submitting...")
+                : t("Enviar al Leaderboard", "Submit to Leaderboard")}
+            </motion.button>
+            {submitError && (
+              <p className="text-center text-sm text-red-500">{submitError}</p>
+            )}
+          </>
+        ) : (
+          <>
+            <SocialShareButtons
+              resultId={resultId!}
+              score={result.totalScore}
+              fanLevel={result.fanLevel}
+            />
+            <Link
+              href="/trivia/leaderboard"
+              className="block text-center text-sm font-medium text-primary hover:underline"
+            >
+              {t("Ver Leaderboard", "View Leaderboard")}
+            </Link>
+          </>
+        )}
+      </motion.div>
+
       {/* Play Again */}
       <motion.button
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, type: "spring", stiffness: 260, damping: 20 }}
+        transition={{ delay: 1.2, type: "spring", stiffness: 260, damping: 20 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={onPlayAgain}
