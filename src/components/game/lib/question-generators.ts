@@ -81,7 +81,7 @@ export function generateAwardsQuestions(awards: Award[], count: number): AwardsQ
     questions.push({
       mode: "awards",
       id: qid(),
-      textEs: `¿En que ceremonia gano Bad Bunny "${award.category}"?`,
+      textEs: `¿En qué ceremonia ganó Bad Bunny "${award.category}"?`,
       textEn: `At which ceremony did Bad Bunny win "${award.category}"?`,
       correctAnswer: award.ceremony,
       options,
@@ -103,7 +103,7 @@ export function generateAwardsQuestions(awards: Award[], count: number): AwardsQ
     questions.push({
       mode: "awards",
       id: qid(),
-      textEs: `¿En que ano gano Bad Bunny "${award.category}" en los ${displayCeremony(award.ceremony)}?`,
+      textEs: `¿En qué año ganó Bad Bunny "${award.category}" en los ${displayCeremony(award.ceremony)}?`,
       textEn: `In what year did Bad Bunny win "${award.category}" at the ${displayCeremony(award.ceremony)}?`,
       correctAnswer: String(award.year),
       options,
@@ -131,7 +131,7 @@ export function generateAwardsQuestions(awards: Award[], count: number): AwardsQ
     questions.push({
       mode: "awards",
       id: qid(),
-      textEs: `¿Cuantos premios ha ganado Bad Bunny en los ${displayCeremony(ceremony)}?`,
+      textEs: `¿Cuántos premios ha ganado Bad Bunny en los ${displayCeremony(ceremony)}?`,
       textEn: `How many awards has Bad Bunny won at the ${displayCeremony(ceremony)}?`,
       correctAnswer: String(correctCount),
       options,
@@ -187,8 +187,8 @@ export function generateAudioDnaQuestions(albums: Album[], count: number): Audio
       mode: "audio-dna",
       id: qid(),
       textEs: track.previewUrl
-        ? "¿A que album pertenece esta cancion?"
-        : `¿A que album pertenece "${track.title}"?`,
+        ? "¿A qué álbum pertenece esta canción?"
+        : `¿A qué álbum pertenece "${track.title}"?`,
       textEn: track.previewUrl
         ? "Which album does this song belong to?"
         : `Which album does "${track.title}" belong to?`,
@@ -325,7 +325,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
     questions.push({
       mode: "world-tour",
       id: qid(),
-      textEs: `¿Cuantos shows tuvo el ${tour}?`,
+      textEs: `¿Cuántos shows tuvo el ${tour}?`,
       textEn: `How many shows did the ${tour} have?`,
       correctAnswer: String(stats.shows),
       options,
@@ -345,7 +345,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
     questions.push({
       mode: "world-tour",
       id: qid(),
-      textEs: `¿Cuantos paises visito el ${tour}?`,
+      textEs: `¿Cuántos países visitó el ${tour}?`,
       textEn: `How many countries did the ${tour} visit?`,
       correctAnswer: String(stats.countryCount),
       options,
@@ -373,7 +373,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
       questions.push({
         mode: "world-tour",
         id: qid(),
-        textEs: `¿Cual tour tuvo shows en ${item.country}?`,
+        textEs: `¿Cuál tour tuvo shows en ${item.country}?`,
         textEn: `Which tour performed in ${item.country}?`,
         correctAnswer: correctTour,
         options,
@@ -401,7 +401,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
       questions.push({
         mode: "world-tour",
         id: qid(),
-        textEs: `¿En cual pais NO se presento el ${tour}?`,
+        textEs: `¿En cuál país NO se presentó el ${tour}?`,
         textEn: `Which country did the ${tour} NOT visit?`,
         correctAnswer: correctCountry,
         options,
@@ -423,7 +423,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
     questions.push({
       mode: "world-tour",
       id: qid(),
-      textEs: `¿Cuantos shows sold-out tuvo el ${tour}?`,
+      textEs: `¿Cuántos shows sold-out tuvo el ${tour}?`,
       textEn: `How many sold-out shows did the ${tour} have?`,
       correctAnswer: String(stats.soldOutCount),
       options,
@@ -444,7 +444,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
       questions.push({
         mode: "world-tour",
         id: qid(),
-        textEs: `¿En que ano se realizo el ${tour}?`,
+        textEs: `¿En qué año se realizó el ${tour}?`,
         textEn: `In what year did the ${tour} take place?`,
         correctAnswer: String(stats.year),
         options,
@@ -469,7 +469,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
       questions.push({
         mode: "world-tour",
         id: qid(),
-        textEs: `¿Cuantos fans asistieron al ${tour} en total?`,
+        textEs: `¿Cuántos fans asistieron al ${tour} en total?`,
         textEn: `How many total fans attended the ${tour}?`,
         correctAnswer: String(rounded),
         options,
