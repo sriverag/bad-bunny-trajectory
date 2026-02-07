@@ -2,6 +2,7 @@
 html[data-theme="x100pre"] {
   --background: #120a1e;
   --foreground: #f5f0eb;
+  --logo-invert: 1;
   --card: #1e1230;
   --card-foreground: #f5f0eb;
   --popover: #1e1230;

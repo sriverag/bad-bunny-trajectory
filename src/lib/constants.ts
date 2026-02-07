@@ -11,7 +11,7 @@ export const NAV_LINKS = [
   { href: "/discography", labelEs: "Discografía", labelEn: "Discography" },
   { href: "/awards", labelEs: "Premios", labelEn: "Awards" },
   { href: "/interviews", labelEs: "Entrevistas", labelEn: "Interviews" },
-  { href: "/gallery", labelEs: "Galería", labelEn: "Gallery" },
+
   { href: "/concerts", labelEs: "Conciertos", labelEn: "Concerts" },
   { href: "/about", labelEs: "Sobre", labelEn: "About" },
 ] as const;
@@ -19,12 +19,12 @@ export const NAV_LINKS = [
 export const STREAMING_LINKS = {
   spotify: "https://open.spotify.com/artist/4q3ewBCX7sLwd24euuV69X",
   appleMusic: "https://music.apple.com/artist/bad-bunny/1126808565",
-  youtube: "https://www.youtube.com/@BadBunny",
+  youtube: "https://www.youtube.com/@BadBunnyPR",
 };
 
 export const SOCIAL_LINKS = {
   instagram: "https://www.instagram.com/badbunnypr/",
-  twitter: "https://twitter.com/sanikibieber",
+  twitter: "https://x.com/sanbenito",
 };
 
 export const CACHE_TTLS = {

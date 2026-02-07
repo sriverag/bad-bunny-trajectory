@@ -116,10 +116,25 @@ export function X100preBg() {
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0"
-      aria-hidden="true"
-    />
+    <>
+      {/* Centered eye from album cover */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0 flex items-center justify-center"
+        aria-hidden="true"
+      >
+        <img
+          src="/images/x100pre-eye.png"
+          alt=""
+          className="w-[280px] h-[280px] md:w-[400px] md:h-[400px] object-contain opacity-[0.07]"
+        />
+      </div>
+
+      {/* Animated petals */}
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 pointer-events-none z-0"
+        aria-hidden="true"
+      />
+    </>
   );
 }

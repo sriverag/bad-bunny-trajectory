@@ -21,6 +21,7 @@ export interface Track {
   spotifyId?: string;
   featuring?: string;
   albumId: string;
+  previewUrl?: string;
   audioFeatures?: AudioFeatures;
 }
 

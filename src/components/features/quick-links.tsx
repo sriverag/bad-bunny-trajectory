@@ -6,7 +6,7 @@ import {
   Calendar,
   Trophy,
   Mic2,
-  Image as ImageIcon,
+
   Music,
   ArrowRight,
 } from "lucide-react";
@@ -45,14 +45,6 @@ const quickLinks = [
     titleEn: "Interviews",
     descriptionEs: "Videos y conversaciones exclusivas",
     descriptionEn: "Exclusive videos and conversations",
-  },
-  {
-    href: "/gallery",
-    icon: ImageIcon,
-    titleEs: "Galería",
-    titleEn: "Gallery",
-    descriptionEs: "Fotos y momentos icónicos",
-    descriptionEn: "Iconic photos and moments",
   },
   {
     href: "/concerts",

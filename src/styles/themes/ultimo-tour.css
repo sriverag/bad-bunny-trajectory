@@ -2,6 +2,7 @@
 html[data-theme="ultimo-tour"] {
   --background: #0d0907;
   --foreground: #e8e0d8;
+  --logo-invert: 1;
   --card: #1a1410;
   --card-foreground: #e8e0d8;
   --popover: #1a1410;

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, SkipForward, SkipBack, ExternalLink } from "lucide-react";
+import { Play, Pause, SkipForward, SkipBack, ExternalLink, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Album, Track } from "@/types/content";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAudioPlayer } from "@/hooks/use-audio-player";
 
 interface MusicPlayerProps {
   albums: Album[];
@@ -42,25 +43,86 @@ function formatDuration(ms: number): string {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
+function formatSeconds(s: number): string {
+  const minutes = Math.floor(s / 60);
+  const seconds = Math.floor(s % 60);
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+
+function SoundBars({ color }: { color: string }) {
+  return (
+    <div className="flex items-end gap-[2px] h-3.5 w-4">
+      {[0, 1, 2].map((i) => (
+        <motion.div
+          key={i}
+          className="w-[3px] rounded-full"
+          style={{ backgroundColor: color }}
+          animate={{
+            height: ["40%", "100%", "60%", "90%", "40%"],
+          }}
+          transition={{
+            duration: 0.8,
+            repeat: Infinity,
+            delay: i * 0.15,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function MusicPlayer({ albums }: MusicPlayerProps) {
   const [selectedAlbumIndex, setSelectedAlbumIndex] = useState(0);
   const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showPlaybackToast, setShowPlaybackToast] = useState(false);
+  const [showToast, setShowToast] = useState<string | null>(null);
 
   const currentAlbum = albums[selectedAlbumIndex];
   const currentColors = getAlbumColors(currentAlbum.themeId);
 
+  const handleAutoAdvance = useCallback(() => {
+    if (!selectedTrack || !currentAlbum.tracks.length) return;
+    const currentIndex = currentAlbum.tracks.findIndex((t) => t.id === selectedTrack.id);
+    if (currentIndex < currentAlbum.tracks.length - 1) {
+      const nextTrack = currentAlbum.tracks[currentIndex + 1];
+      setSelectedTrack(nextTrack);
+      // play is called via the effect below
+      player.play(nextTrack);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTrack, currentAlbum.tracks]);
+
+  const player = useAudioPlayer({ onTrackEnd: handleAutoAdvance });
+
   const handlePlayPause = () => {
-    setShowPlaybackToast(true);
-    setTimeout(() => setShowPlaybackToast(false), 3000);
+    if (!selectedTrack) return;
+
+    if (player.error === "no-preview") {
+      const spotifyUrl = selectedTrack.spotifyId
+        ? `https://open.spotify.com/track/${selectedTrack.spotifyId}`
+        : currentAlbum.spotifyId
+          ? `https://open.spotify.com/album/${currentAlbum.spotifyId}`
+          : null;
+
+      setShowToast(spotifyUrl);
+      setTimeout(() => setShowToast(null), 4000);
+      return;
+    }
+
+    if (player.currentTrack?.id === selectedTrack.id) {
+      player.togglePlayPause();
+    } else {
+      player.play(selectedTrack);
+    }
   };
 
   const handleNext = () => {
     if (!selectedTrack || !currentAlbum.tracks.length) return;
     const currentIndex = currentAlbum.tracks.findIndex((t) => t.id === selectedTrack.id);
     if (currentIndex < currentAlbum.tracks.length - 1) {
-      setSelectedTrack(currentAlbum.tracks[currentIndex + 1]);
+      const nextTrack = currentAlbum.tracks[currentIndex + 1];
+      setSelectedTrack(nextTrack);
+      player.play(nextTrack);
     }
   };
 
@@ -68,26 +130,38 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
     if (!selectedTrack || !currentAlbum.tracks.length) return;
     const currentIndex = currentAlbum.tracks.findIndex((t) => t.id === selectedTrack.id);
     if (currentIndex > 0) {
-      setSelectedTrack(currentAlbum.tracks[currentIndex - 1]);
+      const prevTrack = currentAlbum.tracks[currentIndex - 1];
+      setSelectedTrack(prevTrack);
+      player.play(prevTrack);
     }
   };
 
   const handleAlbumChange = (index: number) => {
     setSelectedAlbumIndex(index);
     setSelectedTrack(null);
-    setIsPlaying(false);
+    player.stop();
   };
 
   const handleTrackSelect = (track: Track) => {
     setSelectedTrack(track);
-    setIsPlaying(false);
+    player.play(track);
   };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!player.duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const fraction = (e.clientX - rect.left) / rect.width;
+    player.seek(fraction * player.duration);
+  };
+
+  const isTrackPlaying = (track: Track) =>
+    player.isPlaying && player.currentTrack?.id === track.id;
 
   return (
     <div className="relative min-h-screen w-full px-4 py-8 md:px-8">
       {/* Toast notification */}
       <AnimatePresence>
-        {showPlaybackToast && (
+        {showToast !== null && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -95,7 +169,20 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
             className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-card border border-border rounded-lg px-6 py-3 shadow-lg"
           >
             <p className="text-sm font-medium text-foreground">
-              Connect Spotify or Apple Music for playback
+              No preview available.{" "}
+              {showToast ? (
+                <a
+                  href={showToast}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline inline-flex items-center gap-1"
+                  style={{ color: currentColors.accent1 }}
+                >
+                  Open in Spotify <ExternalLink className="w-3 h-3" />
+                </a>
+              ) : (
+                "Try another track."
+              )}
             </p>
           </motion.div>
         )}
@@ -258,6 +345,7 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
                 <div className="p-2 space-y-1">
                   {currentAlbum.tracks.map((track) => {
                     const isActive = selectedTrack?.id === track.id;
+                    const playing = isTrackPlaying(track);
                     return (
                       <button
                         key={track.id}
@@ -279,14 +367,18 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                               <span
-                                className="text-xs font-medium w-6 flex-shrink-0"
+                                className="text-xs font-medium w-6 flex-shrink-0 flex items-center justify-center"
                                 style={
                                   isActive
                                     ? { color: currentColors.accent1 }
                                     : {}
                                 }
                               >
-                                {track.trackNumber}
+                                {playing ? (
+                                  <SoundBars color={currentColors.accent1} />
+                                ) : (
+                                  track.trackNumber
+                                )}
                               </span>
                               <div className="min-w-0 flex-1">
                                 <p
@@ -310,9 +402,16 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
                               </div>
                             </div>
                           </div>
-                          <span className="text-xs text-muted-foreground flex-shrink-0">
-                            {formatDuration(track.durationMs)}
-                          </span>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            {!track.previewUrl && (
+                              <span className="text-[10px] text-muted-foreground/60 uppercase">
+                                No preview
+                              </span>
+                            )}
+                            <span className="text-xs text-muted-foreground">
+                              {formatDuration(track.durationMs)}
+                            </span>
+                          </div>
                         </div>
                       </button>
                     );
@@ -374,6 +473,24 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
           animate={{ y: 0, opacity: 1 }}
           className="fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-lg border-t border-border shadow-lg"
         >
+          {/* Progress bar */}
+          {player.currentTrack?.id === selectedTrack.id && player.duration > 0 && (
+            <div
+              className="h-1 w-full cursor-pointer group"
+              onClick={handleSeek}
+            >
+              <div className="relative h-full w-full bg-muted">
+                <motion.div
+                  className="absolute inset-y-0 left-0 rounded-r-full"
+                  style={{
+                    width: `${player.progress * 100}%`,
+                    backgroundColor: currentColors.accent1,
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between gap-4">
               {/* Track info */}
@@ -410,7 +527,9 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
                     backgroundColor: currentColors.accent1,
                   }}
                 >
-                  {isPlaying ? (
+                  {player.isLoading && player.currentTrack?.id === selectedTrack.id ? (
+                    <Loader2 className="w-5 h-5 animate-spin text-white" />
+                  ) : player.isPlaying && player.currentTrack?.id === selectedTrack.id ? (
                     <Pause className="w-5 h-5" fill="white" />
                   ) : (
                     <Play className="w-5 h-5" fill="white" />
@@ -431,9 +550,11 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
                 </Button>
               </div>
 
-              {/* Duration */}
-              <div className="hidden sm:block flex-shrink-0 text-sm text-muted-foreground">
-                {formatDuration(selectedTrack.durationMs)}
+              {/* Duration / time */}
+              <div className="hidden sm:block flex-shrink-0 text-sm text-muted-foreground tabular-nums">
+                {player.currentTrack?.id === selectedTrack.id && player.duration > 0
+                  ? `${formatSeconds(player.currentTime)} / ${formatSeconds(player.duration)}`
+                  : formatDuration(selectedTrack.durationMs)}
               </div>
             </div>
           </div>

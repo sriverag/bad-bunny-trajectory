@@ -32,9 +32,14 @@ export function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="text-xl font-bold tracking-tight text-foreground hover:text-primary transition-colors"
+          className="hover:opacity-80 transition-opacity"
         >
-          BAD BUNNY
+          <img
+            src="/images/logo.png"
+            alt="Bad Bunny"
+            className="h-16 w-auto pt-2"
+            style={{ filter: "brightness(0) invert(var(--logo-invert, 0))" }}
+          />
         </Link>
 
         {/* Desktop Navigation */}

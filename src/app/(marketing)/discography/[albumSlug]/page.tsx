@@ -4,6 +4,7 @@ import { TrackList } from "@/components/shared/track-list";
 import { FadeIn } from "@/components/animations/fade-in";
 import { AudioFeaturesChart } from "@/components/features/audio-features-chart";
 import prisma from "@/lib/prisma";
+import { getAlbumPreviewUrls } from "@/lib/services/spotify";
 import type { Metadata } from "next";
 
 interface AlbumPageProps {
@@ -58,6 +59,14 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
     notFound();
   }
 
+  // Fetch preview URLs from Spotify if album has a spotifyId
+  const previews = album.spotifyId
+    ? await getAlbumPreviewUrls(album.spotifyId)
+    : [];
+  const previewMap = new Map(
+    previews.map((p) => [p.trackNumber, p.previewUrl])
+  );
+
   return (
     <PageTransition>
       {/* Album Header */}
@@ -94,6 +103,8 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
                   trackNumber: track.trackNumber,
                   durationMs: track.durationMs,
                   featuring: track.featuring ?? undefined,
+                  spotifyId: track.spotifyId ?? undefined,
+                  previewUrl: previewMap.get(track.trackNumber) ?? undefined,
                 }))}
               />
             </div>
