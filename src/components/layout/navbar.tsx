@@ -6,6 +6,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Globe } from "lucide-react";
 import { ThemeSwitcher } from "./theme-switcher";
+import { useTheme } from "./theme-provider";
+import { THEMES } from "@/types/theme";
 import { NAV_LINKS } from "@/lib/constants";
 import { useLanguage } from "@/hooks/use-language";
 import { cn } from "@/lib/utils";
@@ -21,6 +23,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
+  const { theme } = useTheme();
 
   const toggleLanguage = () => {
     setLanguage(language === "es" ? "en" : "es");
@@ -98,11 +101,11 @@ export function Navbar() {
               <Menu className="w-6 h-6" />
             </button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+          <SheetContent side="right" className="w-[360px] sm:w-[420px]">
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
-            <div className="mt-8 flex flex-col gap-6">
+            <div className="mt-1 flex flex-col gap-6">
               {/* Mobile Navigation Links */}
               <nav className="flex flex-col gap-4">
                 {NAV_LINKS.map((link) => {
@@ -113,10 +116,10 @@ export function Navbar() {
                       href={link.href}
                       onClick={() => setIsOpen(false)}
                       className={cn(
-                        "text-lg font-medium transition-colors hover:text-primary py-2",
+                        "text-lg font-medium transition-colors hover:text-primary py-2 px-4 rounded-lg",
                         isActive
-                          ? "text-foreground border-l-2 border-primary pl-4"
-                          : "text-muted-foreground pl-4"
+                          ? "text-primary bg-primary/10"
+                          : "text-muted-foreground"
                       )}
                     >
                       {language === "es" ? link.labelEs : link.labelEn}
@@ -126,11 +129,14 @@ export function Navbar() {
               </nav>
 
               {/* Mobile Actions */}
-              <div className="flex flex-col gap-4 pt-4 border-t border-border">
-                <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-4 pt-4 px-4 border-t border-border">
+                <div>
                   <span className="text-sm font-medium text-muted-foreground">
-                    Theme
+                    {t("Estilo", "Theme")}
                   </span>
+                  <p className="text-sm font-semibold text-foreground">
+                    {THEMES[theme].albumTitle}
+                  </p>
                 </div>
                 <ThemeSwitcher />
 

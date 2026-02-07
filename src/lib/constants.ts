@@ -7,6 +7,7 @@ export const SITE_DESCRIPTION_EN =
   "Bad Bunny's complete career trajectory - discography, awards, interviews and more";
 
 export const NAV_LINKS = [
+  { href: "/", labelEs: "Casita", labelEn: "Casita" },
   { href: "/trajectory", labelEs: "Trayectoria", labelEn: "Trajectory" },
   { href: "/discography", labelEs: "Discografía", labelEn: "Discography" },
   { href: "/awards", labelEs: "Premios", labelEn: "Awards" },

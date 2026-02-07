@@ -5,6 +5,7 @@ import { Play } from "lucide-react";
 import { FadeIn } from "@/components/animations/fade-in";
 import { useLanguage } from "@/hooks/use-language";
 import { useTheme } from "@/components/layout/theme-provider";
+import { ThemeSwitcher } from "@/components/layout/theme-switcher";
 import { ThemeId } from "@/types/theme";
 
 interface AlbumInfo {
@@ -96,9 +97,12 @@ export function FeaturedAlbum() {
     <section className="py-24 px-4 bg-muted/30">
       <div className="max-w-7xl mx-auto">
         <FadeIn delay={0.1}>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-6">
             {t("Álbum Destacado", "Featured Album")}
           </h2>
+          <div className="flex justify-center mb-16">
+            <ThemeSwitcher />
+          </div>
         </FadeIn>
 
         <FadeIn delay={0.3}>

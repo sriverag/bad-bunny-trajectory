@@ -22,7 +22,7 @@ export interface ThemeConfig {
 export const THEMES: Record<ThemeId, ThemeConfig> = {
   "debi-tirar": {
     id: "debi-tirar",
-    albumTitle: "DtMF",
+    albumTitle: "DeBí TiRAR MáS FOToS",
     albumTitleShort: "DtMF",
     year: 2025,
     aesthetic: "Nostalgic Puerto Rican",

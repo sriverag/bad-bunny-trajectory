@@ -42,7 +42,7 @@ export function Footer() {
                   alt="Spotify"
                   width={16}
                   height={16}
-                  className="w-4 h-4 opacity-60"
+                  className="w-4 h-4 opacity-80 [filter:brightness(0)_invert(var(--logo-invert,0))]"
                 />
                 <span>Spotify</span>
               </a>
@@ -57,7 +57,7 @@ export function Footer() {
                   alt="Apple Music"
                   width={16}
                   height={16}
-                  className="w-4 h-4 opacity-60"
+                  className="w-4 h-4 opacity-80 [filter:brightness(0)_invert(var(--logo-invert,0))]"
                 />
                 <span>Apple Music</span>
               </a>

@@ -14,7 +14,7 @@ export function ThemeSwitcher() {
   };
 
   return (
-    <div className="flex items-center gap-2 rounded-full bg-card/50 p-2 backdrop-blur-sm border border-border">
+    <div className="flex items-center justify-between w-full rounded-full bg-card/50 p-2 backdrop-blur-sm border border-border">
       {THEME_IDS.map((themeId) => {
         const themeConfig = THEMES[themeId];
         const isActive = theme === themeId;
@@ -48,7 +48,7 @@ export function ThemeSwitcher() {
                 className="text-white text-xs font-bold"
                 style={{ textShadow: "0 1px 3px rgba(0,0,0,0.6), 0 0px 6px rgba(0,0,0,0.4)" }}
               >
-                {themeConfig.year.toString().slice(2)}
+                '{themeConfig.year.toString().slice(2)}
               </span>
             </div>
 

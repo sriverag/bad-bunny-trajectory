@@ -172,22 +172,24 @@ export function HeroSection() {
             <StatCounter value={100} label={t("Canciones", "Songs")} suffix="+" />
             <StatCounter value={3} label="Grammys" />
             <StatCounter value={17} label="Latin Grammys" />
-            <StatCounter value={60} label="Streams" suffix="B+" />
+            <div className="col-span-2 md:col-span-1">
+              <StatCounter value={60} label="Streams" suffix="B+" />
+            </div>
           </div>
         </FadeIn>
 
         {/* CTA Buttons */}
         <FadeIn delay={0.6} duration={0.8}>
-          <div className="flex flex-wrap gap-4 justify-center pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Link
               href="/discography"
-              className="group relative px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold text-lg hover:bg-primary/90 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              className="group relative w-64 text-center px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold text-lg hover:bg-primary/90 transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               {t("Explorar Discografía", "Explore Discography")}
             </Link>
             <Link
               href="/trajectory"
-              className="group relative px-8 py-4 bg-secondary text-secondary-foreground rounded-lg font-semibold text-lg hover:bg-secondary/80 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              className="group relative w-64 text-center px-8 py-4 bg-secondary text-secondary-foreground rounded-lg font-semibold text-lg hover:bg-secondary/80 transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               {t("Ver Trayectoria", "View Trajectory")}
             </Link>

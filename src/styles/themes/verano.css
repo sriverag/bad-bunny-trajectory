@@ -6,7 +6,7 @@ html[data-theme="verano"] {
   --card-foreground: #1a2a3a;
   --popover: #f0ebe3;
   --popover-foreground: #1a2a3a;
-  --primary: #4ecdc4;
+  --primary: #2a9d8f;
   --primary-foreground: #faf7f2;
   --secondary: #f0ebe3;
   --secondary-foreground: #1a2a3a;
@@ -18,7 +18,7 @@ html[data-theme="verano"] {
   --destructive-foreground: #faf7f2;
   --border: #b8b0a4;
   --input: #b8b0a4;
-  --ring: #4ecdc4;
+  --ring: #2a9d8f;
   --radius: 1.5rem;
 
   /* Theme-specific extras */
