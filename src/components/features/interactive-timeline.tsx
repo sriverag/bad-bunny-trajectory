@@ -33,6 +33,7 @@ const TYPE_LABELS: Record<TimelineEventType, { es: string; en: string }> = {
 const ERA_DISPLAY_NAMES: Record<string, string> = {
   origins: "Orígenes / Origins",
   "x100pre": "X 100PRE",
+  oasis: "OASIS",
   yhlqmdlg: "YHLQMDLG",
   "ultimo-tour": "El Último Tour Del Mundo",
   verano: "Un Verano Sin Ti",

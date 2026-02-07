@@ -27,4 +27,13 @@ html[data-theme="verano"] {
   --theme-accent-3: #ff8a80;
   --theme-glow: rgba(78, 205, 196, 0.2);
   --theme-gradient: linear-gradient(135deg, #4ecdc4 0%, #ff6b35 50%, #ff8a80 100%);
+
+  /* Typography */
+  --theme-font-display: var(--font-baloo-2), cursive;
+  --theme-font-body: var(--font-nunito), sans-serif;
+  --theme-heading-weight: 700;
+  --theme-heading-tracking: 0;
+  --theme-heading-transform: none;
+  --theme-body-weight: 400;
+  --theme-body-tracking: 0;
 }

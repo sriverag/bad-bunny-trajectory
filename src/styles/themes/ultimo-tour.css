@@ -28,4 +28,13 @@ html[data-theme="ultimo-tour"] {
   --theme-accent-3: #ffba08;
   --theme-glow: rgba(230, 57, 70, 0.25);
   --theme-gradient: linear-gradient(135deg, #e63946 0%, #ff8c42 50%, #ffba08 100%);
+
+  /* Typography */
+  --theme-font-display: var(--font-anton), sans-serif;
+  --theme-font-body: var(--font-archivo), sans-serif;
+  --theme-heading-weight: 400;
+  --theme-heading-tracking: 0.02em;
+  --theme-heading-transform: uppercase;
+  --theme-body-weight: 400;
+  --theme-body-tracking: 0;
 }

@@ -1,0 +1,40 @@
+/* OASIS (2019) - Minimalist, avant-garde street style (w/ J Balvin) */
+html[data-theme="oasis"] {
+  --background: #0c0c14;
+  --foreground: #f0f0f5;
+  --logo-invert: 1;
+  --card: #14141e;
+  --card-foreground: #f0f0f5;
+  --popover: #14141e;
+  --popover-foreground: #f0f0f5;
+  --primary: #00d4aa;
+  --primary-foreground: #0c0c14;
+  --secondary: #14141e;
+  --secondary-foreground: #f0f0f5;
+  --muted: #1c1c28;
+  --muted-foreground: #a0a0b8;
+  --accent: #ff6b9d;
+  --accent-foreground: #0c0c14;
+  --destructive: #ef4444;
+  --destructive-foreground: #f0f0f5;
+  --border: rgba(0, 212, 170, 0.12);
+  --input: rgba(0, 212, 170, 0.12);
+  --ring: #00d4aa;
+  --radius: 0.5rem;
+
+  /* Theme-specific extras */
+  --theme-accent-1: #00d4aa;
+  --theme-accent-2: #ff6b9d;
+  --theme-accent-3: #ffd93d;
+  --theme-glow: rgba(0, 212, 170, 0.2);
+  --theme-gradient: linear-gradient(135deg, #00d4aa 0%, #ff6b9d 50%, #ffd93d 100%);
+
+  /* Typography */
+  --theme-font-display: var(--font-montserrat), sans-serif;
+  --theme-font-body: var(--font-work-sans), sans-serif;
+  --theme-heading-weight: 900;
+  --theme-heading-tracking: 0.04em;
+  --theme-heading-transform: uppercase;
+  --theme-body-weight: 400;
+  --theme-body-tracking: 0;
+}

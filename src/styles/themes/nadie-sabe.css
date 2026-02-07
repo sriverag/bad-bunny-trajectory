@@ -28,4 +28,13 @@ html[data-theme="nadie-sabe"] {
   --theme-accent-3: #c9a84c;
   --theme-glow: rgba(255, 255, 255, 0.1);
   --theme-gradient: linear-gradient(135deg, #050505 0%, #222222 50%, #111111 100%);
+
+  /* Typography */
+  --theme-font-display: var(--font-playfair-display), serif;
+  --theme-font-body: var(--font-source-serif-4), serif;
+  --theme-heading-weight: 900;
+  --theme-heading-tracking: -0.01em;
+  --theme-heading-transform: none;
+  --theme-body-weight: 400;
+  --theme-body-tracking: 0;
 }

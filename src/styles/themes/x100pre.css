@@ -28,4 +28,13 @@ html[data-theme="x100pre"] {
   --theme-accent-3: #39ff14;
   --theme-glow: rgba(255, 107, 53, 0.3);
   --theme-gradient: linear-gradient(135deg, #ff6b35 0%, #ff1493 50%, #39ff14 100%);
+
+  /* Typography */
+  --theme-font-display: var(--font-space-grotesk), sans-serif;
+  --theme-font-body: var(--font-inter), sans-serif;
+  --theme-heading-weight: 700;
+  --theme-heading-tracking: -0.025em;
+  --theme-heading-transform: none;
+  --theme-body-weight: 400;
+  --theme-body-tracking: 0;
 }

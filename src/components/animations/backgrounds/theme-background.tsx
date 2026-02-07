@@ -7,6 +7,7 @@ import { UltimoTourBg } from "./ultimo-tour-bg";
 import { VeranoBg } from "./verano-bg";
 import { NadieSabeBg } from "./nadie-sabe-bg";
 import { DebiTirarBg } from "./debi-tirar-bg";
+import { OasisBg } from "./oasis-bg";
 
 export function ThemeBackground() {
   const { theme } = useTheme();
@@ -24,6 +25,8 @@ export function ThemeBackground() {
       return <NadieSabeBg />;
     case "debi-tirar":
       return <DebiTirarBg />;
+    case "oasis":
+      return <OasisBg />;
     default:
       return null;
   }

@@ -38,7 +38,7 @@ export function SectionHeader({
       <div className="relative inline-block">
         <h2
           className={cn(
-            "text-3xl font-bold text-foreground md:text-4xl lg:text-5xl",
+            "text-3xl font-heading text-foreground md:text-4xl lg:text-5xl",
             "relative z-10"
           )}
         >

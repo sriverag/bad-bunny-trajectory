@@ -28,4 +28,13 @@ html[data-theme="yhlqmdlg"] {
   --theme-accent-3: #ffd700;
   --theme-glow: rgba(255, 45, 149, 0.3);
   --theme-gradient: linear-gradient(135deg, #ff2d95 0%, #a855f7 50%, #ffd700 100%);
+
+  /* Typography */
+  --theme-font-display: var(--font-oswald), sans-serif;
+  --theme-font-body: var(--font-barlow-condensed), sans-serif;
+  --theme-heading-weight: 700;
+  --theme-heading-tracking: 0.05em;
+  --theme-heading-transform: uppercase;
+  --theme-body-weight: 500;
+  --theme-body-tracking: 0;
 }

@@ -48,6 +48,14 @@ export const themes: Record<string, ThemeColors> = {
     background: "#0a0a12",
     foreground: "#f8f8ff",
   },
+  oasis: {
+    accent1: "#00d4aa",
+    accent2: "#ff6b9d",
+    accent3: "#ffd93d",
+    gradient: "linear-gradient(135deg, #00d4aa 0%, #ff6b9d 50%, #ffd93d 100%)",
+    background: "#0c0c14",
+    foreground: "#f0f0f5",
+  },
   x100pre: {
     accent1: "#ff6b35",
     accent2: "#ff1493",
@@ -62,6 +70,7 @@ export const allAccentColors = Object.values(themes).map((t) => t.accent1);
 
 export const albumCovers = [
   { file: "x100pre.jpg", theme: "x100pre", title: "X 100PRE", year: 2018 },
+  { file: "oasis.jpg", theme: "oasis", title: "OASIS", year: 2019 },
   { file: "yhlqmdlg.jpg", theme: "yhlqmdlg", title: "YHLQMDLG", year: 2020 },
   {
     file: "el-ultimo-tour-del-mundo.jpg",

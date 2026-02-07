@@ -4,6 +4,7 @@ export const THEME_IDS = [
   "verano",
   "ultimo-tour",
   "yhlqmdlg",
+  "oasis",
   "x100pre",
 ] as const;
 
@@ -54,6 +55,15 @@ export const THEMES: Record<ThemeId, ThemeConfig> = {
     albumTitleShort: "YHLQMDLG",
     year: 2020,
     aesthetic: "Retro gaming, pixel art",
+  },
+  oasis: {
+    id: "oasis",
+    albumTitle: "OASIS",
+    albumTitleShort: "OASIS",
+    year: 2019,
+    aesthetic: "Minimalist, avant-garde street style",
+    spotifyId: "6ylFfzx32ICw4L1A7YWNLN",
+    appleMusicId: "oasis/1470146332",
   },
   x100pre: {
     id: "x100pre",

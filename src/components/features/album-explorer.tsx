@@ -18,6 +18,7 @@ function getAlbumGradient(themeId: string): string {
     verano: "linear-gradient(135deg, #4ecdc4 0%, #ff6b35 50%, #ff8a80 100%)",
     "ultimo-tour": "linear-gradient(135deg, #e63946 0%, #ff8c42 50%, #ffba08 100%)",
     yhlqmdlg: "linear-gradient(135deg, #ff2d95 0%, #a855f7 50%, #ffd700 100%)",
+    oasis: "linear-gradient(135deg, #00d4aa 0%, #ff6b9d 50%, #ffd93d 100%)",
     x100pre: "linear-gradient(135deg, #ff6b35 0%, #ff1493 50%, #39ff14 100%)",
   };
   return gradients[themeId] || gradients["debi-tirar"];
@@ -30,6 +31,7 @@ function getAlbumColors(themeId: string): { accent1: string; accent2: string; ac
     verano: { accent1: "#4ecdc4", accent2: "#ff6b35", accent3: "#ff8a80" },
     "ultimo-tour": { accent1: "#e63946", accent2: "#ff8c42", accent3: "#ffba08" },
     yhlqmdlg: { accent1: "#ff2d95", accent2: "#a855f7", accent3: "#ffd700" },
+    oasis: { accent1: "#00d4aa", accent2: "#ff6b9d", accent3: "#ffd93d" },
     x100pre: { accent1: "#ff6b35", accent2: "#ff1493", accent3: "#39ff14" },
   };
   return colors[themeId] || colors["debi-tirar"];

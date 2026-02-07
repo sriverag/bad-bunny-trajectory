@@ -74,6 +74,17 @@ const ALBUM_BY_THEME: Record<ThemeId, AlbumInfo> = {
       "I Do Whatever I Want celebrates classic reggaeton and Latin music, from cumbia to dembow.",
     coverUrl: "/images/albums/yhlqmdlg.jpg",
   },
+  oasis: {
+    slug: "oasis",
+    title: "OASIS",
+    year: 2019,
+    trackCount: 19,
+    descriptionEs:
+      "Álbum colaborativo con J Balvin que fusiona reggaetón, pop latino y dancehall en un viaje tropical de verano.",
+    descriptionEn:
+      "Collaborative album with J Balvin fusing reggaeton, Latin pop, and dancehall into a tropical summer journey.",
+    coverUrl: "/images/albums/oasis.jpg",
+  },
   x100pre: {
     slug: "x100pre",
     title: "X 100PRE",
