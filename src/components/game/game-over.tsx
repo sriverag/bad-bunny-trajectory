@@ -218,12 +218,12 @@ export function GameOver({ result, onPlayAgain }: GameOverProps) {
         </motion.div>
       )}
 
-      {/* Leaderboard submission */}
+      {/* Leaderboard submission + Play Again */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1 }}
-        className="mb-6 w-full max-w-md space-y-4"
+        className="w-full max-w-md space-y-3"
       >
         {!submitted ? (
           <>
@@ -267,24 +267,24 @@ export function GameOver({ result, onPlayAgain }: GameOverProps) {
             </Link>
           </>
         )}
-      </motion.div>
 
-      {/* Play Again */}
-      <motion.button
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2, type: "spring", stiffness: 260, damping: 20 }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={onPlayAgain}
-        className={cn(
-          "rounded-full px-8 py-3",
-          "bg-primary font-semibold text-primary-foreground",
-          "shadow-lg transition-shadow hover:shadow-xl",
-        )}
-      >
-        {t("Jugar de Nuevo", "Play Again")}
-      </motion.button>
+        {/* Play Again — secondary before submit, primary after */}
+        <div className="pt-2">
+          <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onPlayAgain}
+            className={cn(
+              "w-full rounded-xl py-3 font-semibold transition-colors",
+              submitted
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "border border-border bg-transparent text-foreground hover:bg-secondary",
+            )}
+          >
+            {t("Jugar de Nuevo", "Play Again")}
+          </motion.button>
+        </div>
+      </motion.div>
     </div>
   );
 }
