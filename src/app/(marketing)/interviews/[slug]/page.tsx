@@ -48,13 +48,17 @@ export async function generateMetadata({ params }: InterviewPageProps) {
 }
 
 export async function generateStaticParams() {
-  const interviews = await prisma.interview.findMany({
-    select: { slug: true },
-  });
+  try {
+    const interviews = await prisma.interview.findMany({
+      select: { slug: true },
+    });
 
-  return interviews.map((interview) => ({
-    slug: interview.slug,
-  }));
+    return interviews.map((interview) => ({
+      slug: interview.slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function InterviewPage({ params }: InterviewPageProps) {
