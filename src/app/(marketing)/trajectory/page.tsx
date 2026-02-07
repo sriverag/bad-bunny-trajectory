@@ -1,8 +1,20 @@
+import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { InteractiveTimeline } from "@/components/features/interactive-timeline";
 import { prisma } from "@/lib/prisma";
 import type { TimelineEvent } from "@/types/content";
+
+export const metadata: Metadata = {
+  title: "Bad Bunny Career Timeline | From Vega Baja to Super Bowl LX",
+  description:
+    "Bad Bunny's career from Vega Baja, Puerto Rico to Super Bowl LX and Grammy history. The complete timeline of Benito Martinez Ocasio.",
+  openGraph: {
+    title: "Bad Bunny Career Timeline | From Puerto Rico to Global Icon",
+    description:
+      "Explore Bad Bunny's journey from SoundCloud uploads in Puerto Rico to headlining Super Bowl LX and winning Grammy Album of the Year.",
+  },
+};
 
 export default async function TrajectoryPage() {
   const events = await prisma.timelineEvent.findMany({

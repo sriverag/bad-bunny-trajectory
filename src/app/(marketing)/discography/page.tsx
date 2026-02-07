@@ -1,8 +1,20 @@
+import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { AlbumCard } from "@/components/shared/album-card";
 import { FadeIn } from "@/components/animations/fade-in";
 import prisma from "@/lib/prisma";
+
+export const metadata: Metadata = {
+  title: "Bad Bunny Discography | All Albums from X 100PRE to DtMF",
+  description:
+    "Bad Bunny's full discography from X 100PRE to DeBí TiRAR MáS FOToS, the first Spanish-language album to win Grammy Album of the Year.",
+  openGraph: {
+    title: "Bad Bunny Complete Discography",
+    description:
+      "Explore every Bad Bunny album: X 100PRE, OASIS, YHLQMDLG, El Último Tour Del Mundo, Un Verano Sin Ti, Nadie Sabe, and DeBí TiRAR MáS FOToS.",
+  },
+};
 
 export default async function DiscographyPage() {
   const albums = await prisma.album.findMany({

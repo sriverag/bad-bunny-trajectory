@@ -2,9 +2,10 @@ export const BAD_BUNNY_SPOTIFY_ID = "4q3ewBCX7sLwd24euuV69X";
 
 export const SITE_NAME = "This is Bad Bunny";
 export const SITE_DESCRIPTION =
-  "La trayectoria completa de Bad Bunny - discografía, premios, entrevistas y más";
+  "Bad Bunny: ganador del Grammy Álbum del Año, headliner del Super Bowl LX. Discografía, premios, conciertos y raíces de Puerto Rico.";
 export const SITE_DESCRIPTION_EN =
-  "Bad Bunny's complete career trajectory - discography, awards, interviews and more";
+  "Bad Bunny: Grammy Album of the Year winner, Super Bowl LX halftime headliner. Discography, awards, concerts, and Puerto Rico roots.";
+export const SITE_URL = "https://thisisbadbunny.com";
 
 export const NAV_LINKS = [
   { href: "/", labelEs: "Casita", labelEn: "Casita" },

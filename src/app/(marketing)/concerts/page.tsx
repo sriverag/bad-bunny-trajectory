@@ -1,7 +1,19 @@
+import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { ConcertList } from "@/components/features/concert-list";
 import { prisma } from "@/lib/prisma";
+
+export const metadata: Metadata = {
+  title: "Bad Bunny Concerts & Tour History | DtMF World Tour 2026",
+  description:
+    "Bad Bunny concert history and DeBí TiRAR MáS FOToS World Tour 2026: 45 stadium dates across Latin America, Europe, and more.",
+  openGraph: {
+    title: "Bad Bunny Concerts & World Tours",
+    description:
+      "Complete Bad Bunny concert and tour history. From early shows to the 2026 DeBí TiRAR MáS FOToS World Tour across 45 stadiums worldwide.",
+  },
+};
 
 async function getConcerts() {
   try {

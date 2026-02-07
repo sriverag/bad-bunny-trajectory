@@ -4,6 +4,7 @@ import { TrackList } from "@/components/shared/track-list";
 import { FadeIn } from "@/components/animations/fade-in";
 import { AudioFeaturesChart } from "@/components/features/audio-features-chart";
 import { StreamingLinks } from "@/components/features/streaming-links";
+import { AlbumJsonLd } from "@/components/seo/json-ld";
 import prisma from "@/lib/prisma";
 import { getAlbumPreviewUrls } from "@/lib/services/spotify";
 import type { Metadata } from "next";
@@ -29,8 +30,14 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${album.title} (${album.year}) - Bad Bunny`,
-    description: album.descriptionEn,
+    title: `${album.title} (${album.year}) - Bad Bunny Album`,
+    description: `${album.descriptionEn} Listen to ${album.title} by Bad Bunny.`,
+    openGraph: {
+      title: `${album.title} - Bad Bunny (${album.year})`,
+      description: album.descriptionEn || undefined,
+      images: [`/images/albums/${albumSlug}.jpg`],
+      type: "music.album",
+    },
   };
 }
 
@@ -70,6 +77,15 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
 
   return (
     <PageTransition>
+      <AlbumJsonLd
+        name={album.title}
+        year={album.year}
+        trackCount={album.tracks.length}
+        spotifyId={album.spotifyId}
+        description={album.descriptionEn || `${album.title} by Bad Bunny (${album.year})`}
+        image={`https://thisisbadbunny.com/images/albums/${albumSlug}.jpg`}
+        slug={albumSlug}
+      />
       {/* Album Header */}
       <div
         className="relative overflow-hidden py-20"

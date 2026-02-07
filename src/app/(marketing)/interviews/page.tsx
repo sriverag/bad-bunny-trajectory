@@ -1,11 +1,18 @@
+import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { InterviewGrid } from "@/components/features/interview-grid";
 import { prisma } from "@/lib/prisma";
 
-export const metadata = {
-  title: "Entrevistas | This is Bad Bunny",
-  description: "Las entrevistas más importantes de Bad Bunny a lo largo de su carrera.",
+export const metadata: Metadata = {
+  title: "Bad Bunny Interviews | Super Bowl, Grammy & Career Conversations",
+  description:
+    "Watch Bad Bunny's most iconic interviews: Super Bowl LX press conference, Grammy speeches, Hot Ones, Chente Ydrach, and more.",
+  openGraph: {
+    title: "Bad Bunny Interviews Collection",
+    description:
+      "The most important Bad Bunny interviews from Super Bowl LX press conference to Grammy acceptance speeches and in-depth conversations.",
+  },
 };
 
 export default async function InterviewsPage() {

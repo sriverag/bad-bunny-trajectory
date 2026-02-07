@@ -1,8 +1,20 @@
+import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { AwardsShowcase } from "@/components/features/awards-showcase";
 import { prisma } from "@/lib/prisma";
 import type { Award } from "@/types/content";
+
+export const metadata: Metadata = {
+  title: "Bad Bunny Awards | Grammy Wins, Latin Grammys & Full List",
+  description:
+    "Bad Bunny awards: 6 Grammys including historic Album of the Year 2026, 17 Latin Grammys, Billboard Music Awards. Complete list of wins and nominations.",
+  openGraph: {
+    title: "Bad Bunny Awards & Nominations",
+    description:
+      "Complete list of Bad Bunny's Grammy, Latin Grammy, Billboard, and Lo Nuestro awards. First Spanish-language Grammy Album of the Year winner.",
+  },
+};
 
 export default async function AwardsPage() {
   const awards = await prisma.award.findMany({

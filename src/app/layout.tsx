@@ -23,7 +23,8 @@ import { LanguageProvider } from "@/components/layout/language-provider";
 import { ThemeBackgroundWrapper } from "@/components/animations/backgrounds";
 import { DEFAULT_THEME, ThemeId } from "@/types/theme";
 import type { Language } from "@/hooks/use-language";
-import { SITE_NAME, SITE_DESCRIPTION } from "@/lib/constants";
+import { SITE_NAME, SITE_DESCRIPTION, SITE_DESCRIPTION_EN, SITE_URL } from "@/lib/constants";
+import { MusicArtistJsonLd, WebsiteJsonLd } from "@/components/seo/json-ld";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -151,8 +152,73 @@ const workSans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  title: SITE_NAME,
-  description: SITE_DESCRIPTION,
+  title: {
+    default: `${SITE_NAME} | Bad Bunny Grammy Winner & Super Bowl LX`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION_EN,
+  keywords: [
+    "Bad Bunny",
+    "Benito Antonio Martinez Ocasio",
+    "Super Bowl LX",
+    "Super Bowl halftime show 2026",
+    "Grammy Album of the Year",
+    "DeBí TiRAR MáS FOToS",
+    "Puerto Rico",
+    "reggaeton",
+    "Latin music",
+    "Bad Bunny discography",
+    "Bad Bunny awards",
+    "Bad Bunny tour 2026",
+    "Bad Bunny concerts",
+    "Bad Bunny interviews",
+    "Un Verano Sin Ti",
+    "YHLQMDLG",
+    "musica urbana",
+  ],
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: "/",
+    languages: {
+      es: "/",
+      en: "/",
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_PR",
+    alternateLocale: "en_US",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: "Bad Bunny: Grammy Album of the Year & Super Bowl LX Halftime Show",
+    description: SITE_DESCRIPTION_EN,
+    images: [
+      {
+        url: "/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Bad Bunny - This is Bad Bunny",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bad Bunny: Grammy Winner & Super Bowl LX Headliner",
+    description: SITE_DESCRIPTION_EN,
+    creator: "@sanbenito",
+    images: ["/images/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default async function RootLayout({
@@ -171,6 +237,8 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${inter.variable} ${oswald.variable} ${barlowCondensed.variable} ${anton.variable} ${archivo.variable} ${baloo2.variable} ${nunito.variable} ${playfairDisplay.variable} ${sourceSerif4.variable} ${caveat.variable} ${karla.variable} ${montserrat.variable} ${workSans.variable} antialiased`}
       >
+        <MusicArtistJsonLd />
+        <WebsiteJsonLd />
         <ThemeProvider defaultTheme={theme}>
           <LanguageProvider defaultLanguage={language}>
             <ThemeBackgroundWrapper />
