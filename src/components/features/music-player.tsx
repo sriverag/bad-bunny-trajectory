@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Pause, SkipForward, SkipBack, ExternalLink, Loader2 } from "lucide-react";
+import posthog from "posthog-js";
 import { cn } from "@/lib/utils";
 import { Album, Track } from "@/types/content";
 import { Button } from "@/components/ui/button";
@@ -137,12 +138,27 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
   };
 
   const handleAlbumChange = (index: number) => {
+    const newAlbum = albums[index];
+    posthog.capture("album_selected", {
+      album_title: newAlbum.title,
+      album_year: newAlbum.year,
+      album_id: newAlbum.id,
+      previous_album: currentAlbum.title,
+    });
     setSelectedAlbumIndex(index);
     setSelectedTrack(null);
     player.stop();
   };
 
   const handleTrackSelect = (track: Track) => {
+    posthog.capture("track_played", {
+      track_title: track.title,
+      track_number: track.trackNumber,
+      album_title: currentAlbum.title,
+      album_year: currentAlbum.year,
+      has_preview: !!track.previewUrl,
+      featuring: track.featuring || null,
+    });
     setSelectedTrack(track);
     player.play(track);
   };
@@ -303,6 +319,12 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
                       href={`https://open.spotify.com/album/${currentAlbum.spotifyId}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => posthog.capture("streaming_link_clicked", {
+                        platform: "spotify",
+                        album_title: currentAlbum.title,
+                        album_year: currentAlbum.year,
+                        context: "music_player",
+                      })}
                     >
                       <ExternalLink className="w-4 h-4" />
                       Spotify
@@ -324,6 +346,12 @@ export function MusicPlayer({ albums }: MusicPlayerProps) {
                       href={`https://music.apple.com/album/${currentAlbum.appleMusicId}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => posthog.capture("streaming_link_clicked", {
+                        platform: "apple_music",
+                        album_title: currentAlbum.title,
+                        album_year: currentAlbum.year,
+                        context: "music_player",
+                      })}
                     >
                       <ExternalLink className="w-4 h-4" />
                       Apple Music

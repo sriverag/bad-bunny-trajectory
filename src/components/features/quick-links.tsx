@@ -10,6 +10,7 @@ import {
   Music,
   ArrowRight,
 } from "lucide-react";
+import posthog from "posthog-js";
 import { FadeIn } from "@/components/animations/fade-in";
 import { useLanguage } from "@/hooks/use-language";
 
@@ -80,6 +81,11 @@ export function QuickLinks() {
               <Link
                 href={link.href}
                 className="group relative flex flex-col items-center text-center p-7 rounded-2xl bg-background border border-border/60 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300"
+                onClick={() => posthog.capture("quick_link_clicked", {
+                  link_title: language === "en" ? link.titleEn : link.titleEs,
+                  link_href: link.href,
+                  link_position: index + 1,
+                })}
               >
                 <div className="mb-4 p-3.5 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
                   <link.icon className="w-6 h-6" strokeWidth={1.8} />

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import posthog from "posthog-js";
 import { useTheme } from "./theme-provider";
 import { THEMES, THEME_IDS, ThemeId } from "@/types/theme";
 import { cn } from "@/lib/utils";
@@ -10,6 +11,15 @@ export function ThemeSwitcher() {
 
   const handleThemeChange = (newTheme: ThemeId) => {
     if (newTheme === theme) return;
+    const newThemeConfig = THEMES[newTheme];
+    const previousThemeConfig = THEMES[theme];
+    posthog.capture("theme_changed", {
+      new_theme: newTheme,
+      new_theme_album: newThemeConfig.albumTitle,
+      new_theme_year: newThemeConfig.year,
+      previous_theme: theme,
+      previous_theme_album: previousThemeConfig.albumTitle,
+    });
     setTheme(newTheme);
   };
 

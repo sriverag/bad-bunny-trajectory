@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import posthog from "posthog-js";
 import { cn } from "@/lib/utils";
 
 interface AlbumCardProps {
@@ -43,8 +44,17 @@ export function AlbumCard({ album, className }: AlbumCardProps) {
     setRotateY(0);
   };
 
+  const handleAlbumClick = () => {
+    posthog.capture("album_card_clicked", {
+      album_title: album.title,
+      album_year: album.year,
+      album_slug: album.slug,
+      track_count: album.trackCount || null,
+    });
+  };
+
   return (
-    <Link href={`/discography/${album.slug}`}>
+    <Link href={`/discography/${album.slug}`} onClick={handleAlbumClick}>
       <motion.div
         ref={cardRef}
         onMouseMove={handleMouseMove}

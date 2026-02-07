@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
+import posthog from "posthog-js";
 import { FadeIn } from "@/components/animations/fade-in";
 import { StatCounter } from "@/components/shared/stat-counter";
 import { Badge } from "@/components/ui/badge";
@@ -74,6 +75,13 @@ export function ConcertList({ concerts }: ConcertListProps) {
   const [hiddenTours, setHiddenTours] = useState<Set<string>>(new Set());
 
   const toggleTour = (tour: string) => {
+    const isCurrentlyVisible = !hiddenTours.has(tour);
+    const tourConcerts = concertsByTour.get(tour) || [];
+    posthog.capture("tour_filter_toggled", {
+      tour_name: tour,
+      action: isCurrentlyVisible ? "hide" : "show",
+      tour_concert_count: tourConcerts.length,
+    });
     setHiddenTours((prev) => {
       const next = new Set(prev);
       if (next.has(tour)) {

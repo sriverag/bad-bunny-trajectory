@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Play } from "lucide-react";
+import posthog from "posthog-js";
 import { FadeIn } from "@/components/animations/fade-in";
 import { useLanguage } from "@/hooks/use-language";
 import { useTheme } from "@/components/layout/theme-provider";
@@ -122,6 +123,12 @@ export function FeaturedAlbum() {
           <Link
             href={`/discography/${album.slug}`}
             className="group block max-w-5xl mx-auto"
+            onClick={() => posthog.capture("featured_album_clicked", {
+              album_title: album.title,
+              album_year: album.year,
+              album_slug: album.slug,
+              track_count: album.trackCount,
+            })}
           >
             <div className="relative overflow-hidden rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
               <div className="grid md:grid-cols-2 gap-8 p-8 md:p-12">

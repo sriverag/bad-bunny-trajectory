@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback } from "react";
 import { Play, Pause } from "lucide-react";
+import posthog from "posthog-js";
 import { cn } from "@/lib/utils";
 
 interface Track {
@@ -56,6 +57,14 @@ export function TrackList({ tracks, className }: TrackListProps) {
       a.src = track.previewUrl;
       a.play().catch(() => setPlayingTrackId(null));
       setPlayingTrackId(track.id);
+
+      // Track the preview play event
+      posthog.capture("track_preview_played", {
+        track_title: track.title,
+        track_number: track.trackNumber,
+        featuring: track.featuring || null,
+        has_spotify_id: !!track.spotifyId,
+      });
     },
     [playingTrackId]
   );

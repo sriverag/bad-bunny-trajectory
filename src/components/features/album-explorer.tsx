@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Music } from "lucide-react";
+import posthog from "posthog-js";
 import { cn } from "@/lib/utils";
 import { Album } from "@/types/content";
 import { Button } from "@/components/ui/button";
@@ -79,6 +80,14 @@ export function AlbumExplorer({ albums }: AlbumExplorerProps) {
   };
 
   const handleAlbumClick = (index: number) => {
+    const selectedAlbum = albums[index];
+    posthog.capture("album_explored", {
+      album_title: selectedAlbum.title,
+      album_year: selectedAlbum.year,
+      album_id: selectedAlbum.id,
+      previous_album: focusedAlbum.title,
+      navigation_method: "click",
+    });
     setFocusedIndex(index);
   };
 

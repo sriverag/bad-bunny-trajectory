@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import posthog from "posthog-js";
 import { StatCounter } from "@/components/shared/stat-counter";
 import { FadeIn } from "@/components/animations/fade-in";
 import { useLanguage } from "@/hooks/use-language";
@@ -184,12 +185,20 @@ export function HeroSection() {
             <Link
               href="/discography"
               className="group relative w-64 text-center px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold text-lg hover:bg-primary/90 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              onClick={() => posthog.capture("hero_cta_clicked", {
+                cta_type: "discography",
+                cta_text: "Explore Discography",
+              })}
             >
               {t("Explorar Discografía", "Explore Discography")}
             </Link>
             <Link
               href="/trajectory"
               className="group relative w-64 text-center px-8 py-4 bg-secondary text-secondary-foreground rounded-lg font-semibold text-lg hover:bg-secondary/80 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              onClick={() => posthog.capture("hero_cta_clicked", {
+                cta_type: "trajectory",
+                cta_text: "View Trajectory",
+              })}
             >
               {t("Ver Trayectoria", "View Trajectory")}
             </Link>

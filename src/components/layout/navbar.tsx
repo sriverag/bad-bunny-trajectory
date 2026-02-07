@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Globe } from "lucide-react";
+import posthog from "posthog-js";
 import { ThemeSwitcher } from "./theme-switcher";
 import { useTheme } from "./theme-provider";
 import { THEMES } from "@/types/theme";
@@ -26,7 +27,13 @@ export function Navbar() {
   const { theme } = useTheme();
 
   const toggleLanguage = () => {
-    setLanguage(language === "es" ? "en" : "es");
+    const newLanguage = language === "es" ? "en" : "es";
+    posthog.capture("language_toggled", {
+      new_language: newLanguage,
+      previous_language: language,
+      current_page: pathname,
+    });
+    setLanguage(newLanguage);
   };
 
   return (
