@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { AwardsShowcase } from "@/components/features/awards-showcase";
+import { FAQSection } from "@/components/shared/faq-section";
+import {
+  BreadcrumbJsonLd,
+  FAQJsonLd,
+  SpeakableJsonLd,
+} from "@/components/seo/json-ld";
+import { awardsFAQs } from "@/lib/faq-data";
 import { prisma } from "@/lib/prisma";
 import type { Award } from "@/types/content";
 
@@ -30,16 +37,33 @@ export default async function AwardsPage() {
 
   return (
     <PageTransition>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Casita", url: "https://thisisbadbunny.com" },
+          { name: "Awards", url: "https://thisisbadbunny.com/awards" },
+        ]}
+      />
+      <FAQJsonLd faqs={awardsFAQs} />
+      <SpeakableJsonLd
+        url="https://thisisbadbunny.com/awards"
+        cssSelectors={[".speakable-awards-header"]}
+      />
       <div className="container py-12 md:py-16 lg:py-20">
-        <SectionHeader
-          title="Premios"
-          titleEn="Awards & Recognition"
-          subtitle="Una colección completa de todos los premios y nominaciones que Bad Bunny ha recibido a lo largo de su carrera."
-          subtitleEn="A complete collection of all the awards and nominations Bad Bunny has received throughout his career."
-          className="mb-12"
-        />
+        <div className="speakable-awards-header">
+          <SectionHeader
+            title="Premios"
+            titleEn="Awards & Recognition"
+            subtitle="Una colección completa de todos los premios y nominaciones que Bad Bunny ha recibido a lo largo de su carrera."
+            subtitleEn="A complete collection of all the awards and nominations Bad Bunny has received throughout his career."
+            className="mb-12"
+          />
+        </div>
 
         <AwardsShowcase awards={typedAwards} />
+
+        <div className="mt-16">
+          <FAQSection faqs={awardsFAQs} />
+        </div>
       </div>
     </PageTransition>
   );

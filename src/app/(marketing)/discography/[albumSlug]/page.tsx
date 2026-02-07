@@ -4,7 +4,7 @@ import { TrackList } from "@/components/shared/track-list";
 import { FadeIn } from "@/components/animations/fade-in";
 import { AudioFeaturesChart } from "@/components/features/audio-features-chart";
 import { StreamingLinks } from "@/components/features/streaming-links";
-import { AlbumJsonLd } from "@/components/seo/json-ld";
+import { AlbumJsonLd, BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import prisma from "@/lib/prisma";
 import { getAlbumPreviewUrls } from "@/lib/services/spotify";
 import type { Metadata } from "next";
@@ -77,6 +77,13 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
 
   return (
     <PageTransition>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Casita", url: "https://thisisbadbunny.com" },
+          { name: "Discography", url: "https://thisisbadbunny.com/discography" },
+          { name: album.title, url: `https://thisisbadbunny.com/discography/${albumSlug}` },
+        ]}
+      />
       <AlbumJsonLd
         name={album.title}
         year={album.year}

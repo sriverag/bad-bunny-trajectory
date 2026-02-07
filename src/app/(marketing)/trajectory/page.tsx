@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { InteractiveTimeline } from "@/components/features/interactive-timeline";
+import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { prisma } from "@/lib/prisma";
 import type { TimelineEvent } from "@/types/content";
 
@@ -30,6 +31,12 @@ export default async function TrajectoryPage() {
 
   return (
     <PageTransition>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Casita", url: "https://thisisbadbunny.com" },
+          { name: "Career Timeline", url: "https://thisisbadbunny.com/trajectory" },
+        ]}
+      />
       <div className="container py-12 md:py-16 lg:py-20">
         <SectionHeader
           title="Trayectoria"

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { InterviewGrid } from "@/components/features/interview-grid";
+import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/seo/json-ld";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
@@ -22,6 +23,19 @@ export default async function InterviewsPage() {
 
   return (
     <PageTransition>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Casita", url: "https://thisisbadbunny.com" },
+          { name: "Interviews", url: "https://thisisbadbunny.com/interviews" },
+        ]}
+      />
+      <ItemListJsonLd
+        name="Bad Bunny Interviews"
+        items={interviews.map((interview) => ({
+          name: interview.title,
+          url: `https://thisisbadbunny.com/interviews/${interview.slug}`,
+        }))}
+      />
       <div className="container py-12 space-y-12">
         <SectionHeader
           title="Entrevistas"

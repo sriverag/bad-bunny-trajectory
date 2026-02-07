@@ -3,6 +3,14 @@ import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { AlbumCard } from "@/components/shared/album-card";
 import { FadeIn } from "@/components/animations/fade-in";
+import { FAQSection } from "@/components/shared/faq-section";
+import {
+  BreadcrumbJsonLd,
+  FAQJsonLd,
+  ItemListJsonLd,
+  SpeakableJsonLd,
+} from "@/components/seo/json-ld";
+import { discographyFAQs } from "@/lib/faq-data";
 import prisma from "@/lib/prisma";
 
 export const metadata: Metadata = {
@@ -24,13 +32,33 @@ export default async function DiscographyPage() {
 
   return (
     <PageTransition>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Casita", url: "https://thisisbadbunny.com" },
+          { name: "Discography", url: "https://thisisbadbunny.com/discography" },
+        ]}
+      />
+      <FAQJsonLd faqs={discographyFAQs} />
+      <ItemListJsonLd
+        name="Bad Bunny Discography"
+        items={albums.map((album) => ({
+          name: `${album.title} (${album.year})`,
+          url: `https://thisisbadbunny.com/discography/${album.slug}`,
+        }))}
+      />
+      <SpeakableJsonLd
+        url="https://thisisbadbunny.com/discography"
+        cssSelectors={[".speakable-discography-header"]}
+      />
       <div className="container py-12">
-        <SectionHeader
-          title="Discografía"
-          titleEn="Discography"
-          subtitle="Descubre todos los álbumes y canciones de Bad Bunny."
-          subtitleEn="Discover all of Bad Bunny's albums and songs."
-        />
+        <div className="speakable-discography-header">
+          <SectionHeader
+            title="Discografía"
+            titleEn="Discography"
+            subtitle="Descubre todos los álbumes y canciones de Bad Bunny."
+            subtitleEn="Discover all of Bad Bunny's albums and songs."
+          />
+        </div>
 
         <FadeIn className="mt-12">
           <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:gap-8">
@@ -48,6 +76,10 @@ export default async function DiscographyPage() {
               />
             ))}
           </div>
+        </FadeIn>
+
+        <FadeIn className="mt-16">
+          <FAQSection faqs={discographyFAQs} />
         </FadeIn>
       </div>
     </PageTransition>

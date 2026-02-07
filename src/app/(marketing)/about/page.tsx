@@ -5,11 +5,17 @@ import { useLanguage } from "@/hooks/use-language";
 import { SectionHeader } from "@/components/shared/section-header";
 import { StatCounter } from "@/components/shared/stat-counter";
 import { FadeIn } from "@/components/animations/fade-in";
+import { FAQSection } from "@/components/shared/faq-section";
+import {
+  BreadcrumbJsonLd,
+  FAQJsonLd,
+  SpeakableJsonLd,
+} from "@/components/seo/json-ld";
+import { aboutFAQs } from "@/lib/faq-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Music,
-  Trophy,
   TrendingUp,
   Instagram,
   Twitter,
@@ -22,10 +28,21 @@ export default function AboutPage() {
 
   return (
     <PageTransition>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Casita", url: "https://thisisbadbunny.com" },
+          { name: "About", url: "https://thisisbadbunny.com/about" },
+        ]}
+      />
+      <FAQJsonLd faqs={aboutFAQs} />
+      <SpeakableJsonLd
+        url="https://thisisbadbunny.com/about"
+        cssSelectors={[".speakable-about-hero", ".speakable-about-bio"]}
+      />
       <div className="container py-12 space-y-16">
         {/* Hero Section */}
         <FadeIn direction="up">
-          <div className="space-y-4 text-center">
+          <div className="speakable-about-hero space-y-4 text-center">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading text-foreground">
               Benito Antonio Martínez Ocasio
             </h1>
@@ -51,7 +68,7 @@ export default function AboutPage() {
               subtitleEn="The path of a global phenomenon"
             />
 
-            <div className="prose prose-lg max-w-none dark:prose-invert">
+            <div className="speakable-about-bio prose prose-lg max-w-none dark:prose-invert">
               <div className="space-y-6 text-muted-foreground">
                 <p>
                   {t(
@@ -226,8 +243,13 @@ export default function AboutPage() {
           </div>
         </FadeIn>
 
-        {/* About this project */}
+        {/* FAQ Section */}
         <FadeIn direction="up" delay={0.5}>
+          <FAQSection faqs={aboutFAQs} />
+        </FadeIn>
+
+        {/* About this project */}
+        <FadeIn direction="up" delay={0.6}>
           <div className="border-t pt-16">
             <div className="space-y-6 text-center max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold text-foreground">

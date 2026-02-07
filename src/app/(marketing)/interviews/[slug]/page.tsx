@@ -4,8 +4,9 @@ import { PageTransition } from "@/components/layout/page-transition";
 import { VideoEmbed } from "@/components/shared/video-embed";
 import { FadeIn } from "@/components/animations/fade-in";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { BreadcrumbJsonLd, VideoObjectJsonLd } from "@/components/seo/json-ld";
 import { prisma } from "@/lib/prisma";
 import { Calendar, ArrowLeft, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -104,6 +105,19 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
 
   return (
     <PageTransition>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Casita", url: "https://thisisbadbunny.com" },
+          { name: "Interviews", url: "https://thisisbadbunny.com/interviews" },
+          { name: interview.title, url: `https://thisisbadbunny.com/interviews/${slug}` },
+        ]}
+      />
+      <VideoObjectJsonLd
+        name={interview.title}
+        description={interview.description}
+        youtubeId={interview.youtubeId}
+        uploadDate={new Date(interview.date).toISOString()}
+      />
       <div className="container py-12 space-y-12">
         {/* Back Button */}
         <FadeIn direction="up">

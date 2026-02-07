@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { ConcertList } from "@/components/features/concert-list";
+import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/seo/json-ld";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
@@ -44,6 +45,19 @@ export default async function ConcertsPage() {
 
   return (
     <PageTransition>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Casita", url: "https://thisisbadbunny.com" },
+          { name: "Concerts", url: "https://thisisbadbunny.com/concerts" },
+        ]}
+      />
+      <ItemListJsonLd
+        name="Bad Bunny Concerts"
+        items={concerts.slice(0, 50).map((concert) => ({
+          name: `${concert.tourName} — ${concert.venue}, ${concert.city}`,
+          url: "https://thisisbadbunny.com/concerts",
+        }))}
+      />
       <div className="container py-12 space-y-12">
         <SectionHeader
           title="Conciertos"
