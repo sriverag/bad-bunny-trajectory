@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { playSound } from "../lib/sounds";
 
 interface CountdownTimerProps {
   timeLeft: number;
@@ -19,6 +21,15 @@ export function CountdownTimer({
   const strokeDashoffset = circumference * (1 - fraction);
 
   const isUrgent = timeLeft <= 5;
+  const prevTimeLeft = useRef(timeLeft);
+
+  // Play tick sound when time is running low
+  useEffect(() => {
+    if (timeLeft !== prevTimeLeft.current && timeLeft <= 5 && timeLeft > 0) {
+      playSound("timerTick");
+    }
+    prevTimeLeft.current = timeLeft;
+  }, [timeLeft]);
 
   const strokeColor =
     fraction > 0.6

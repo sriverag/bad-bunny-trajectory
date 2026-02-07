@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { Volume2, VolumeX, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/use-language";
 import { MODE_CONFIGS } from "./lib/game-constants";
+import { isMuted, toggleMute } from "./lib/sounds";
 import { CountdownTimer } from "./shared/countdown-timer";
 import { ScoreAnimation } from "./shared/score-animation";
 
@@ -33,6 +34,7 @@ export function GameHud({
   onQuit,
 }: GameHudProps) {
   const { t } = useLanguage();
+  const [sfxMuted, setSfxMuted] = useState(() => isMuted());
   const prevScore = useRef(score);
   const [scoreDelta, setScoreDelta] = useState(0);
   const [showDelta, setShowDelta] = useState(false);
@@ -91,6 +93,17 @@ export function GameHud({
             )}
           >
             <X className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setSfxMuted(toggleMute())}
+            aria-label={sfxMuted ? t("Activar sonido", "Unmute") : t("Silenciar", "Mute")}
+            className={cn(
+              "flex h-8 w-8 items-center justify-center rounded-lg transition-colors",
+              "cursor-pointer bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground",
+            )}
+          >
+            {sfxMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
           </button>
           {ModeIcon && <ModeIcon className="h-5 w-5 text-primary" />}
           <span className="hidden text-sm font-medium text-muted-foreground sm:inline">

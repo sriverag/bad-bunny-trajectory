@@ -12,7 +12,7 @@ export function MusicArtistJsonLd() {
     foundingDate: "2016",
     birthPlace: {
       "@type": "Place",
-      name: "Vega Baja, Puerto Rico",
+      name: "Bayamón, Puerto Rico",
     },
     member: {
       "@type": "Person",
@@ -21,7 +21,7 @@ export function MusicArtistJsonLd() {
       birthDate: "1994-03-10",
       birthPlace: {
         "@type": "Place",
-        name: "Vega Baja, Puerto Rico",
+        name: "Bayamón, Puerto Rico",
       },
       nationality: {
         "@type": "Country",
@@ -33,6 +33,7 @@ export function MusicArtistJsonLd() {
         { "@type": "Occupation", name: "Rapper" },
         { "@type": "Occupation", name: "Songwriter" },
         { "@type": "Occupation", name: "Actor" },
+        { "@type": "Occupation", name: "Wrestler" },
       ],
     },
     sameAs: [
@@ -42,13 +43,18 @@ export function MusicArtistJsonLd() {
       "https://www.youtube.com/@BadBunnyPR",
       "https://music.apple.com/artist/bad-bunny/1126808565",
       "https://en.wikipedia.org/wiki/Bad_Bunny",
+      "https://www.wwe.com/superstars/bad-bunny",
     ],
     award: [
       "Grammy Award for Album of the Year (2026)",
       "Grammy Award for Best Música Urbana Album",
       "Grammy Award for Best Latin Pop or Urban Album",
+      "Grammy Award for Best Global Musical Performance (2026)",
+      "Latin Grammy Award for Album of the Year (2025)",
       "Latin Grammy Award for Best Urban Music Album",
       "Billboard Music Award for Top Latin Artist",
+      "Billboard Latin Music Award for Artist of the Year",
+      "MTV Video Music Award for Artist of the Year (2022)",
     ],
     description:
       "Bad Bunny (Benito Antonio Martínez Ocasio) is a Puerto Rican rapper, singer, and songwriter. Grammy Album of the Year winner for DeBí TiRAR MáS FOToS and Super Bowl LX halftime show headliner.",

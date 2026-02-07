@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/hooks/use-language";
 import { FAN_LEVELS } from "./lib/game-constants";
 import type { FanLevel } from "./lib/game-types";
@@ -88,9 +90,9 @@ export function Leaderboard() {
               key={i}
               className="flex items-center gap-4 rounded-xl border border-border/50 bg-card/80 p-4"
             >
-              <div className="h-6 w-6 animate-pulse rounded-full bg-muted" />
-              <div className="h-4 w-24 animate-pulse rounded bg-muted" />
-              <div className="ml-auto h-4 w-16 animate-pulse rounded bg-muted" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="ml-auto h-4 w-16" />
             </div>
           ))}
         </div>
@@ -115,8 +117,11 @@ export function Leaderboard() {
             const rank = index + 1;
             const isTop3 = rank <= 3;
             return (
-              <div
+              <motion.div
                 key={entry.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05, duration: 0.3 }}
                 className={cn(
                   "flex items-center gap-3 rounded-xl border p-4 transition-colors",
                   isTop3
@@ -154,7 +159,7 @@ export function Leaderboard() {
                 <span className="shrink-0 text-lg font-bold tabular-nums text-foreground">
                   {entry.totalScore.toLocaleString()}
                 </span>
-              </div>
+              </motion.div>
             );
           })}
         </div>

@@ -3,6 +3,7 @@ import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { AlbumCard } from "@/components/shared/album-card";
 import { FadeIn } from "@/components/animations/fade-in";
+import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { FAQSection } from "@/components/shared/faq-section";
 import {
   BreadcrumbJsonLd,
@@ -60,23 +61,25 @@ export default async function DiscographyPage() {
           />
         </div>
 
-        <FadeIn className="mt-12">
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:gap-8">
-            {albums.map((album) => (
-              <AlbumCard
-                key={album.id}
-                album={{
-                  slug: album.slug,
-                  title: album.title,
-                  year: album.year,
-                  coverUrl: album.coverUrl || "",
-                  themeId: album.themeId,
-                  trackCount: album.tracks.length,
-                }}
-              />
-            ))}
-          </div>
-        </FadeIn>
+        <ScrollReveal
+          className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-3 lg:gap-8"
+          stagger
+          staggerDelay={0.08}
+        >
+          {albums.map((album) => (
+            <AlbumCard
+              key={album.id}
+              album={{
+                slug: album.slug,
+                title: album.title,
+                year: album.year,
+                coverUrl: album.coverUrl || "",
+                themeId: album.themeId,
+                trackCount: album.tracks.length,
+              }}
+            />
+          ))}
+        </ScrollReveal>
 
         <FadeIn className="mt-16">
           <FAQSection faqs={discographyFAQs} />

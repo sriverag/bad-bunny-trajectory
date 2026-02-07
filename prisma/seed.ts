@@ -104,7 +104,7 @@ export async function main() {
       description:
         "YHLQMDLG (Yo Hago Lo Que Me Da La Gana) es el segundo álbum de estudio de Bad Bunny. El disco explora desde reggaetón clásico hasta cumbia y dembow.",
       descriptionEn:
-        "YHLQMDLG (I Do Whatever I Want) is Bad Bunny's second studio album. The record explores everything from classic reggaeton to cumbia and dembow.",
+        "YHLQMDLG (Yo Hago Lo Que Me Da La Gana) is Bad Bunny's second studio album. The record explores everything from classic reggaeton to cumbia and dembow.",
       tracks: {
         create: [
           { title: "Si Veo a Tu Mamá", trackNumber: 1, durationMs: 170000, danceability: 0.73, energy: 0.62, valence: 0.65, tempo: 95.0, acousticness: 0.18 },

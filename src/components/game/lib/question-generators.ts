@@ -340,6 +340,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
       labelEn: String(n),
       value: String(n),
     }));
+    const tourConcerts = pastConcerts.filter((c) => c.tourName === tour);
     questions.push({
       mode: "world-tour",
       id: qid(),
@@ -351,6 +352,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
         : `How many shows did the ${tour} have?`,
       correctAnswer: String(stats.shows),
       options,
+      highlightCoords: tourConcerts.map((c) => ({ lat: c.lat, lng: c.lng })),
     });
   }
 
@@ -365,6 +367,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
       labelEn: String(n),
       value: String(n),
     }));
+    const tourConcertsForCountry = pastConcerts.filter((c) => c.tourName === tour);
     questions.push({
       mode: "world-tour",
       id: qid(),
@@ -376,6 +379,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
         : `How many countries did the ${tour} visit?`,
       correctAnswer: String(stats.countryCount),
       options,
+      highlightCoords: tourConcertsForCountry.map((c) => ({ lat: c.lat, lng: c.lng })),
     });
   }
 
@@ -397,6 +401,9 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
         labelEn: t,
         value: t,
       }));
+      const countryConcerts = pastConcerts.filter(
+        (c) => c.country === item.country && c.tourName === correctTour
+      );
       questions.push({
         mode: "world-tour",
         id: qid(),
@@ -404,6 +411,7 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
         textEn: `Which tour performed in ${item.country}?`,
         correctAnswer: correctTour,
         options,
+        highlightCoords: countryConcerts.map((c) => ({ lat: c.lat, lng: c.lng })),
       });
     }
   }
