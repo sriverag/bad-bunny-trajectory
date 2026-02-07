@@ -22,6 +22,7 @@ const CEREMONY_CONFIG: Record<AwardCeremony, { label: string; color: string; bg:
   BILLBOARD: { label: "Billboard", color: "text-blue-600", bg: "bg-blue-600/10" },
   MTV: { label: "MTV", color: "text-purple-600", bg: "bg-purple-600/10" },
   AMERICAN_MUSIC: { label: "American Music Awards", color: "text-red-600", bg: "bg-red-600/10" },
+  WWE: { label: "WWE", color: "text-green-600", bg: "bg-green-600/10" },
   OTHER: { label: "Otro", color: "text-gray-600", bg: "bg-gray-600/10" },
 };
 
@@ -41,6 +42,7 @@ export function AwardsShowcase({ awards }: AwardsShowcaseProps) {
       latinGrammyWon: won.filter(a => a.ceremony === "LATIN_GRAMMY").length,
       billboardWon: won.filter(a => a.ceremony === "BILLBOARD").length,
       mtvWon: won.filter(a => a.ceremony === "MTV").length,
+      wweWon: won.filter(a => a.ceremony === "WWE").length,
     };
   }, [awards]);
 
@@ -60,20 +62,21 @@ export function AwardsShowcase({ awards }: AwardsShowcaseProps) {
     });
   }, [awards, selectedCeremony, selectedResult, selectedYear]);
 
-  const ceremonies: Array<AwardCeremony | "ALL"> = ["ALL", "GRAMMY", "LATIN_GRAMMY", "BILLBOARD", "MTV", "AMERICAN_MUSIC", "OTHER"];
+  const ceremonies: Array<AwardCeremony | "ALL"> = ["ALL", "GRAMMY", "LATIN_GRAMMY", "BILLBOARD", "MTV", "AMERICAN_MUSIC", "WWE", "OTHER"];
   const results: Array<AwardResult | "ALL"> = ["ALL", "WON", "NOMINATED"];
 
   return (
     <div className="space-y-12">
       {/* Hero Stats Section */}
       <FadeIn direction="up">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 p-8 bg-gradient-to-br from-primary/10 to-accent-1/10 rounded-2xl border">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6 p-8 bg-gradient-to-br from-primary/10 to-accent-1/10 rounded-2xl border">
           <StatCounter value={stats.won} label={t("Premios Ganados", "Awards Won")} />
           <StatCounter value={stats.total} label={t("Nominaciones Totales", "Total Nominations")} />
           <StatCounter value={stats.grammyWon} label="Grammys" />
           <StatCounter value={stats.latinGrammyWon} label="Latin Grammys" />
           <StatCounter value={stats.billboardWon} label="Billboard" />
           <StatCounter value={stats.mtvWon} label="MTV" />
+          <StatCounter value={stats.wweWon} label="WWE" />
         </div>
       </FadeIn>
 

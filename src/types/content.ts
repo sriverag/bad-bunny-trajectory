@@ -41,6 +41,7 @@ export type AwardCeremony =
   | "BILLBOARD"
   | "MTV"
   | "AMERICAN_MUSIC"
+  | "WWE"
   | "OTHER";
 
 export type AwardResult = "WON" | "NOMINATED";

@@ -415,6 +415,9 @@ export async function main() {
       { title: "Favorite Male Latin Artist", ceremony: "AMERICAN_MUSIC", category: "Favorite Male Latin Artist", year: 2025, result: "WON" },
       { title: "Favorite Latin Album - DeBí TiRAR MáS FOToS", ceremony: "AMERICAN_MUSIC", category: "Favorite Latin Album", year: 2025, result: "WON" },
 
+      // ── WWE ────────────────────────────────────────────────────
+      { title: "Bad Bunny", ceremony: "WWE", category: "24/7 Championship", year: 2021, result: "WON" },
+
       // ── Other Awards ───────────────────────────────────────────
       { title: "Most Streamed Artist on Spotify (2020)", ceremony: "OTHER", category: "Most Streamed Artist on Spotify", year: 2020, result: "WON" },
       { title: "Most Streamed Artist on Spotify (2021)", ceremony: "OTHER", category: "Most Streamed Artist on Spotify", year: 2021, result: "WON" },
