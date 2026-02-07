@@ -1,3 +1,5 @@
+import type { FAQItem } from "@/lib/faq-data";
+
 export function MusicArtistJsonLd() {
   const schema = {
     "@context": "https://schema.org",
@@ -7,9 +9,31 @@ export function MusicArtistJsonLd() {
     url: "https://thisisbadbunny.com",
     image: "https://thisisbadbunny.com/images/og-image.jpg",
     genre: ["Reggaeton", "Latin Trap", "Latin Pop", "Musica Urbana"],
+    foundingDate: "2016",
     birthPlace: {
       "@type": "Place",
       name: "Vega Baja, Puerto Rico",
+    },
+    member: {
+      "@type": "Person",
+      name: "Benito Antonio Martínez Ocasio",
+      alternateName: "Bad Bunny",
+      birthDate: "1994-03-10",
+      birthPlace: {
+        "@type": "Place",
+        name: "Vega Baja, Puerto Rico",
+      },
+      nationality: {
+        "@type": "Country",
+        name: "Puerto Rico",
+      },
+      knowsLanguage: ["es", "en"],
+      hasOccupation: [
+        { "@type": "Occupation", name: "Singer" },
+        { "@type": "Occupation", name: "Rapper" },
+        { "@type": "Occupation", name: "Songwriter" },
+        { "@type": "Occupation", name: "Actor" },
+      ],
     },
     sameAs: [
       "https://open.spotify.com/artist/4q3ewBCX7sLwd24euuV69X",
@@ -149,6 +173,153 @@ export function ConcertJsonLd({
         availability: "https://schema.org/SoldOut",
       },
     }),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// --- New GEO components ---
+
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+export function BreadcrumbJsonLd({ items }: { items: BreadcrumbItem[] }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function FAQJsonLd({ faqs }: { faqs: FAQItem[] }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+interface VideoObjectJsonLdProps {
+  name: string;
+  description: string;
+  youtubeId: string;
+  uploadDate: string;
+  duration?: string;
+}
+
+export function VideoObjectJsonLd({
+  name,
+  description,
+  youtubeId,
+  uploadDate,
+  duration,
+}: VideoObjectJsonLdProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name,
+    description,
+    thumbnailUrl: `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`,
+    uploadDate,
+    contentUrl: `https://www.youtube.com/watch?v=${youtubeId}`,
+    embedUrl: `https://www.youtube.com/embed/${youtubeId}`,
+    ...(duration && { duration }),
+    publisher: {
+      "@type": "Organization",
+      name: "This is Bad Bunny",
+      url: "https://thisisbadbunny.com",
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+interface ItemListItem {
+  name: string;
+  url: string;
+}
+
+export function ItemListJsonLd({
+  name,
+  items,
+}: {
+  name: string;
+  items: ItemListItem[];
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    numberOfItems: items.length,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function SpeakableJsonLd({
+  url,
+  cssSelectors,
+}: {
+  url: string;
+  cssSelectors: string[];
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: cssSelectors,
+    },
   };
 
   return (
