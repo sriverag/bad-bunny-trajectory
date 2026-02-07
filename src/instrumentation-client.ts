@@ -6,5 +6,6 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "production" && ke
   posthog.init(key, {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
     defaults: "2025-11-30",
+    person_profiles: "always",
   });
 }
