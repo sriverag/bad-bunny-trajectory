@@ -80,6 +80,7 @@ function getThemeGradient(themeId: ThemeId): string {
     "verano": "linear-gradient(135deg, #4ecdc4 0%, #ff6b35 50%, #ff8a80 100%)",
     "ultimo-tour": "linear-gradient(135deg, #e63946 0%, #ff8c42 50%, #ffba08 100%)",
     "yhlqmdlg": "linear-gradient(135deg, #ff2d95 0%, #a855f7 50%, #ffd700 100%)",
+    "oasis": "linear-gradient(135deg, #00d4aa 0%, #ff6b9d 50%, #ffd93d 100%)",
     "x100pre": "linear-gradient(135deg, #ff6b35 0%, #ff1493 50%, #39ff14 100%)",
   };
 

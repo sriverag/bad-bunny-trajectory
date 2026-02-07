@@ -1,5 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Space_Grotesk,
+  Inter,
+  Oswald,
+  Barlow_Condensed,
+  Anton,
+  Archivo,
+  Baloo_2,
+  Nunito,
+  Playfair_Display,
+  Source_Serif_4,
+  Caveat,
+  Karla,
+  Montserrat,
+  Work_Sans,
+} from "next/font/google";
 import { cookies } from "next/headers";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { LanguageProvider } from "@/components/layout/language-provider";
@@ -17,6 +34,120 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Theme display fonts
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "700"],
+});
+
+const oswald = Oswald({
+  variable: "--font-oswald",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["700"],
+});
+
+const anton = Anton({
+  variable: "--font-anton",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400"],
+});
+
+const baloo2 = Baloo_2({
+  variable: "--font-baloo-2",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["500", "700", "800"],
+});
+
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair-display",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "700", "900"],
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "700"],
+});
+
+// Theme body fonts
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600"],
+});
+
+const barlowCondensed = Barlow_Condensed({
+  variable: "--font-barlow-condensed",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600", "700"],
+});
+
+const archivo = Archivo({
+  variable: "--font-archivo",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600", "700"],
+});
+
+const nunito = Nunito({
+  variable: "--font-nunito",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600", "700"],
+});
+
+const sourceSerif4 = Source_Serif_4({
+  variable: "--font-source-serif-4",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600"],
+});
+
+const karla = Karla({
+  variable: "--font-karla",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600", "700"],
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "700", "900"],
+});
+
+const workSans = Work_Sans({
+  variable: "--font-work-sans",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -38,7 +169,7 @@ export default async function RootLayout({
   return (
     <html lang={language} data-theme={theme}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${inter.variable} ${oswald.variable} ${barlowCondensed.variable} ${anton.variable} ${archivo.variable} ${baloo2.variable} ${nunito.variable} ${playfairDisplay.variable} ${sourceSerif4.variable} ${caveat.variable} ${karla.variable} ${montserrat.variable} ${workSans.variable} antialiased`}
       >
         <ThemeProvider defaultTheme={theme}>
           <LanguageProvider defaultLanguage={language}>

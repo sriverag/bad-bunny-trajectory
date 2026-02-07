@@ -142,7 +142,7 @@ export function Navbar() {
 
                 <button
                   onClick={toggleLanguage}
-                  className="flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium text-foreground bg-accent hover:bg-accent/80 transition-colors"
+                  className="flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium text-accent-foreground bg-accent hover:bg-accent/80 transition-colors"
                   aria-label={t("Cambiar idioma", "Toggle language")}
                 >
                   <span>{t("Idioma", "Language")}</span>

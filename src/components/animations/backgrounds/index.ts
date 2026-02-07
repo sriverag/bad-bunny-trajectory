@@ -6,3 +6,4 @@ export { UltimoTourBg } from "./ultimo-tour-bg";
 export { VeranoBg } from "./verano-bg";
 export { NadieSabeBg } from "./nadie-sabe-bg";
 export { DebiTirarBg } from "./debi-tirar-bg";
+export { OasisBg } from "./oasis-bg";

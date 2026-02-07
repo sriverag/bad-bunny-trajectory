@@ -153,7 +153,7 @@ export function HeroSection() {
               This is
             </p>
             <h1
-              className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter bg-clip-text text-transparent animate-gradient-shift"
+              className="text-7xl md:text-8xl lg:text-9xl font-heading tracking-tighter bg-clip-text text-transparent animate-gradient-shift"
               style={{
                 backgroundImage:
                   "linear-gradient(90deg, var(--theme-accent-1), var(--theme-accent-2), var(--theme-accent-3), var(--theme-accent-1))",

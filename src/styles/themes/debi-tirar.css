@@ -12,7 +12,7 @@ html[data-theme="debi-tirar"] {
   --secondary-foreground: #2d1f14;
   --muted: #e8e1d8;
   --muted-foreground: #6b5d52;
-  --accent: #c17840;
+  --accent: #8a7356;
   --accent-foreground: #faf8f5;
   --destructive: #b91c1c;
   --destructive-foreground: #faf8f5;
@@ -23,8 +23,17 @@ html[data-theme="debi-tirar"] {
 
   /* Theme-specific extras */
   --theme-accent-1: #2d6a4f;
-  --theme-accent-2: #c17840;
-  --theme-accent-3: #b8960c;
+  --theme-accent-2: #8a7356;
+  --theme-accent-3: #8aad3e;
   --theme-glow: rgba(45, 106, 79, 0.15);
-  --theme-gradient: linear-gradient(135deg, #2d6a4f 0%, #c17840 50%, #b8960c 100%);
+  --theme-gradient: linear-gradient(135deg, #2d6a4f 0%, #8a7356 50%, #8aad3e 100%);
+
+  /* Typography */
+  --theme-font-display: var(--font-caveat), cursive;
+  --theme-font-body: var(--font-karla), sans-serif;
+  --theme-heading-weight: 700;
+  --theme-heading-tracking: 0;
+  --theme-heading-transform: none;
+  --theme-body-weight: 400;
+  --theme-body-tracking: 0;
 }

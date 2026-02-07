@@ -26,10 +26,10 @@ export default function AboutPage() {
         {/* Hero Section */}
         <FadeIn direction="up">
           <div className="space-y-4 text-center">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading text-foreground">
               Benito Antonio Martínez Ocasio
             </h1>
-            <p className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary">
+            <p className="text-3xl md:text-4xl lg:text-5xl font-heading text-primary">
               Bad Bunny
             </p>
             <div className="flex flex-wrap justify-center gap-2 mt-6">
@@ -125,7 +125,7 @@ export default function AboutPage() {
         {/* Key Stats */}
         <FadeIn direction="up" delay={0.3}>
           <div className="space-y-8">
-            <h3 className="text-2xl font-bold text-foreground text-center">
+            <h3 className="text-2xl font-heading text-foreground text-center">
               {t("Logros destacados", "Key Achievements")}
             </h3>
 
@@ -149,7 +149,7 @@ export default function AboutPage() {
         {/* Social & Streaming Links */}
         <FadeIn direction="up" delay={0.4}>
           <div className="space-y-8">
-            <h3 className="text-2xl font-bold text-foreground text-center">
+            <h3 className="text-2xl font-heading text-foreground text-center">
               {t("Síguelo y escúchalo", "Follow and Listen")}
             </h3>
 

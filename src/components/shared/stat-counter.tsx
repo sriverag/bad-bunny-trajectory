@@ -20,7 +20,7 @@ export function StatCounter({
 }: StatCounterProps) {
   return (
     <div className={cn("flex flex-col items-center text-center", className)}>
-      <div className="text-4xl font-bold text-primary md:text-5xl lg:text-6xl">
+      <div className="text-4xl font-heading text-primary md:text-5xl lg:text-6xl">
         <CountUp
           end={value}
           duration={2.5}
