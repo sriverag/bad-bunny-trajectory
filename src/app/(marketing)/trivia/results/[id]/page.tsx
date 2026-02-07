@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const MODE_LABELS: Record<string, string> = {
-  awards: "Awards Trivia",
+  awards: "My Trophy Case",
   "audio-dna": "Audio DNA",
   timeline: "Timeline Builder",
   "world-tour": "World Tour",

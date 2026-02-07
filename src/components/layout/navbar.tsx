@@ -157,7 +157,7 @@ export function Navbar() {
                         href={link.href}
                         onClick={() => setMoreOpen(false)}
                         className={cn(
-                          "block rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-primary",
+                          "block rounded-md px-3 py-2 text-sm font-medium transition-all hover:bg-accent/50 hover:text-primary",
                           isActive
                             ? "text-primary bg-primary/10"
                             : "text-muted-foreground",

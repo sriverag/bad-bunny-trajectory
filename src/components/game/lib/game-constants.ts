@@ -42,8 +42,8 @@ export function getFanLevelConfig(level: FanLevel): FanLevelConfig {
 export const MODE_CONFIGS: ModeConfig[] = [
   {
     mode: "awards",
-    titleEs: "Premios Trivia",
-    titleEn: "Awards Trivia",
+    titleEs: "Mi Trophy Case",
+    titleEn: "My Trophy Case",
     descriptionEs: "Demuestra cuanto sabes sobre los premios de Bad Bunny",
     descriptionEn: "Show how much you know about Bad Bunny's awards",
     icon: Trophy,

@@ -50,7 +50,7 @@ function useCountUp(end: number, duration = 2000): number {
 }
 
 const MODE_LABELS: Record<string, { es: string; en: string }> = {
-  awards: { es: "Premios Trivia", en: "Awards Trivia" },
+  awards: { es: "Mi Trophy Case", en: "My Trophy Case" },
   "audio-dna": { es: "ADN Musical", en: "Audio DNA" },
   timeline: { es: "Linea Temporal", en: "Timeline Builder" },
   "world-tour": { es: "Gira Mundial", en: "World Tour" },
