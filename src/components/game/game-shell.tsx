@@ -59,15 +59,8 @@ export function GameShell({ albums, awards, timelineEvents, concerts }: GameShel
     answerQuestion,
     nextQuestion,
     finishMode,
-    finishGame,
     reset,
   } = useGameState();
-
-  // Track which modes have been completed
-  const completedModes = useMemo(
-    () => state.modeResults.map((r) => r.mode),
-    [state.modeResults],
-  );
 
   // Timer time depends on the active mode
   const timerSeconds = state.activeMode === "timeline" ? TIMELINE_ROUND_TIME : QUESTION_TIME;
@@ -136,10 +129,6 @@ export function GameShell({ albums, awards, timelineEvents, concerts }: GameShel
     timer.pause();
     finishMode();
   }, [timer, finishMode]);
-
-  const handleFinishGame = useCallback(() => {
-    finishGame();
-  }, [finishGame]);
 
   const handlePlayAgain = useCallback(() => {
     reset();
@@ -234,9 +223,6 @@ export function GameShell({ albums, awards, timelineEvents, concerts }: GameShel
           >
             <GameMenu
               onSelectMode={handleSelectMode}
-              onFinishGame={handleFinishGame}
-              completedModes={completedModes}
-              totalScore={state.score}
             />
           </motion.div>
         )}

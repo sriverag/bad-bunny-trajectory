@@ -9,19 +9,12 @@ import { MODE_CONFIGS } from "./lib/game-constants";
 
 interface GameMenuProps {
   onSelectMode: (mode: GameMode) => void;
-  onFinishGame: () => void;
-  completedModes: GameMode[];
-  totalScore: number;
 }
 
 export function GameMenu({
   onSelectMode,
-  onFinishGame,
-  completedModes,
-  totalScore,
 }: GameMenuProps) {
   const { t } = useLanguage();
-  const hasCompletedAny = completedModes.length > 0;
 
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center px-4 py-12">
@@ -41,15 +34,6 @@ export function GameMenu({
             "Show how much you know about Bad Bunny",
           )}
         </p>
-        {hasCompletedAny && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-3 text-sm font-semibold text-primary tabular-nums"
-          >
-            {t("Puntuacion Total", "Total Score")}: {totalScore.toLocaleString()}
-          </motion.p>
-        )}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -70,99 +54,65 @@ export function GameMenu({
 
       {/* Mode cards grid */}
       <div className="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-        {MODE_CONFIGS.map((config, index) => {
-          const isCompleted = completedModes.includes(config.mode);
+        {MODE_CONFIGS.map((config, index) => (
+          <motion.button
+            key={config.mode}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20,
+              delay: index * 0.1,
+            }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => onSelectMode(config.mode)}
+            className={cn(
+              "relative flex flex-col items-start gap-2 rounded-2xl border border-border/50",
+              "bg-card/80 p-5 text-left backdrop-blur-md",
+              "transition-colors hover:border-primary/50 hover:bg-primary/5",
+            )}
+          >
+            {/* Icon */}
+            <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
+              <config.icon className="h-6 w-6" />
+            </div>
 
-          return (
-            <motion.button
-              key={config.mode}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 20,
-                delay: index * 0.1,
-              }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => onSelectMode(config.mode)}
-              disabled={isCompleted}
-              className={cn(
-                "relative flex flex-col items-start gap-2 rounded-2xl border border-border/50",
-                "bg-card/80 p-5 text-left backdrop-blur-md",
-                "transition-colors",
-                isCompleted
-                  ? "cursor-not-allowed opacity-60"
-                  : "hover:border-primary/50 hover:bg-primary/5",
-              )}
-            >
-              {/* Completed overlay */}
-              {isCompleted && (
-                <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-background/60 backdrop-blur-sm">
-                  <span className="text-3xl">&#10003;</span>
-                </div>
-              )}
+            {/* Title */}
+            <h3 className="text-lg font-heading text-foreground">
+              {t(config.titleEs, config.titleEn)}
+            </h3>
 
-              {/* Icon */}
-              <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
-                <config.icon className="h-6 w-6" />
-              </div>
+            {/* Description */}
+            <p className="text-sm text-muted-foreground">
+              {t(config.descriptionEs, config.descriptionEn)}
+            </p>
 
-              {/* Title */}
-              <h3 className="text-lg font-heading text-foreground">
-                {t(config.titleEs, config.titleEn)}
-              </h3>
-
-              {/* Description */}
-              <p className="text-sm text-muted-foreground">
-                {t(config.descriptionEs, config.descriptionEn)}
-              </p>
-
-              {/* Difficulty dots */}
-              <div className="mt-1 flex items-center gap-1">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <span
-                    key={i}
-                    className={cn(
-                      "h-2 w-2 rounded-full",
-                      i < config.difficulty
-                        ? "bg-primary"
-                        : "bg-muted-foreground/20",
-                    )}
-                  />
-                ))}
-                <span className="ml-2 text-xs text-muted-foreground">
-                  {config.difficulty === 1
-                    ? t("Facil", "Easy")
-                    : config.difficulty === 2
-                      ? t("Medio", "Medium")
-                      : t("Dificil", "Hard")}
-                </span>
-              </div>
-            </motion.button>
-          );
-        })}
+            {/* Difficulty dots */}
+            <div className="mt-1 flex items-center gap-1">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <span
+                  key={i}
+                  className={cn(
+                    "h-2 w-2 rounded-full",
+                    i < config.difficulty
+                      ? "bg-primary"
+                      : "bg-muted-foreground/20",
+                  )}
+                />
+              ))}
+              <span className="ml-2 text-xs text-muted-foreground">
+                {config.difficulty === 1
+                  ? t("Facil", "Easy")
+                  : config.difficulty === 2
+                    ? t("Medio", "Medium")
+                    : t("Dificil", "Hard")}
+              </span>
+            </div>
+          </motion.button>
+        ))}
       </div>
-
-      {/* See Results button */}
-      {hasCompletedAny && (
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, type: "spring", stiffness: 260, damping: 20 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onFinishGame}
-          className={cn(
-            "mt-8 rounded-full px-8 py-3",
-            "bg-primary font-semibold text-primary-foreground",
-            "shadow-lg transition-shadow hover:shadow-xl",
-          )}
-        >
-          {t("Ver Resultados", "See Results")}
-        </motion.button>
-      )}
     </div>
   );
 }

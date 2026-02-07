@@ -62,7 +62,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       };
       return {
         ...state,
-        screen: "menu",
+        screen: "game-over",
         activeMode: null,
         modeResults: [...state.modeResults, modeResult],
       };
