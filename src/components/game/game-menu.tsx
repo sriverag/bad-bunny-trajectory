@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/use-language";
@@ -32,7 +33,7 @@ export function GameMenu({
         className="mb-8 text-center"
       >
         <h1 className="text-4xl font-heading text-foreground md:text-5xl lg:text-6xl">
-          La Trayectoria
+          La Prueba
         </h1>
         <p className="mt-2 text-muted-foreground md:text-lg">
           {t(
@@ -49,6 +50,22 @@ export function GameMenu({
             {t("Puntuacion Total", "Total Score")}: {totalScore.toLocaleString()}
           </motion.p>
         )}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="mt-4"
+        >
+          <Link
+            href="/trivia/leaderboard"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 21h8M12 17v4M7 4h10l1 8H6L7 4zM12 4v8M6 12l-2 5h16l-2-5" />
+            </svg>
+            {t("Ver Leaderboard", "View Leaderboard")}
+          </Link>
+        </motion.div>
       </motion.div>
 
       {/* Mode cards grid */}
