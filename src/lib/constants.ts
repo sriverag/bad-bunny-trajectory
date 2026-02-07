@@ -15,6 +15,7 @@ export const NAV_LINKS = [
   { href: "/interviews", labelEs: "Entrevistas", labelEn: "Interviews" },
 
   { href: "/concerts", labelEs: "Conciertos", labelEn: "Concerts" },
+  { href: "/trivia", labelEs: "Trivia", labelEn: "Trivia" },
   { href: "/about", labelEs: "Sobre", labelEn: "About" },
 ] as const;
 
