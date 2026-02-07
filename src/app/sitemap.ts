@@ -4,14 +4,6 @@ import { prisma } from "@/lib/prisma";
 const BASE_URL = "https://thisisbadbunny.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const albums = await prisma.album.findMany({
-    select: { slug: true, updatedAt: true },
-  });
-
-  const interviews = await prisma.interview.findMany({
-    select: { slug: true, date: true },
-  });
-
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
@@ -57,21 +49,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const albumPages: MetadataRoute.Sitemap = albums.map((album) => ({
-    url: `${BASE_URL}/discography/${album.slug}`,
-    lastModified: album.updatedAt,
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
+  try {
+    const [albums, interviews] = await Promise.all([
+      prisma.album.findMany({ select: { slug: true, updatedAt: true } }),
+      prisma.interview.findMany({ select: { slug: true, date: true } }),
+    ]);
 
-  const interviewPages: MetadataRoute.Sitemap = interviews.map(
-    (interview) => ({
-      url: `${BASE_URL}/interviews/${interview.slug}`,
-      lastModified: interview.date,
-      changeFrequency: "yearly" as const,
-      priority: 0.6,
-    })
-  );
+    const albumPages: MetadataRoute.Sitemap = albums.map((album) => ({
+      url: `${BASE_URL}/discography/${album.slug}`,
+      lastModified: album.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
 
-  return [...staticPages, ...albumPages, ...interviewPages];
+    const interviewPages: MetadataRoute.Sitemap = interviews.map(
+      (interview) => ({
+        url: `${BASE_URL}/interviews/${interview.slug}`,
+        lastModified: interview.date,
+        changeFrequency: "yearly" as const,
+        priority: 0.6,
+      })
+    );
+
+    return [...staticPages, ...albumPages, ...interviewPages];
+  } catch {
+    return staticPages;
+  }
 }
