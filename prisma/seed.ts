@@ -987,6 +987,18 @@ export async function main() {
         tags: "in-depth,puerto-rico,residency",
         language: "en",
       },
+      {
+        slug: "super-bowl-lx-press-conference-2026",
+        title: "Bad Bunny | Conferencia de prensa del Apple Music Super Bowl LX Halftime Show",
+        titleEn: "Bad Bunny | Apple Music Super Bowl LX Halftime Show Press Conference",
+        outlet: "Apple Music",
+        date: new Date("2026-02-05"),
+        youtubeId: "--rR8vMXVII",
+        description: "Bad Bunny se une a Ebro Darden y Zane Lowe en San Francisco para reflexionar sobre su trayectoria musical y adelantar lo que los fans pueden esperar del show de medio tiempo del Super Bowl LX.",
+        descriptionEn: "Bad Bunny joins Ebro Darden and Zane Lowe in San Francisco to reflect on his journey in music and preview what fans can expect from the Super Bowl LX Halftime Show.",
+        tags: "super-bowl,halftime,press-conference,apple-music",
+        language: "en",
+      },
     ],
   });
 
