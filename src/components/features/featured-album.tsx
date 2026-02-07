@@ -112,7 +112,9 @@ export function FeaturedAlbum() {
             {t("Álbum Destacado", "Featured Album")}
           </h2>
           <div className="flex justify-center mb-16">
-            <ThemeSwitcher />
+            <div className="max-w-md w-full">
+              <ThemeSwitcher />
+            </div>
           </div>
         </FadeIn>
 
@@ -129,12 +131,6 @@ export function FeaturedAlbum() {
                     src={album.coverUrl}
                     alt={album.title}
                     className="h-full w-full object-cover"
-                    onError={(e) => {
-                      // Fallback to gradient if image not found
-                      const target = e.currentTarget;
-                      target.style.display = "none";
-                      target.parentElement?.classList.add("flex", "items-center", "justify-center");
-                    }}
                   />
                   {/* Fallback play icon (visible when image fails) */}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
