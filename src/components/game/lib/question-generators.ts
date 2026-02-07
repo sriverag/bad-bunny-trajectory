@@ -283,7 +283,11 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
   const questions: WorldTourQuestion[] = [];
   const tours = [...new Set(concerts.map((c) => c.tourName))];
 
-  // Pre-compute per-tour stats
+  // Filter to past concerts only for computing stats
+  const now = new Date();
+  const pastConcerts = concerts.filter((c) => new Date(c.date) <= now);
+
+  // Pre-compute per-tour stats using only past concerts
   const tourStats = new Map<string, {
     shows: number;
     countries: string[];
@@ -294,13 +298,14 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
   }>();
 
   for (const tour of tours) {
-    const tourConcerts = concerts.filter((c) => c.tourName === tour);
-    const tourCountries = [...new Set(tourConcerts.map((c) => c.country))];
-    const soldOut = tourConcerts.filter((c) => c.soldOut).length;
-    const totalCap = tourConcerts.reduce((sum, c) => sum + (c.capacity ?? 0), 0);
-    const year = new Date(tourConcerts[0].date).getFullYear();
+    const tourPastConcerts = pastConcerts.filter((c) => c.tourName === tour);
+    if (tourPastConcerts.length === 0) continue; // skip tours with no past shows
+    const tourCountries = [...new Set(tourPastConcerts.map((c) => c.country))];
+    const soldOut = tourPastConcerts.filter((c) => c.soldOut).length;
+    const totalCap = tourPastConcerts.reduce((sum, c) => sum + (c.capacity ?? 0), 0);
+    const year = new Date(tourPastConcerts[0].date).getFullYear();
     tourStats.set(tour, {
-      shows: tourConcerts.length,
+      shows: tourPastConcerts.length,
       countries: tourCountries,
       countryCount: tourCountries.length,
       soldOutCount: soldOut,
@@ -309,12 +314,25 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
     });
   }
 
+  // Detect in-progress tours (have both past and future shows)
+  const futureTourNames = new Set(
+    concerts.filter((c) => new Date(c.date) > now).map((c) => c.tourName)
+  );
+  const inProgressTours = new Set(
+    tours.filter((t) => tourStats.has(t) && futureTourNames.has(t))
+  );
+
+  // Use all concerts for country pool (wrong options), but pastConcerts for stats
   const allCountries = [...new Set(concerts.map((c) => c.country))];
   const allYears = [...new Set([...tourStats.values()].map((s) => s.year))];
 
+  // Only generate questions for tours that have stats (past shows)
+  const toursWithStats = tours.filter((t) => tourStats.has(t));
+
   // Type 1: Tour show count
-  for (const tour of pickRandom(tours, 2)) {
+  for (const tour of pickRandom(toursWithStats, 2)) {
     const stats = tourStats.get(tour)!;
+    const ip = inProgressTours.has(tour);
     const wrong = generateWrongNumbers(stats.shows, 3);
     const options: QuestionOption[] = shuffle([stats.shows, ...wrong]).map((n) => ({
       id: oid(),
@@ -325,16 +343,21 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
     questions.push({
       mode: "world-tour",
       id: qid(),
-      textEs: `¿Cuántos shows tuvo el ${tour}?`,
-      textEn: `How many shows did the ${tour} have?`,
+      textEs: ip
+        ? `¿Cuántos shows ha tenido el ${tour} hasta ahora?`
+        : `¿Cuántos shows tuvo el ${tour}?`,
+      textEn: ip
+        ? `How many shows has the ${tour} had so far?`
+        : `How many shows did the ${tour} have?`,
       correctAnswer: String(stats.shows),
       options,
     });
   }
 
   // Type 2: Tour country reach
-  for (const tour of pickRandom(tours, 2)) {
+  for (const tour of pickRandom(toursWithStats, 2)) {
     const stats = tourStats.get(tour)!;
+    const ip = inProgressTours.has(tour);
     const wrong = generateWrongNumbers(stats.countryCount, 3);
     const options: QuestionOption[] = shuffle([stats.countryCount, ...wrong]).map((n) => ({
       id: oid(),
@@ -345,25 +368,29 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
     questions.push({
       mode: "world-tour",
       id: qid(),
-      textEs: `¿Cuántos países visitó el ${tour}?`,
-      textEn: `How many countries did the ${tour} visit?`,
+      textEs: ip
+        ? `¿Cuántos países ha visitado el ${tour} hasta ahora?`
+        : `¿Cuántos países visitó el ${tour}?`,
+      textEn: ip
+        ? `How many countries has the ${tour} visited so far?`
+        : `How many countries did the ${tour} visit?`,
       correctAnswer: String(stats.countryCount),
       options,
     });
   }
 
   // Type 3: Which tour visited country
-  if (tours.length >= 4) {
+  if (toursWithStats.length >= 4) {
     const countriesWithTours = allCountries.map((country) => ({
       country,
-      tours: tours.filter((t) =>
+      tours: toursWithStats.filter((t) =>
         tourStats.get(t)!.countries.includes(country)
       ),
-    })).filter((c) => c.tours.length > 0 && c.tours.length < tours.length);
+    })).filter((c) => c.tours.length > 0 && c.tours.length < toursWithStats.length);
 
     for (const item of pickRandom(countriesWithTours, 2)) {
       const correctTour = pickRandom(item.tours, 1)[0];
-      const wrong = generateWrongOptions(correctTour, tours, 3);
+      const wrong = generateWrongOptions(correctTour, toursWithStats, 3);
       const options: QuestionOption[] = shuffle([correctTour, ...wrong]).map((t) => ({
         id: oid(),
         labelEs: t,
@@ -382,9 +409,10 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
   }
 
   // Type 4: Tour NOT in country
-  if (tours.length >= 2 && allCountries.length >= 4) {
-    for (const tour of pickRandom(tours, 2)) {
+  if (toursWithStats.length >= 2 && allCountries.length >= 4) {
+    for (const tour of pickRandom(toursWithStats, 2)) {
       const stats = tourStats.get(tour)!;
+      const ip = inProgressTours.has(tour);
       const visitedSet = new Set(stats.countries);
       const notVisited = allCountries.filter((c) => !visitedSet.has(c));
       if (notVisited.length === 0) continue;
@@ -401,8 +429,12 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
       questions.push({
         mode: "world-tour",
         id: qid(),
-        textEs: `¿En cuál país NO se presentó el ${tour}?`,
-        textEn: `Which country did the ${tour} NOT visit?`,
+        textEs: ip
+          ? `¿En cuál país NO se ha presentado el ${tour} hasta ahora?`
+          : `¿En cuál país NO se presentó el ${tour}?`,
+        textEn: ip
+          ? `Which country has the ${tour} NOT visited yet?`
+          : `Which country did the ${tour} NOT visit?`,
         correctAnswer: correctCountry,
         options,
       });
@@ -410,9 +442,10 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
   }
 
   // Type 5: Sold-out count
-  const toursWithSoldOut = tours.filter((t) => tourStats.get(t)!.soldOutCount > 0);
-  for (const tour of pickRandom(toursWithSoldOut.length >= 2 ? toursWithSoldOut : tours, 2)) {
+  const toursWithSoldOut = toursWithStats.filter((t) => tourStats.get(t)!.soldOutCount > 0);
+  for (const tour of pickRandom(toursWithSoldOut.length >= 2 ? toursWithSoldOut : toursWithStats, 2)) {
     const stats = tourStats.get(tour)!;
+    const ip = inProgressTours.has(tour);
     const wrong = generateWrongNumbers(stats.soldOutCount, 3, 0);
     const options: QuestionOption[] = shuffle([stats.soldOutCount, ...wrong]).map((n) => ({
       id: oid(),
@@ -423,8 +456,12 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
     questions.push({
       mode: "world-tour",
       id: qid(),
-      textEs: `¿Cuántos shows sold-out tuvo el ${tour}?`,
-      textEn: `How many sold-out shows did the ${tour} have?`,
+      textEs: ip
+        ? `¿Cuántos shows sold-out ha tenido el ${tour} hasta ahora?`
+        : `¿Cuántos shows sold-out tuvo el ${tour}?`,
+      textEn: ip
+        ? `How many sold-out shows has the ${tour} had so far?`
+        : `How many sold-out shows did the ${tour} have?`,
       correctAnswer: String(stats.soldOutCount),
       options,
     });
@@ -432,8 +469,9 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
 
   // Type 6: Tour year
   if (allYears.length >= 4) {
-    for (const tour of pickRandom(tours, 2)) {
+    for (const tour of pickRandom(toursWithStats, 2)) {
       const stats = tourStats.get(tour)!;
+      const ip = inProgressTours.has(tour);
       const wrong = generateWrongNumbers(stats.year, 3, 2017);
       const options: QuestionOption[] = shuffle([stats.year, ...wrong]).map((y) => ({
         id: oid(),
@@ -444,8 +482,12 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
       questions.push({
         mode: "world-tour",
         id: qid(),
-        textEs: `¿En qué año se realizó el ${tour}?`,
-        textEn: `In what year did the ${tour} take place?`,
+        textEs: ip
+          ? `¿En qué año comenzó el ${tour}?`
+          : `¿En qué año se realizó el ${tour}?`,
+        textEn: ip
+          ? `In what year did the ${tour} start?`
+          : `In what year did the ${tour} take place?`,
         correctAnswer: String(stats.year),
         options,
       });
@@ -453,10 +495,11 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
   }
 
   // Type 7: Total capacity
-  const toursWithCapacity = tours.filter((t) => tourStats.get(t)!.totalCapacity > 0);
+  const toursWithCapacity = toursWithStats.filter((t) => tourStats.get(t)!.totalCapacity > 0);
   if (toursWithCapacity.length >= 1) {
     for (const tour of pickRandom(toursWithCapacity, 2)) {
       const stats = tourStats.get(tour)!;
+      const ip = inProgressTours.has(tour);
       const rounded = Math.round(stats.totalCapacity / 1000) * 1000;
       const wrong = generateWrongCapacities(stats.totalCapacity, 3);
       if (wrong.length < 3) continue; // skip if not enough distinct options
@@ -469,8 +512,12 @@ export function generateWorldTourQuestions(concerts: Concert[], count: number): 
       questions.push({
         mode: "world-tour",
         id: qid(),
-        textEs: `¿Cuántos fans asistieron al ${tour} en total?`,
-        textEn: `How many total fans attended the ${tour}?`,
+        textEs: ip
+          ? `¿Cuántos fans han asistido al ${tour} hasta ahora?`
+          : `¿Cuántos fans asistieron al ${tour} en total?`,
+        textEn: ip
+          ? `How many total fans have attended the ${tour} so far?`
+          : `How many total fans attended the ${tour}?`,
         correctAnswer: String(rounded),
         options,
       });
