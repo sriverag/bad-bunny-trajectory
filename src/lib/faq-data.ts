@@ -9,10 +9,10 @@ export const aboutFAQs: FAQItem[] = [
   {
     question: "Who is Bad Bunny?",
     answer:
-      "Bad Bunny (real name Benito Antonio Martínez Ocasio) is a Puerto Rican rapper, singer, and songwriter born on March 10, 1994 in Vega Baja, Puerto Rico. He is one of the most influential Latin music artists of his generation, known for blending reggaeton, Latin trap, and pop. He was the most-streamed artist on Spotify for three consecutive years (2020–2022) and won the Grammy for Album of the Year in 2026.",
+      "Bad Bunny (real name Benito Antonio Martínez Ocasio) is a Puerto Rican rapper, singer, and songwriter born on March 10, 1994 in Bayamón, Puerto Rico, and raised in Almirante Sur, Vega Baja. He is one of the most influential Latin music artists of his generation, known for blending reggaeton, Latin trap, and pop. He was the most-streamed artist on Spotify for four consecutive years (2020–2023) and won the Grammy for Album of the Year in 2026.",
     questionEs: "¿Quién es Bad Bunny?",
     answerEs:
-      "Bad Bunny (nombre real Benito Antonio Martínez Ocasio) es un rapero, cantante y compositor puertorriqueño nacido el 10 de marzo de 1994 en Vega Baja, Puerto Rico. Es uno de los artistas de música latina más influyentes de su generación, conocido por fusionar reggaetón, trap latino y pop. Fue el artista más escuchado en Spotify durante tres años consecutivos (2020–2022) y ganó el Grammy al Álbum del Año en 2026.",
+      "Bad Bunny (nombre real Benito Antonio Martínez Ocasio) es un rapero, cantante y compositor puertorriqueño nacido el 10 de marzo de 1994 en Bayamón, Puerto Rico, y criado en Almirante Sur, Vega Baja. Es uno de los artistas de música latina más influyentes de su generación, conocido por fusionar reggaetón, trap latino y pop. Fue el artista más escuchado en Spotify durante cuatro años consecutivos (2020–2023) y ganó el Grammy al Álbum del Año en 2026.",
   },
   {
     question: "Where is Bad Bunny from?",

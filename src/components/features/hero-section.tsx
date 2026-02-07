@@ -1,12 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import posthog from "posthog-js";
 import { StatCounter } from "@/components/shared/stat-counter";
 import { FadeIn } from "@/components/animations/fade-in";
 import { useLanguage } from "@/hooks/use-language";
+import { BLUR_DATA_URL } from "@/lib/blur-placeholder";
 
 // Pre-determined rotation/offset per slot index for scattered collage look
 const TILE_TRANSFORMS = [
@@ -108,15 +110,23 @@ function MarqueeRow({
         {images.map((img, i) => {
           const tf = TILE_TRANSFORMS[i % TILE_TRANSFORMS.length];
           return (
-            <img
+            <div
               key={`${img.alt}-${i}`}
-              src={img.src}
-              alt=""
-              className="w-[160px] h-[160px] md:w-[200px] md:h-[200px] flex-shrink-0 rounded-xl object-cover"
+              className="relative w-[160px] h-[160px] md:w-[200px] md:h-[200px] flex-shrink-0"
               style={{
                 transform: `rotate(${tf.rotate}deg) translateY(${tf.offsetY}px)`,
               }}
-            />
+            >
+              <Image
+                src={img.src}
+                alt=""
+                fill
+                className="rounded-xl object-cover"
+                sizes="(max-width: 768px) 160px, 200px"
+                placeholder="blur"
+                blurDataURL={BLUR_DATA_URL}
+              />
+            </div>
           );
         })}
       </motion.div>

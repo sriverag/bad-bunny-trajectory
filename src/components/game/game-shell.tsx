@@ -1,27 +1,32 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/hooks/use-language";
 import { useGameState } from "./hooks/use-game-state";
 import { useGameTimer } from "./hooks/use-game-timer";
 import { calculateGameResult, saveHighScore, calculatePoints } from "./lib/scoring";
 import { QUESTION_TIME, TIMELINE_ROUND_TIME, MODE_CONFIGS, QUESTIONS_PER_MODE } from "./lib/game-constants";
+import { playSound, initSounds } from "./lib/sounds";
 import type { GameData, GameMode } from "./lib/game-types";
 import { GameMenu } from "./game-menu";
 import { GameHud } from "./game-hud";
 import { GameOver } from "./game-over";
+import { Confetti } from "./ui/confetti";
+import { ScreenShake } from "./ui/screen-shake";
+import { StreakToast } from "./ui/streak-toast";
 
 // Loading placeholder while mode chunks are fetched
 function ModeLoader() {
   return (
     <div className="flex w-full max-w-2xl flex-col items-center gap-4 py-12">
-      <div className="h-8 w-48 animate-pulse rounded-lg bg-muted" />
-      <div className="h-48 w-full animate-pulse rounded-xl bg-muted" />
+      <Skeleton className="h-8 w-48 rounded-lg" />
+      <Skeleton className="h-48 w-full rounded-xl" />
       <div className="grid w-full grid-cols-2 gap-3">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-12 animate-pulse rounded-xl bg-muted" />
+          <Skeleton key={i} className="h-12 rounded-xl" />
         ))}
       </div>
     </div>
@@ -62,6 +67,13 @@ export function GameShell({ albums, awards, timelineEvents, concerts }: GameShel
     reset,
   } = useGameState();
 
+  // Celebration state
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [confettiIntensity, setConfettiIntensity] = useState<"small" | "medium" | "large">("small");
+  const [showShake, setShowShake] = useState(false);
+  const [streakToastStreak, setStreakToastStreak] = useState(0);
+  const [showStreakToast, setShowStreakToast] = useState(false);
+
   // Timer time depends on the active mode
   const timerSeconds = state.activeMode === "timeline" ? TIMELINE_ROUND_TIME : QUESTION_TIME;
 
@@ -93,6 +105,8 @@ export function GameShell({ albums, awards, timelineEvents, concerts }: GameShel
 
   const handleSelectMode = useCallback(
     (mode: GameMode) => {
+      initSounds();
+      playSound("select");
       startMode(mode, QUESTIONS_PER_MODE);
       timer.reset(mode === "timeline" ? TIMELINE_ROUND_TIME : QUESTION_TIME);
       timer.start();
@@ -108,6 +122,43 @@ export function GameShell({ albums, awards, timelineEvents, concerts }: GameShel
         ? calculatePoints(timer.timeLeft, state.currentStreak + 1)
         : 0;
       answerQuestion(correct, points);
+
+      // Sound + celebration feedback
+      if (correct) {
+        const newStreak = state.currentStreak + 1;
+        playSound("correct");
+
+        // Streak milestone celebrations
+        if (newStreak === 10) {
+          playSound("streak10");
+          setConfettiIntensity("large");
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 100);
+          setStreakToastStreak(10);
+          setShowStreakToast(true);
+          setTimeout(() => setShowStreakToast(false), 100);
+        } else if (newStreak === 5) {
+          playSound("streak5");
+          setConfettiIntensity("medium");
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 100);
+          setStreakToastStreak(5);
+          setShowStreakToast(true);
+          setTimeout(() => setShowStreakToast(false), 100);
+        } else if (newStreak === 3) {
+          playSound("streak3");
+          setConfettiIntensity("small");
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 100);
+          setStreakToastStreak(3);
+          setShowStreakToast(true);
+          setTimeout(() => setShowStreakToast(false), 100);
+        }
+      } else {
+        playSound("wrong");
+        setShowShake(true);
+        setTimeout(() => setShowShake(false), 100);
+      }
 
       // Advance to next question after reveal delay (mode components reset
       // their own internal state on the same timer). For the last question,
@@ -127,6 +178,7 @@ export function GameShell({ albums, awards, timelineEvents, concerts }: GameShel
   // Mode components call onComplete when all questions are done
   const handleModeComplete = useCallback(() => {
     timer.pause();
+    playSound("gameOver");
     finishMode();
   }, [timer, finishMode]);
 
@@ -211,6 +263,10 @@ export function GameShell({ albums, awards, timelineEvents, concerts }: GameShel
 
   return (
     <div className="relative min-h-screen">
+      {/* Celebration overlays */}
+      <Confetti trigger={showConfetti} intensity={confettiIntensity} />
+      <StreakToast streak={streakToastStreak} show={showStreakToast} />
+
       <AnimatePresence mode="wait">
         {/* Menu screen */}
         {state.screen === "menu" && (
@@ -248,9 +304,11 @@ export function GameShell({ albums, awards, timelineEvents, concerts }: GameShel
               modeLabel={modeLabel}
               onQuit={handleQuit}
             />
-            <div className="flex justify-center px-4 py-8">
-              {renderModeComponent()}
-            </div>
+            <ScreenShake trigger={showShake}>
+              <div className="flex justify-center px-4 py-8">
+                {renderModeComponent()}
+              </div>
+            </ScreenShake>
           </motion.div>
         )}
 

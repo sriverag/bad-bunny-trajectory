@@ -193,6 +193,16 @@
   animation: gradient-shift 4s ease infinite;
 }
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@utility animate-shimmer {
+  animation: shimmer 1.5s infinite;
+}
+
 @utility font-heading {
   font-family: var(--theme-font-display);
   font-weight: var(--theme-heading-weight);

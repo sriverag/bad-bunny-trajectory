@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import posthog from "posthog-js";
 import { FadeIn } from "@/components/animations/fade-in";
 import { useLanguage } from "@/hooks/use-language";
@@ -72,7 +72,7 @@ const ALBUM_BY_THEME: Record<ThemeId, AlbumInfo> = {
     descriptionEs:
       "Yo Hago Lo Que Me Da La Gana celebra el reggaetón clásico y la música latina, desde cumbia hasta dembow.",
     descriptionEn:
-      "I Do Whatever I Want celebrates classic reggaeton and Latin music, from cumbia to dembow.",
+      "YHLQMDLG (Yo Hago Lo Que Me Da La Gana) celebrates classic reggaeton and Latin music, from cumbia to dembow.",
     coverUrl: "/images/albums/yhlqmdlg.jpg",
   },
   oasis: {
@@ -139,14 +139,6 @@ export function FeaturedAlbum() {
                     alt={album.title}
                     className="h-full w-full object-cover"
                   />
-                  {/* Fallback play icon (visible when image fails) */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="text-center space-y-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-24 h-24 mx-auto rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-colors">
-                        <Play className="w-12 h-12 text-primary fill-primary" />
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Album Info */}
@@ -178,7 +170,7 @@ export function FeaturedAlbum() {
                   <div className="pt-4">
                     <div className="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-4 transition-all">
                       {t("Explorar Álbum", "Explore Album")}
-                      <Play className="w-5 h-5" />
+                      <ArrowRight className="w-5 h-5" />
                     </div>
                   </div>
                 </div>

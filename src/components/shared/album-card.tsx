@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import posthog from "posthog-js";
 import { cn } from "@/lib/utils";
+import { BLUR_DATA_URL } from "@/lib/blur-placeholder";
 
 interface AlbumCardProps {
   album: {
@@ -71,12 +73,16 @@ export function AlbumCard({ album, className }: AlbumCardProps) {
         )}
         style={{ transformStyle: "preserve-3d" }}
       >
-        <div className="aspect-square overflow-hidden">
+        <div className="relative aspect-square overflow-hidden">
           {album.coverUrl ? (
-            <img
+            <Image
               src={album.coverUrl}
               alt={album.title}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              placeholder="blur"
+              blurDataURL={BLUR_DATA_URL}
             />
           ) : (
             <div

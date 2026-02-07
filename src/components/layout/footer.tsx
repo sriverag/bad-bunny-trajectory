@@ -16,7 +16,16 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {/* Brand Section */}
           <div className="flex flex-col gap-4">
-            <h3 className="text-lg font-bold text-foreground">BAD BUNNY</h3>
+            <Link href="/" className="inline-block hover:opacity-80 transition-opacity">
+              <Image
+                src="/images/logo.png"
+                alt="This is Bad Bunny"
+                width={100}
+                height={80}
+                className="h-20 w-auto"
+                style={{ filter: "brightness(0) invert(var(--logo-invert, 0))" }}
+              />
+            </Link>
             <p className="text-sm text-muted-foreground max-w-xs">
               {t(
                 "Explora la trayectoria completa del artista más escuchado del mundo.",
@@ -35,7 +44,7 @@ export function Footer() {
                 href={STREAMING_LINKS.spotify}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                className="flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full relative"
               >
                 <Image
                   src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Black.png"
@@ -50,7 +59,7 @@ export function Footer() {
                 href={STREAMING_LINKS.appleMusic}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                className="flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full relative"
               >
                 <Image
                   src="/images/brands/apple-music.svg"
@@ -65,7 +74,7 @@ export function Footer() {
                 href={STREAMING_LINKS.youtube}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                className="flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full relative"
               >
                 <Image
                   src="/images/brands/youtube.svg"
@@ -108,7 +117,15 @@ export function Footer() {
         {/* Copyright */}
         <div className="mt-8 pt-8 border-t border-border/40">
           <p className="text-xs text-center text-muted-foreground">
-            {currentYear} This is Bad Bunny. {t("Un proyecto de fans para fans.", "A fan project for fans.")}
+            &copy; {currentYear} This is Bad Bunny, {t("para fans de Benito por", "for Benito fans by")}{" "}
+            <a
+              href="https://x.com/sriverag787"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors underline underline-offset-2"
+            >
+              @sriverag787
+            </a>
           </p>
         </div>
       </div>

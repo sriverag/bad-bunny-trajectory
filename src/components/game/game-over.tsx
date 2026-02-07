@@ -10,6 +10,7 @@ import { getFanLevelConfig } from "./lib/game-constants";
 import { getHighScore } from "./lib/scoring";
 import { NicknameInput } from "./shared/nickname-input";
 import { SocialShareButtons } from "./shared/social-share-buttons";
+import { Confetti } from "./ui/confetti";
 
 interface GameOverProps {
   result: GameResult;
@@ -60,6 +61,15 @@ export function GameOver({ result, onPlayAgain }: GameOverProps) {
   const fanConfig = getFanLevelConfig(result.fanLevel);
   const displayScore = useCountUp(result.totalScore);
   const isNewHighScore = result.totalScore > 0 && result.totalScore >= getHighScore();
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  // Trigger confetti for high scores after a brief delay
+  useEffect(() => {
+    if (isNewHighScore) {
+      const timer = setTimeout(() => setShowConfetti(true), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [isNewHighScore]);
 
   const [nickname, setNickname] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -109,6 +119,9 @@ export function GameOver({ result, onPlayAgain }: GameOverProps) {
 
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center px-4 py-12">
+      {/* High score confetti */}
+      <Confetti trigger={showConfetti} intensity="large" />
+
       {/* Fan level badge */}
       <motion.div
         initial={{ scale: 0, opacity: 0 }}

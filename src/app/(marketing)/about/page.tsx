@@ -53,6 +53,7 @@ export default function AboutPage() {
               <Badge variant="secondary">{t("Artista", "Artist")}</Badge>
               <Badge variant="secondary">{t("Productor", "Producer")}</Badge>
               <Badge variant="secondary">{t("Actor", "Actor")}</Badge>
+              <Badge variant="secondary">{t("Luchador", "Wrestler")}</Badge>
               <Badge variant="secondary">{t("Activista", "Activist")}</Badge>
             </div>
           </div>
@@ -72,29 +73,29 @@ export default function AboutPage() {
               <div className="space-y-6 text-muted-foreground">
                 <p>
                   {t(
-                    "Nacido el 10 de marzo de 1994 en Vega Baja, Puerto Rico, Benito Antonio Martínez Ocasio, conocido profesionalmente como Bad Bunny, emergió de las plataformas de streaming como SoundCloud para convertirse en uno de los artistas más influyentes de la música contemporánea. Su carrera despegó en 2016 cuando su sencillo \"Diles\" se volvió viral, capturando la atención de la industria musical global.",
-                    "Born on March 10, 1994 in Vega Baja, Puerto Rico, Benito Antonio Martínez Ocasio, professionally known as Bad Bunny, emerged from streaming platforms like SoundCloud to become one of the most influential artists in contemporary music. His career took off in 2016 when his single \"Diles\" went viral, capturing the attention of the global music industry."
+                    "Nacido el 10 de marzo de 1994 en Bayamón, Puerto Rico, y criado en Almirante Sur, Vega Baja, Benito Antonio Martínez Ocasio, conocido profesionalmente como Bad Bunny, emergió de las plataformas de streaming como SoundCloud para convertirse en uno de los artistas más influyentes de la música contemporánea. Su carrera despegó en 2016 cuando su sencillo \"Diles\" se volvió viral, capturando la atención de la industria musical global.",
+                    "Born on March 10, 1994 in Bayamón, Puerto Rico, and raised in Almirante Sur, Vega Baja, Benito Antonio Martínez Ocasio, professionally known as Bad Bunny, emerged from streaming platforms like SoundCloud to become one of the most influential artists in contemporary music. His career took off in 2016 when his single \"Diles\" went viral, capturing the attention of the global music industry."
                   )}
                 </p>
 
                 <p>
                   {t(
-                    "Tras firmar con Rimas Entertainment y posteriormente con Hear This Music, Bad Bunny revolucionó el trap latino y el reggaetón con su estilo único e inconfundible. Su habilidad para fusionar géneros y desafiar las normas establecidas lo convirtió en una fuerza imparable. Entre 2020 y 2022, logró el récord histórico de ser el artista más escuchado en Spotify durante tres años consecutivos, un logro sin precedentes que consolidó su estatus como fenómeno musical global.",
-                    "After signing with Rimas Entertainment and later Hear This Music, Bad Bunny revolutionized Latin trap and reggaeton with his unique and unmistakable style. His ability to fuse genres and defy established norms made him an unstoppable force. Between 2020 and 2022, he achieved the historic record of being the most-streamed artist on Spotify for three consecutive years, an unprecedented achievement that cemented his status as a global musical phenomenon."
+                    "Tras firmar con Hear This Music y posteriormente con Rimas Entertainment, Bad Bunny revolucionó el trap latino y el reggaetón con su estilo único e inconfundible. Su habilidad para fusionar géneros y desafiar las normas establecidas lo convirtió en una fuerza imparable. Entre 2020 y 2023, logró el récord histórico de ser el artista más escuchado en Spotify durante cuatro años consecutivos, un logro sin precedentes que consolidó su estatus como fenómeno musical global.",
+                    "After signing with Hear This Music and later Rimas Entertainment, Bad Bunny revolutionized Latin trap and reggaeton with his unique and unmistakable style. His ability to fuse genres and defy established norms made him an unstoppable force. Between 2020 and 2023, he achieved the historic record of being the most-streamed artist on Spotify for four consecutive years, an unprecedented achievement that cemented his status as a global musical phenomenon."
                   )}
                 </p>
 
                 <p>
                   {t(
-                    "Su discografía incluye álbumes aclamados por la crítica como \"X 100PRE\" (2018), \"YHLQMDLG\" (2020), \"El Último Tour Del Mundo\" (2020), \"Un Verano Sin Ti\" (2022), \"nadie sabe lo que va a pasar mañana\" (2023), y \"Debí Tirar Más Fotos\" (2025). Cada lanzamiento ha redefinido las expectativas del género y ha expandido los límites de la música latina en el escenario mundial.",
-                    "His discography includes critically acclaimed albums such as \"X 100PRE\" (2018), \"YHLQMDLG\" (2020), \"El Último Tour Del Mundo\" (2020), \"Un Verano Sin Ti\" (2022), \"nadie sabe lo que va a pasar mañana\" (2023), and \"Debí Tirar Más Fotos\" (2025). Each release has redefined genre expectations and expanded the boundaries of Latin music on the world stage."
+                    "Su discografía incluye álbumes aclamados por la crítica como \"X 100PRE\" (2018), \"OASIS\" con J Balvin (2019), \"YHLQMDLG\" (2020), \"Las que no iban a salir\" (2020), \"El Último Tour Del Mundo\" (2020), \"Un Verano Sin Ti\" (2022), \"nadie sabe lo que va a pasar mañana\" (2023), y \"Debí Tirar Más Fotos\" (2025). Cada lanzamiento ha redefinido las expectativas del género y ha expandido los límites de la música latina en el escenario mundial.",
+                    "His discography includes critically acclaimed albums such as \"X 100PRE\" (2018), \"OASIS\" with J Balvin (2019), \"YHLQMDLG\" (2020), \"Las que no iban a salir\" (2020), \"El Último Tour Del Mundo\" (2020), \"Un Verano Sin Ti\" (2022), \"nadie sabe lo que va a pasar mañana\" (2023), and \"Debí Tirar Más Fotos\" (2025). Each release has redefined genre expectations and expanded the boundaries of Latin music on the world stage."
                   )}
                 </p>
 
                 <p>
                   {t(
-                    "Más allá de la música, Bad Bunny ha incursionado exitosamente en la actuación, con apariciones destacadas en películas como \"Bullet Train\" (2022) junto a Brad Pitt y \"Cassandro\" (2023). Su versatilidad también se extendió al mundo del wrestling profesional, con una memorable participación en WWE Royal Rumble 2021, demostrando su capacidad para trascender fronteras artísticas.",
-                    "Beyond music, Bad Bunny has successfully ventured into acting, with notable appearances in films like \"Bullet Train\" (2022) alongside Brad Pitt and \"Cassandro\" (2023). His versatility also extended to professional wrestling, with a memorable appearance at WWE Royal Rumble 2021, demonstrating his ability to transcend artistic boundaries."
+                    "Más allá de la música, Bad Bunny ha incursionado exitosamente en la actuación, con apariciones destacadas en películas como \"Bullet Train\" (2022) junto a Brad Pitt y \"Cassandro\" (2023). Su versatilidad también se extendió al mundo del wrestling profesional en WWE, donde ganó el Campeonato 24/7, compitió en WrestleMania 37 (2021) y Backlash (2023) en Puerto Rico, y participó en el Royal Rumble 2022, demostrando su capacidad para trascender fronteras artísticas.",
+                    "Beyond music, Bad Bunny has successfully ventured into acting, with notable appearances in films like \"Bullet Train\" (2022) alongside Brad Pitt and \"Cassandro\" (2023). His versatility also extended to professional wrestling in WWE, where he won the 24/7 Championship, competed at WrestleMania 37 (2021) and Backlash (2023) in Puerto Rico, and appeared in the 2022 Royal Rumble, demonstrating his ability to transcend artistic boundaries."
                   )}
                 </p>
               </div>
@@ -148,7 +149,7 @@ export default function AboutPage() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-y">
               <StatCounter value={6} label={t("Álbumes de estudio", "Studio Albums")} suffix="+" />
-              <StatCounter value={3} label="Grammy Awards" />
+              <StatCounter value={6} label="Grammy Awards" />
               <StatCounter value={17} label="Latin Grammy Awards" suffix="+" />
               <div className="flex flex-col items-center text-center">
                 <div className="flex items-center gap-2 text-4xl font-bold text-primary md:text-5xl lg:text-6xl">
@@ -156,7 +157,7 @@ export default function AboutPage() {
                   <span>#1</span>
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground md:text-base">
-                  {t("Artista más escuchado en Spotify (2020-2022)", "Most-streamed artist on Spotify (2020-2022)")}
+                  {t("Artista más escuchado en Spotify (2020-2023)", "Most-streamed artist on Spotify (2020-2023)")}
                 </p>
               </div>
             </div>
