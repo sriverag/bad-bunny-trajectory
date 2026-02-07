@@ -732,6 +732,16 @@ export async function main() {
         importance: 5,
       },
       {
+        title: "Super Bowl LX Halftime Show",
+        titleEn: "Super Bowl LX Halftime Show",
+        description: "Bad Bunny encabeza el Apple Music Super Bowl LX Halftime Show en el Levi's Stadium en Santa Clara, California, convirtiéndose en el primer artista latino en encabezar el espectáculo del medio tiempo del Super Bowl.",
+        descriptionEn: "Bad Bunny headlines the Apple Music Super Bowl LX Halftime Show at Levi's Stadium in Santa Clara, California, becoming the first Latino artist to headline the Super Bowl halftime show.",
+        date: new Date("2026-02-08"),
+        era: "debi-tirar",
+        type: "CONCERT",
+        importance: 5,
+      },
+      {
         title: "No Me Quiero Casar - Colaboración con Bad Gyal",
         titleEn: "No Me Quiero Casar - Collaboration with Bad Gyal",
         description: "La colaboración con Bad Gyal consolida lazos entre la escena urbana latina y europea.",

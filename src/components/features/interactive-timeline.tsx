@@ -115,6 +115,7 @@ export function InteractiveTimeline({ events }: InteractiveTimelineProps) {
               {eraEvents.map((event, eventIndex) => {
                 const isEven = eventIndex % 2 === 0;
                 const isImportant = event.importance >= 4;
+                const isUpcoming = new Date(event.date) > new Date();
                 const colors = TYPE_COLORS[event.type];
                 const title = language === "en" && event.titleEn ? event.titleEn : event.title;
                 const description = language === "en" && event.descriptionEn ? event.descriptionEn : event.description;
@@ -166,7 +167,12 @@ export function InteractiveTimeline({ events }: InteractiveTimelineProps) {
                             <Badge className={cn(colors.bg, colors.text, "border-0")}>
                               {TYPE_LABELS[event.type][language]}
                             </Badge>
-                            {isImportant && (
+                            {isUpcoming && (
+                              <Badge className="bg-amber-500/20 text-amber-600 border-0 text-xs animate-pulse">
+                                {t("Próximamente", "Coming Soon")}
+                              </Badge>
+                            )}
+                            {isImportant && !isUpcoming && (
                               <Badge variant="secondary" className="text-xs">
                                 {t("Importante", "Important")}
                               </Badge>
