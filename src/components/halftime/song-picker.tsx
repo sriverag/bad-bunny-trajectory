@@ -38,6 +38,9 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
   const selectedAlbum = selectedAlbumId ? albums.find((a) => a.id === selectedAlbumId) : null;
   const searchPlaceholder = selectedAlbum
     ? (() => {
+        if (selectedAlbum.title === "Colaboraciones") {
+          return t("Buscar colaboraciones...", "Search collabs...");
+        }
         const short = THEMES[selectedAlbum.themeId as ThemeId]?.albumTitleShort ?? selectedAlbum.title;
         return t(`Buscar canciones de ${short}...`, `Search ${short} songs...`);
       })()

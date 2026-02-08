@@ -30,8 +30,8 @@ function formatDuration(ms: number): string {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
-function getShareText(nickname: string, songCount: number, totalMs: number) {
-  return `🏈 ${nickname}'s Super Bowl Halftime Setlist - ${songCount} songs, ${formatDuration(totalMs)}. What would YOU pick for Bad Bunny?`;
+function getShareText(nickname: string, songCount: number) {
+  return `🏈 ${nickname}'s Super Bowl Halftime Setlist - ${songCount} songs. What would YOU pick for Bad Bunny?`;
 }
 
 /**
@@ -200,7 +200,7 @@ export function HalftimeShareButtons({
   const [sharing, setSharing] = useState(false);
 
   const shareUrl = getShareUrl(playlistId);
-  const shareText = getShareText(nickname, songCount, totalMs);
+  const shareText = getShareText(nickname, songCount);
 
   const copyToClipboard = useCallback(
     async (message?: string) => {
@@ -273,7 +273,28 @@ export function HalftimeShareButtons({
     [nickname, themeId, tracks, totalMs, songCount, playlistId, shareText, copyToClipboard],
   );
 
-  function shareToX() {
+  async function shareToX() {
+    // Generate and download the story image so user can attach it to their tweet
+    setSharing(true);
+    try {
+      const imageFile = await generateHalftimeStoryImage(
+        nickname, themeId, tracks, totalMs, songCount, playlistId,
+      );
+      const blobUrl = URL.createObjectURL(imageFile);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `halftime-setlist-${nickname.toLowerCase().replace(/\s+/g, "-")}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch {
+      // Continue to open tweet compose even if image fails
+    } finally {
+      setSharing(false);
+    }
+
+    // Open tweet compose with text + link
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(url, "_blank", "noopener,noreferrer");
   }
