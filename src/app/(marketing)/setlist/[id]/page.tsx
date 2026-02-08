@@ -95,14 +95,12 @@ export default async function HalftimeResultPage({ params }: Props) {
         {/* Header */}
         <div className="mb-8 flex flex-col items-center gap-2">
           <span className="text-5xl md:text-6xl">🏈</span>
-          <p className="text-sm font-medium uppercase tracking-widest text-primary">
-            Super Bowl Halftime
-          </p>
           <h1 className="text-2xl font-heading text-foreground md:text-3xl">
-            {playlist.nickname}
+            {playlist.nickname}&apos;s{" "}
+            <span className="text-primary">Predicted Setlist</span>
           </h1>
           <p className="text-sm text-muted-foreground">
-            {playlist.songCount} songs &middot; {formatDuration(playlist.totalMs)}
+            {playlist.songCount} songs
           </p>
         </div>
 
@@ -111,23 +109,13 @@ export default async function HalftimeResultPage({ params }: Props) {
           {playlist.tracks.map((track, index) => (
             <div
               key={track.id}
-              className="flex items-center gap-3 rounded-xl border border-border/50 bg-card/80 px-4 py-3"
+              className="flex items-center justify-center rounded-xl border border-border/50 bg-card/80 px-4 py-3"
             >
-              <span className="w-6 shrink-0 text-center text-sm font-bold tabular-nums text-muted-foreground">
-                {index + 1}
-              </span>
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 text-center">
                 <p className="truncate text-sm font-medium text-foreground">
                   {track.title}
                 </p>
-                <p className="truncate text-xs text-muted-foreground">
-                  {track.albumTitle}
-                  {track.featuring && ` · feat. ${track.featuring}`}
-                </p>
               </div>
-              <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-                {formatDuration(track.durationMs)}
-              </span>
             </div>
           ))}
         </div>

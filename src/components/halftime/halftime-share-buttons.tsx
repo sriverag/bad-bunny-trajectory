@@ -23,15 +23,8 @@ function getShareUrl(playlistId: string) {
   return `${BASE_URL}/setlist/${playlistId}`;
 }
 
-function formatDuration(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
-
-function getShareText(nickname: string, songCount: number) {
-  return `🏈 ${nickname}'s Super Bowl Halftime Setlist - ${songCount} songs. What would YOU pick for Bad Bunny?`;
+function getShareText() {
+  return `🏈 This is my Super Bowl LX setlist prediction for Bad Bunny's halftime show!`;
 }
 
 /**
@@ -57,109 +50,99 @@ async function generateHalftimeStoryImage(
     : "debi-tirar";
   const colors = getThemeColors(validThemeId);
 
-  // Always use a dark background for readability, tinted with theme accent
   const darkBg = "#0a0a0a";
-  // Pick a visible accent — use accent3 (gold/bright) for themes where accent1 is white/light
   const isLightAccent1 = colors.accent1.toLowerCase() === "#ffffff" || colors.accent1.toLowerCase() === "#fff";
   const accentPrimary = isLightAccent1 ? colors.accent3 : colors.accent1;
-  const accentSecondary = colors.accent2;
 
-  // Background: solid dark base with very subtle theme tint
+  // Background
   ctx.fillStyle = darkBg;
   ctx.fillRect(0, 0, W, H);
-  const grad = ctx.createRadialGradient(W / 2, H / 3, 0, W / 2, H / 3, H * 0.6);
-  grad.addColorStop(0, accentPrimary + "0A");
-  grad.addColorStop(1, "transparent");
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, W, H);
 
-  // Decorative circles
-  ctx.globalAlpha = 0.03;
-  ctx.fillStyle = accentPrimary;
-  ctx.beginPath();
-  ctx.arc(200, 400, 300, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(880, 1500, 250, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalAlpha = 1;
-
-  const shareUrl = getShareUrl(playlistId);
-
-  // Top label
-  ctx.fillStyle = accentPrimary;
-  ctx.font = "bold 32px system-ui, -apple-system, sans-serif";
+  // Football emoji
   ctx.textAlign = "center";
-  ctx.fillText("SUPER BOWL HALFTIME", W / 2, 300);
+  ctx.font = "120px system-ui, -apple-system, sans-serif";
+  ctx.fillText("🏈", W / 2, 180);
 
-  ctx.font = "24px system-ui, -apple-system, sans-serif";
-  ctx.fillStyle = accentSecondary;
-  ctx.fillText("PREDICTED SETLIST", W / 2, 345);
-
-  // Nickname
+  // "{NAME}'S" in white
   ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 56px system-ui, -apple-system, sans-serif";
-  ctx.fillText(nickname, W / 2, 450);
+  ctx.font = "bold 64px system-ui, -apple-system, sans-serif";
+  ctx.fillText(`${nickname.toUpperCase()}'S`, W / 2, 310);
+
+  // "PREDICTED SETLIST" in accent
+  ctx.fillStyle = accentPrimary;
+  ctx.font = "bold 64px system-ui, -apple-system, sans-serif";
+  ctx.fillText("PREDICTED SETLIST", W / 2, 390);
 
   // Song count
-  ctx.fillStyle = accentPrimary;
-  ctx.font = "bold 36px system-ui, -apple-system, sans-serif";
-  ctx.fillText(`${songCount} song${songCount === 1 ? "" : "s"}`, W / 2, 520);
+  ctx.fillStyle = "#888888";
+  ctx.font = "36px system-ui, -apple-system, sans-serif";
+  ctx.fillText(`${songCount} song${songCount === 1 ? "" : "s"}`, W / 2, 460);
 
-  // Divider
-  ctx.strokeStyle = accentPrimary + "44";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(W / 2 - 200, 570);
-  ctx.lineTo(W / 2 + 200, 570);
-  ctx.stroke();
+  // Song cards
+  const cardMarginX = 60;
+  const cardWidth = W - cardMarginX * 2;
+  const cardHeight = 90;
+  const cardGap = 16;
+  const cardRadius = 20;
+  const maxSongs = Math.min(tracks.length, 12);
+  const cardsStartY = 520;
 
-  // Song list (up to 10 songs)
-  const maxSongs = Math.min(tracks.length, 10);
-  ctx.textAlign = "left";
-  const startY = 640;
-  const lineHeight = 60;
+  function roundRect(x: number, y: number, w: number, h: number, r: number) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
 
   for (let i = 0; i < maxSongs; i++) {
     const track = tracks[i];
-    const y = startY + i * lineHeight;
+    const y = cardsStartY + i * (cardHeight + cardGap);
 
-    // Number
-    ctx.fillStyle = accentPrimary;
-    ctx.font = "bold 28px system-ui, -apple-system, sans-serif";
-    ctx.fillText(`${i + 1}.`, 180, y);
+    // Card background
+    roundRect(cardMarginX, y, cardWidth, cardHeight, cardRadius);
+    ctx.fillStyle = "#1a1a1a";
+    ctx.fill();
 
-    // Title
+    // Card border
+    roundRect(cardMarginX, y, cardWidth, cardHeight, cardRadius);
+    ctx.strokeStyle = "#333333";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Song title
     ctx.fillStyle = "#ffffff";
-    ctx.font = "28px system-ui, -apple-system, sans-serif";
-    const maxWidth = 680;
+    ctx.font = "36px system-ui, -apple-system, sans-serif";
+    ctx.textAlign = "center";
+    const maxTextWidth = cardWidth - 60;
     let title = track.title;
-    if (ctx.measureText(title).width > maxWidth) {
-      while (ctx.measureText(title + "...").width > maxWidth && title.length > 0) {
+    if (ctx.measureText(title).width > maxTextWidth) {
+      while (ctx.measureText(title + "...").width > maxTextWidth && title.length > 0) {
         title = title.slice(0, -1);
       }
       title += "...";
     }
-    ctx.fillText(title, 240, y);
+    ctx.fillText(title, W / 2, y + cardHeight / 2 + 12);
   }
 
   if (tracks.length > maxSongs) {
-    const y = startY + maxSongs * lineHeight;
-    ctx.fillStyle = accentSecondary;
-    ctx.font = "italic 26px system-ui, -apple-system, sans-serif";
+    const y = cardsStartY + maxSongs * (cardHeight + cardGap) + 20;
+    ctx.fillStyle = "#888888";
+    ctx.font = "italic 32px system-ui, -apple-system, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText(`...and ${tracks.length - maxSongs} more`, W / 2, y);
   }
 
-  // URL
-  ctx.textAlign = "center";
-  ctx.fillStyle = accentPrimary;
-  ctx.font = "26px system-ui, -apple-system, sans-serif";
-  ctx.fillText(shareUrl, W / 2, H - 140);
-
   // Bottom branding
   ctx.fillStyle = "#666666";
-  ctx.font = "22px system-ui, -apple-system, sans-serif";
+  ctx.font = "26px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "center";
   ctx.fillText("thisisbadbunny.com", W / 2, H - 80);
 
   return new Promise((resolve) => {
@@ -174,18 +157,6 @@ async function generateHalftimeStoryImage(
   });
 }
 
-function canShareFiles(): boolean {
-  if (typeof navigator === "undefined") return false;
-  if (!navigator.canShare) return false;
-  try {
-    return navigator.canShare({
-      files: [new File([""], "test.png", { type: "image/png" })],
-    });
-  } catch {
-    return false;
-  }
-}
-
 export function HalftimeShareButtons({
   playlistId,
   nickname,
@@ -196,14 +167,13 @@ export function HalftimeShareButtons({
 }: HalftimeShareButtonsProps) {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
 
   const shareUrl = getShareUrl(playlistId);
-  const shareText = getShareText(nickname, songCount);
+  const shareText = getShareText();
 
   const copyToClipboard = useCallback(
-    async (message?: string) => {
+    async () => {
       try {
         await navigator.clipboard.writeText(shareUrl);
       } catch {
@@ -215,62 +185,10 @@ export function HalftimeShareButtons({
         document.body.removeChild(textarea);
       }
 
-      if (message) {
-        setToastMessage(message);
-        setTimeout(() => setToastMessage(null), 3000);
-      } else {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     },
     [shareUrl],
-  );
-
-  const shareWithImage = useCallback(
-    async (fallbackMessage: string) => {
-      setSharing(true);
-      try {
-        const imageFile = await generateHalftimeStoryImage(
-          nickname,
-          themeId,
-          tracks,
-          totalMs,
-          songCount,
-          playlistId,
-        );
-
-        // Mobile: use Web Share API to open native share sheet (Instagram/TikTok Stories)
-        if (canShareFiles()) {
-          try {
-            await navigator.share({
-              text: shareText,
-              files: [imageFile],
-            });
-            return;
-          } catch (err) {
-            if (err instanceof Error && err.name === "AbortError") return;
-            // Fall through to download
-          }
-        }
-
-        // Desktop / fallback: download the image + copy link
-        const url = URL.createObjectURL(imageFile);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `halftime-setlist-${nickname.toLowerCase().replace(/\s+/g, "-")}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        await copyToClipboard(fallbackMessage);
-      } catch {
-        await copyToClipboard(fallbackMessage);
-      } finally {
-        setSharing(false);
-      }
-    },
-    [nickname, themeId, tracks, totalMs, songCount, playlistId, shareText, copyToClipboard],
   );
 
   async function shareToX() {
@@ -299,27 +217,41 @@ export function HalftimeShareButtons({
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  function shareToFacebook() {
+  async function shareToFacebook() {
+    // Copy share text to clipboard so user can paste it into their post
+    try {
+      await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = `${shareText}\n${shareUrl}`;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  function shareToInstagram() {
-    shareWithImage(
-      t(
-        "Link copiado! Pegalo en tu post o historia de Instagram",
-        "Link copied! Paste in your Instagram post/story",
-      ),
-    );
-  }
-
-  function shareToTikTok() {
-    shareWithImage(
-      t(
-        "Link copiado! Pegalo en tu post de TikTok",
-        "Link copied! Paste in your TikTok post",
-      ),
-    );
+  async function downloadImage() {
+    setSharing(true);
+    try {
+      const imageFile = await generateHalftimeStoryImage(
+        nickname, themeId, tracks, totalMs, songCount, playlistId,
+      );
+      const blobUrl = URL.createObjectURL(imageFile);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `halftime-setlist-${nickname.toLowerCase().replace(/\s+/g, "-")}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch {
+      // silently fail
+    } finally {
+      setSharing(false);
+    }
   }
 
   return (
@@ -328,7 +260,7 @@ export function HalftimeShareButtons({
         {t("Comparte tu setlist", "Share your setlist")}
       </p>
 
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-4 gap-2">
         {/* X / Twitter */}
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -363,42 +295,27 @@ export function HalftimeShareButtons({
           <span className="text-[10px] text-muted-foreground">Facebook</span>
         </motion.button>
 
-        {/* Instagram */}
+        {/* Download */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={shareToInstagram}
+          onClick={downloadImage}
           disabled={sharing}
           className={cn(
             "flex flex-col items-center gap-1 rounded-xl border border-border/50 bg-card/80 p-3",
             "transition-colors hover:bg-card",
             sharing && "opacity-50",
           )}
-          aria-label="Share on Instagram"
+          aria-label={t("Descargar imagen", "Download image")}
         >
-          <svg viewBox="0 0 24 24" className="h-5 w-5 fill-foreground" aria-hidden="true">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+          <svg viewBox="0 0 24 24" className="h-5 w-5 text-foreground" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+            <polyline strokeLinecap="round" strokeLinejoin="round" points="7 10 12 15 17 10" />
+            <line strokeLinecap="round" strokeLinejoin="round" x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          <span className="text-[10px] text-muted-foreground">Instagram</span>
-        </motion.button>
-
-        {/* TikTok */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={shareToTikTok}
-          disabled={sharing}
-          className={cn(
-            "flex flex-col items-center gap-1 rounded-xl border border-border/50 bg-card/80 p-3",
-            "transition-colors hover:bg-card",
-            sharing && "opacity-50",
-          )}
-          aria-label="Share on TikTok"
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5 fill-foreground" aria-hidden="true">
-            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48v-7.1a8.16 8.16 0 005.58 2.18v-3.45a4.85 4.85 0 01-1.99-2.62 4.83 4.83 0 01-.01-2z" />
-          </svg>
-          <span className="text-[10px] text-muted-foreground">TikTok</span>
+          <span className="text-[10px] text-muted-foreground">
+            {t("Descargar", "Download")}
+          </span>
         </motion.button>
 
         {/* Copy Link */}
@@ -429,17 +346,6 @@ export function HalftimeShareButtons({
         </motion.button>
       </div>
 
-      {/* Toast for fallback messages */}
-      {toastMessage && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
-          className="rounded-xl border border-green-500/30 bg-green-500/10 px-4 py-2 text-center text-sm text-green-700 dark:text-green-400"
-        >
-          {toastMessage}
-        </motion.div>
-      )}
     </div>
   );
 }
