@@ -57,17 +57,25 @@ async function generateHalftimeStoryImage(
     : "debi-tirar";
   const colors = getThemeColors(validThemeId);
 
-  // Background gradient
-  const grad = ctx.createLinearGradient(0, 0, W, H);
-  grad.addColorStop(0, colors.background);
-  grad.addColorStop(0.5, colors.accent1 + "22");
-  grad.addColorStop(1, colors.background);
+  // Always use a dark background for readability, tinted with theme accent
+  const darkBg = "#0a0a0a";
+  // Pick a visible accent — use accent3 (gold/bright) for themes where accent1 is white/light
+  const isLightAccent1 = colors.accent1.toLowerCase() === "#ffffff" || colors.accent1.toLowerCase() === "#fff";
+  const accentPrimary = isLightAccent1 ? colors.accent3 : colors.accent1;
+  const accentSecondary = colors.accent2;
+
+  // Background: solid dark base with very subtle theme tint
+  ctx.fillStyle = darkBg;
+  ctx.fillRect(0, 0, W, H);
+  const grad = ctx.createRadialGradient(W / 2, H / 3, 0, W / 2, H / 3, H * 0.6);
+  grad.addColorStop(0, accentPrimary + "0A");
+  grad.addColorStop(1, "transparent");
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
   // Decorative circles
-  ctx.globalAlpha = 0.05;
-  ctx.fillStyle = colors.accent1;
+  ctx.globalAlpha = 0.03;
+  ctx.fillStyle = accentPrimary;
   ctx.beginPath();
   ctx.arc(200, 400, 300, 0, Math.PI * 2);
   ctx.fill();
@@ -79,27 +87,27 @@ async function generateHalftimeStoryImage(
   const shareUrl = getShareUrl(playlistId);
 
   // Top label
-  ctx.fillStyle = colors.accent1;
+  ctx.fillStyle = accentPrimary;
   ctx.font = "bold 32px system-ui, -apple-system, sans-serif";
   ctx.textAlign = "center";
   ctx.fillText("SUPER BOWL HALFTIME", W / 2, 300);
 
   ctx.font = "24px system-ui, -apple-system, sans-serif";
-  ctx.fillStyle = colors.accent2;
+  ctx.fillStyle = accentSecondary;
   ctx.fillText("PREDICTED SETLIST", W / 2, 345);
 
   // Nickname
-  ctx.fillStyle = colors.foreground;
+  ctx.fillStyle = "#ffffff";
   ctx.font = "bold 56px system-ui, -apple-system, sans-serif";
   ctx.fillText(nickname, W / 2, 450);
 
-  // Song count + duration
-  ctx.fillStyle = colors.accent1;
+  // Song count
+  ctx.fillStyle = accentPrimary;
   ctx.font = "bold 36px system-ui, -apple-system, sans-serif";
-  ctx.fillText(`${songCount} songs · ${formatDuration(totalMs)}`, W / 2, 520);
+  ctx.fillText(`${songCount} song${songCount === 1 ? "" : "s"}`, W / 2, 520);
 
   // Divider
-  ctx.strokeStyle = colors.accent1 + "33";
+  ctx.strokeStyle = accentPrimary + "44";
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(W / 2 - 200, 570);
@@ -117,12 +125,12 @@ async function generateHalftimeStoryImage(
     const y = startY + i * lineHeight;
 
     // Number
-    ctx.fillStyle = colors.accent1;
+    ctx.fillStyle = accentPrimary;
     ctx.font = "bold 28px system-ui, -apple-system, sans-serif";
     ctx.fillText(`${i + 1}.`, 180, y);
 
     // Title
-    ctx.fillStyle = colors.foreground;
+    ctx.fillStyle = "#ffffff";
     ctx.font = "28px system-ui, -apple-system, sans-serif";
     const maxWidth = 680;
     let title = track.title;
@@ -137,7 +145,7 @@ async function generateHalftimeStoryImage(
 
   if (tracks.length > maxSongs) {
     const y = startY + maxSongs * lineHeight;
-    ctx.fillStyle = colors.accent2;
+    ctx.fillStyle = accentSecondary;
     ctx.font = "italic 26px system-ui, -apple-system, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText(`...and ${tracks.length - maxSongs} more`, W / 2, y);
@@ -145,12 +153,12 @@ async function generateHalftimeStoryImage(
 
   // URL
   ctx.textAlign = "center";
-  ctx.fillStyle = colors.accent1;
+  ctx.fillStyle = accentPrimary;
   ctx.font = "26px system-ui, -apple-system, sans-serif";
   ctx.fillText(shareUrl, W / 2, H - 140);
 
   // Bottom branding
-  ctx.fillStyle = colors.foreground + "66";
+  ctx.fillStyle = "#666666";
   ctx.font = "22px system-ui, -apple-system, sans-serif";
   ctx.fillText("thisisbadbunny.com", W / 2, H - 80);
 
@@ -220,11 +228,6 @@ export function HalftimeShareButtons({
 
   const shareWithImage = useCallback(
     async (fallbackMessage: string) => {
-      if (!canShareFiles()) {
-        copyToClipboard(fallbackMessage);
-        return;
-      }
-
       setSharing(true);
       try {
         const imageFile = await generateHalftimeStoryImage(
@@ -235,14 +238,34 @@ export function HalftimeShareButtons({
           songCount,
           playlistId,
         );
-        await navigator.share({
-          text: shareText,
-          files: [imageFile],
-        });
-      } catch (err) {
-        if (err instanceof Error && err.name !== "AbortError") {
-          copyToClipboard(fallbackMessage);
+
+        // Mobile: use Web Share API to open native share sheet (Instagram/TikTok Stories)
+        if (canShareFiles()) {
+          try {
+            await navigator.share({
+              text: shareText,
+              files: [imageFile],
+            });
+            return;
+          } catch (err) {
+            if (err instanceof Error && err.name === "AbortError") return;
+            // Fall through to download
+          }
         }
+
+        // Desktop / fallback: download the image + copy link
+        const url = URL.createObjectURL(imageFile);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `halftime-setlist-${nickname.toLowerCase().replace(/\s+/g, "-")}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        await copyToClipboard(fallbackMessage);
+      } catch {
+        await copyToClipboard(fallbackMessage);
       } finally {
         setSharing(false);
       }
