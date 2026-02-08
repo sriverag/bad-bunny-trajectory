@@ -10,6 +10,8 @@ import { TrajectoryScene } from "../scenes/TrajectoryScene";
 import { ConcertsScene } from "../scenes/ConcertsScene";
 import { DiscographyScene } from "../scenes/DiscographyScene";
 import { InterviewsScene } from "../scenes/InterviewsScene";
+import { TriviaScene } from "../scenes/TriviaScene";
+import { SetlistScene } from "../scenes/SetlistScene";
 import { SuperBowlScene } from "../scenes/SuperBowlScene";
 import { OutroScene } from "../scenes/OutroScene";
 
@@ -25,11 +27,13 @@ const TRAJECTORY_DURATION = Math.round(3.5 * FPS); // 105
 const CONCERTS_DURATION = Math.round(3.5 * FPS); // 105
 const DISCOGRAPHY_DETAIL_DURATION = Math.round(3.5 * FPS); // 105
 const INTERVIEWS_DURATION = Math.round(3.5 * FPS); // 105
+const TRIVIA_DURATION = Math.round(3.5 * FPS); // 105
+const SETLIST_DURATION = Math.round(3.5 * FPS); // 105
 const SUPERBOWL_DURATION = Math.round(3.5 * FPS); // 105
 const OUTRO_DURATION = Math.round(3.5 * FPS); // 105
 
-const SCENE_COUNT = 10;
-const TRANSITION_COUNT = SCENE_COUNT - 1; // 9
+const SCENE_COUNT = 12;
+const TRANSITION_COUNT = SCENE_COUNT - 1; // 11
 
 export const TOTAL_DURATION =
   INTRO_DURATION +
@@ -40,6 +44,8 @@ export const TOTAL_DURATION =
   CONCERTS_DURATION +
   DISCOGRAPHY_DETAIL_DURATION +
   INTERVIEWS_DURATION +
+  TRIVIA_DURATION +
+  SETLIST_DURATION +
   SUPERBOWL_DURATION +
   OUTRO_DURATION -
   TRANSITION_COUNT * TRANSITION_DURATION;
@@ -148,7 +154,27 @@ export const AnnouncementVideo: React.FC = () => {
         timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
       />
 
-      {/* 9. Super Bowl Callout */}
+      {/* 9. Trivia Games */}
+      <TransitionSeries.Sequence durationInFrames={TRIVIA_DURATION}>
+        <TriviaScene />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+      />
+
+      {/* 10. Setlist Prediction */}
+      <TransitionSeries.Sequence durationInFrames={SETLIST_DURATION}>
+        <SetlistScene />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+      />
+
+      {/* 11. Super Bowl Callout */}
       <TransitionSeries.Sequence durationInFrames={SUPERBOWL_DURATION}>
         <SuperBowlScene />
       </TransitionSeries.Sequence>
@@ -158,7 +184,7 @@ export const AnnouncementVideo: React.FC = () => {
         timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
       />
 
-      {/* 10. Outro/CTA */}
+      {/* 12. Outro/CTA */}
       <TransitionSeries.Sequence durationInFrames={OUTRO_DURATION}>
         <OutroScene />
       </TransitionSeries.Sequence>

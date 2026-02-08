@@ -19,7 +19,7 @@ export const OutroScene: React.FC = () => {
   const { fps } = useVideoConfig();
 
   // Logo fade in
-  const logoOpacity = interpolate(frame, [0, 0.4 * fps], [0, 1], {
+  const logoOpacity = interpolate(frame, [0, 0.5 * fps], [0, 1], {
     extrapolateRight: "clamp",
     extrapolateLeft: "clamp",
   });
@@ -29,13 +29,13 @@ export const OutroScene: React.FC = () => {
     config: { damping: 15, stiffness: 100 },
   });
 
-  // URL spring entrance
+  // URL entrance
   const urlScale = spring({
-    frame: frame - Math.floor(0.3 * fps),
+    frame: frame - Math.floor(0.5 * fps),
     fps,
     config: { damping: 10, stiffness: 150 },
   });
-  const urlOpacity = interpolate(frame, [0.3 * fps, 0.6 * fps], [0, 1], {
+  const urlOpacity = interpolate(frame, [0.5 * fps, 0.8 * fps], [0, 1], {
     extrapolateRight: "clamp",
     extrapolateLeft: "clamp",
   });
@@ -58,19 +58,20 @@ export const OutroScene: React.FC = () => {
         position: "relative",
       }}
     >
-      {/* Logo */}
+      {/* Logo - inverted to white for dark background */}
       <div
         style={{
           opacity: logoOpacity,
           transform: `scale(${logoScale})`,
-          marginBottom: 50,
+          marginBottom: 60,
+          filter: "invert(1)",
         }}
       >
         <Img
           src={staticFile("images/logo.png")}
           style={{
-            width: 160,
-            height: 160,
+            width: 500,
+            height: 400,
             objectFit: "contain",
           }}
         />
@@ -81,16 +82,16 @@ export const OutroScene: React.FC = () => {
         style={{
           opacity: urlOpacity,
           transform: `scale(${urlScale})`,
-          fontSize: 64,
-          fontWeight: 900,
-          color: "#ffffff",
+          fontSize: 36,
+          fontWeight: 700,
+          color: "#888888",
           textAlign: "center",
-          textShadow: `0 0 30px ${currentColor}88`,
+          letterSpacing: 3,
+          textShadow: `0 0 20px ${currentColor}44`,
         }}
       >
-        thisisbadbunny.com
+        www.thisisbadbunny.com
       </div>
-
     </div>
   );
 };

@@ -12,7 +12,6 @@ interface HalftimeShareButtonsProps {
   nickname: string;
   themeId: string;
   tracks: SetlistTrack[];
-  totalMs: number;
   songCount: number;
 }
 
@@ -33,7 +32,6 @@ async function generateHalftimeStoryImage(
   nickname: string,
   themeId: string,
   tracks: SetlistTrack[],
-  totalMs: number,
   songCount: number,
   playlistId: string,
 ): Promise<File> {
@@ -210,7 +208,6 @@ export function HalftimeShareButtons({
   nickname,
   themeId,
   tracks,
-  totalMs,
   songCount,
 }: HalftimeShareButtonsProps) {
   const { t } = useLanguage();
@@ -244,7 +241,7 @@ export function HalftimeShareButtons({
     setSharing(true);
     try {
       const imageFile = await generateHalftimeStoryImage(
-        nickname, themeId, tracks, totalMs, songCount, playlistId,
+        nickname, themeId, tracks, songCount, playlistId,
       );
       const blobUrl = URL.createObjectURL(imageFile);
       const a = document.createElement("a");
@@ -269,7 +266,7 @@ export function HalftimeShareButtons({
     setSharing(true);
     try {
       const imageFile = await generateHalftimeStoryImage(
-        nickname, themeId, tracks, totalMs, songCount, playlistId,
+        nickname, themeId, tracks, songCount, playlistId,
       );
 
       // Use Web Share API if available — on iOS this shows "Save Image" to Photos

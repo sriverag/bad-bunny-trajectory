@@ -8,13 +8,6 @@ export const alt = "Super Bowl Halftime Predicted Setlist";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-function formatDuration(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
-
 export default async function OGImage({
   params,
 }: {
@@ -131,10 +124,6 @@ export default async function OGImage({
           <div style={{ display: "flex", gap: "8px" }}>
             <span style={{ fontWeight: 700 }}>{playlist.songCount}</span>
             <span style={{ opacity: 0.7 }}>songs</span>
-          </div>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <span style={{ fontWeight: 700 }}>{formatDuration(playlist.totalMs)}</span>
-            <span style={{ opacity: 0.7 }}>total</span>
           </div>
         </div>
 

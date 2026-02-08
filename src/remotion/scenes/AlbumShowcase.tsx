@@ -8,9 +8,7 @@ import {
 } from "remotion";
 import { albumCovers, themes } from "../lib/theme-colors";
 
-const GRID_COLS = 3;
-const GRID_ROWS = 2;
-const CARD_SIZE = 280;
+const CARD_SIZE = 240;
 const GAP = 24;
 
 const entryDirections = [
@@ -18,20 +16,34 @@ const entryDirections = [
   { x: 0, y: -400 },
   { x: 400, y: -300 },
   { x: -400, y: 300 },
-  { x: 0, y: 400 },
+  { x: -150, y: 400 },
+  { x: 150, y: 400 },
   { x: 400, y: 300 },
 ];
 
-const rotations = [-3, 2, -2, 2.5, -1.5, 3];
+const rotations = [-3, 2, -2, 2.5, -1.5, 3, -2.5];
+
+// Compute position for 3-top, 4-bottom layout
+const getCardPosition = (i: number) => {
+  if (i < 3) {
+    // Top row: 3 cards, centered
+    const rowWidth = 3 * CARD_SIZE + 2 * GAP;
+    const startX = (1080 - rowWidth) / 2;
+    const topY = (1080 - (2 * CARD_SIZE + GAP)) / 2;
+    return { x: startX + i * (CARD_SIZE + GAP), y: topY };
+  } else {
+    // Bottom row: 4 cards, centered
+    const col = i - 3;
+    const rowWidth = 4 * CARD_SIZE + 3 * GAP;
+    const startX = (1080 - rowWidth) / 2;
+    const topY = (1080 - (2 * CARD_SIZE + GAP)) / 2 + CARD_SIZE + GAP;
+    return { x: startX + col * (CARD_SIZE + GAP), y: topY };
+  }
+};
 
 export const AlbumShowcase: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-
-  const gridWidth = GRID_COLS * CARD_SIZE + (GRID_COLS - 1) * GAP;
-  const gridHeight = GRID_ROWS * CARD_SIZE + (GRID_ROWS - 1) * GAP;
-  const startX = (1080 - gridWidth) / 2;
-  const startY = (1080 - gridHeight) / 2;
 
   return (
     <div
@@ -44,8 +56,6 @@ export const AlbumShowcase: React.FC = () => {
       }}
     >
       {albumCovers.map((album, i) => {
-        const col = i % GRID_COLS;
-        const row = Math.floor(i / GRID_COLS);
         const delay = i * 4;
 
         const progress = spring({
@@ -64,8 +74,7 @@ export const AlbumShowcase: React.FC = () => {
         const rotation = interpolate(progress, [0, 1], [rotations[i] * 5, rotations[i]]);
 
         const theme = themes[album.theme];
-        const targetX = startX + col * (CARD_SIZE + GAP);
-        const targetY = startY + row * (CARD_SIZE + GAP);
+        const pos = getCardPosition(i);
 
         // Glow pulse
         const glowIntensity = interpolate(
@@ -79,8 +88,8 @@ export const AlbumShowcase: React.FC = () => {
             key={album.file}
             style={{
               position: "absolute",
-              left: targetX,
-              top: targetY,
+              left: pos.x,
+              top: pos.y,
               width: CARD_SIZE,
               height: CARD_SIZE,
               transform: `translate(${x}px, ${y}px) rotate(${rotation}deg)`,

@@ -58,7 +58,7 @@ export const FeatureDiscography: React.FC = () => {
           marginBottom: 60,
         }}
       >
-        6 Albums. 6 Themes.
+        7 Albums. 7 Themes.
       </div>
 
       <div

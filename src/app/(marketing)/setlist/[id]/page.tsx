@@ -45,17 +45,9 @@ async function getPlaylist(id: string) {
     nickname: playlist.nickname,
     themeId: playlist.themeId,
     tracks: orderedTracks,
-    totalMs: playlist.totalMs,
     songCount: playlist.songCount,
     createdAt: playlist.createdAt.toISOString(),
   };
-}
-
-function formatDuration(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -64,7 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!playlist) return { title: "Playlist Not Found" };
 
   const title = `${playlist.nickname}'s Super Bowl Halftime Setlist`;
-  const description = `${playlist.songCount} songs, ${formatDuration(playlist.totalMs)} - Predicted Bad Bunny Super Bowl halftime setlist`;
+  const description = `${playlist.songCount} songs - Predicted Bad Bunny Super Bowl halftime setlist`;
 
   return {
     title,
@@ -95,7 +87,6 @@ export default async function HalftimeResultPage({ params }: Props) {
         nickname={playlist.nickname}
         themeId={playlist.themeId}
         tracks={playlist.tracks}
-        totalMs={playlist.totalMs}
         songCount={playlist.songCount}
         createdAt={playlist.createdAt}
       />

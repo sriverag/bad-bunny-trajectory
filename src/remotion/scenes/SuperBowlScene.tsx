@@ -172,7 +172,7 @@ export const SuperBowlScene: React.FC = () => {
             textTransform: "uppercase",
           }}
         >
-          Coming Soon
+          Don't Miss It
         </div>
       </div>
     </div>

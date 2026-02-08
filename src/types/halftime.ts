@@ -15,7 +15,6 @@ export interface HalftimePlaylistData {
   nickname: string;
   themeId: string;
   tracks: SetlistTrack[];
-  totalMs: number;
   songCount: number;
   createdAt: string;
 }
