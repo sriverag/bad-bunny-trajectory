@@ -4,6 +4,7 @@ export interface SetlistTrack {
   trackNumber: number;
   durationMs: number;
   featuring?: string;
+  previewUrl?: string;
   albumId: string;
   albumTitle: string;
   albumCoverUrl: string;

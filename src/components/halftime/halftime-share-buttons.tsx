@@ -223,16 +223,23 @@ export function HalftimeShareButtons({
       const imageFile = await generateHalftimeStoryImage(
         nickname, themeId, tracks, totalMs, songCount, playlistId,
       );
-      const blobUrl = URL.createObjectURL(imageFile);
-      const a = document.createElement("a");
-      a.href = blobUrl;
-      a.download = `halftime-setlist-${nickname.toLowerCase().replace(/\s+/g, "-")}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(blobUrl);
+
+      // Use Web Share API if available — on iOS this shows "Save Image" to Photos
+      if (navigator.share && navigator.canShare?.({ files: [imageFile] })) {
+        await navigator.share({ files: [imageFile] });
+      } else {
+        // Fallback: download via anchor tag (saves to Files on iOS, Downloads on desktop)
+        const blobUrl = URL.createObjectURL(imageFile);
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = `halftime-setlist-${nickname.toLowerCase().replace(/\s+/g, "-")}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+      }
     } catch {
-      // silently fail
+      // User cancelled share or error — silently fail
     } finally {
       setSharing(false);
     }
