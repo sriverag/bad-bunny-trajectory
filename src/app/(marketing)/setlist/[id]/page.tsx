@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { PageTransition } from "@/components/layout/page-transition";
-import { HalftimeShareButtons } from "@/components/halftime/halftime-share-buttons";
+import { SetlistResult } from "@/components/halftime/setlist-result";
 import type { SetlistTrack } from "@/types/halftime";
 
 interface Props {
@@ -91,65 +90,15 @@ export default async function HalftimeResultPage({ params }: Props) {
 
   return (
     <PageTransition>
-      <div className="flex min-h-[80vh] flex-col items-center justify-center px-4 py-12">
-        {/* Header */}
-        <div className="mb-8 flex flex-col items-center gap-2">
-          <span className="text-5xl md:text-6xl">🏈</span>
-          <h1 className="text-2xl font-heading text-foreground md:text-3xl">
-            {playlist.nickname}&apos;s{" "}
-            <span className="text-primary">Predicted Setlist</span>
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {playlist.songCount} songs
-          </p>
-        </div>
-
-        {/* Numbered song list */}
-        <div className="mb-8 w-full max-w-md space-y-2">
-          {playlist.tracks.map((track, index) => (
-            <div
-              key={track.id}
-              className="flex items-center justify-center rounded-xl border border-border/50 bg-card/80 px-4 py-3"
-            >
-              <div className="min-w-0 text-center">
-                <p className="truncate text-sm font-medium text-foreground">
-                  {track.title}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Date */}
-        <p className="mb-6 text-xs text-muted-foreground">
-          Created on{" "}
-          {new Date(playlist.createdAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </p>
-
-        {/* Share buttons */}
-        <div className="w-full max-w-md mb-6">
-          <HalftimeShareButtons
-            playlistId={playlist.id}
-            nickname={playlist.nickname}
-            themeId={playlist.themeId}
-            tracks={playlist.tracks}
-            totalMs={playlist.totalMs}
-            songCount={playlist.songCount}
-          />
-        </div>
-
-        {/* CTA */}
-        <Link
-          href="/setlist"
-          className="rounded-full bg-primary px-8 py-3 font-semibold text-primary-foreground shadow-lg transition-shadow hover:shadow-xl"
-        >
-          Build Your Own Setlist
-        </Link>
-      </div>
+      <SetlistResult
+        playlistId={playlist.id}
+        nickname={playlist.nickname}
+        themeId={playlist.themeId}
+        tracks={playlist.tracks}
+        totalMs={playlist.totalMs}
+        songCount={playlist.songCount}
+        createdAt={playlist.createdAt}
+      />
     </PageTransition>
   );
 }

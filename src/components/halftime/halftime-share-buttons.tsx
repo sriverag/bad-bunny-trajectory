@@ -59,21 +59,44 @@ async function generateHalftimeStoryImage(
   // Theme palette matching CSS variables from each theme file
   const THEME_PALETTE: Record<string, {
     primary: string; background: string; foreground: string;
-    card: string; border: string; muted: string;
+    card: string; border: string; muted: string; glow: string;
   }> = {
-    "debi-tirar": { primary: "#2d6a4f", background: "#faf8f5", foreground: "#2d1f14", card: "#f2ede6", border: "#ddd5c8", muted: "#6b5d52" },
-    "nadie-sabe": { primary: "#ffffff", background: "#050505", foreground: "#d4d4d4", card: "#111111", border: "#222222", muted: "#808080" },
-    verano: { primary: "#2a9d8f", background: "#faf7f2", foreground: "#1a2a3a", card: "#f0ebe3", border: "#b8b0a4", muted: "#3a4a5a" },
-    "ultimo-tour": { primary: "#e63946", background: "#0d0907", foreground: "#e8e0d8", card: "#1a1410", border: "#2a201a", muted: "#a89888" },
-    yhlqmdlg: { primary: "#ff2d95", background: "#0a0a12", foreground: "#f8f8ff", card: "#12121f", border: "#3a2040", muted: "#b0b0c8" },
-    oasis: { primary: "#00d4aa", background: "#0c0c14", foreground: "#f0f0f5", card: "#14141e", border: "#1a2a28", muted: "#a0a0b8" },
-    x100pre: { primary: "#ff6b35", background: "#120a1e", foreground: "#f5f0eb", card: "#1e1230", border: "#2a1a3e", muted: "#c8b8d8" },
+    "debi-tirar": { primary: "#2d6a4f", background: "#faf8f5", foreground: "#2d1f14", card: "#f2ede6", border: "#ddd5c8", muted: "#6b5d52", glow: "rgba(45, 106, 79, 0.15)" },
+    "nadie-sabe": { primary: "#ffffff", background: "#050505", foreground: "#d4d4d4", card: "#111111", border: "#222222", muted: "#808080", glow: "rgba(255, 255, 255, 0.1)" },
+    verano: { primary: "#2a9d8f", background: "#faf7f2", foreground: "#1a2a3a", card: "#f0ebe3", border: "#b8b0a4", muted: "#3a4a5a", glow: "rgba(78, 205, 196, 0.2)" },
+    "ultimo-tour": { primary: "#e63946", background: "#0d0907", foreground: "#e8e0d8", card: "#1a1410", border: "#2a201a", muted: "#a89888", glow: "rgba(230, 57, 70, 0.25)" },
+    yhlqmdlg: { primary: "#ff2d95", background: "#0a0a12", foreground: "#f8f8ff", card: "#12121f", border: "#3a2040", muted: "#b0b0c8", glow: "rgba(255, 45, 149, 0.3)" },
+    oasis: { primary: "#00d4aa", background: "#0c0c14", foreground: "#f0f0f5", card: "#14141e", border: "#1a2a28", muted: "#a0a0b8", glow: "rgba(0, 212, 170, 0.2)" },
+    x100pre: { primary: "#ff6b35", background: "#120a1e", foreground: "#f5f0eb", card: "#1e1230", border: "#2a1a3e", muted: "#c8b8d8", glow: "rgba(255, 107, 53, 0.3)" },
   };
   const palette = THEME_PALETTE[validThemeId] ?? THEME_PALETTE["debi-tirar"];
 
   // Background
   ctx.fillStyle = palette.background;
   ctx.fillRect(0, 0, W, H);
+
+  // Radial glow overlays for depth (matches the UI animated backgrounds)
+  const glowColor = palette.glow;
+  // Top-left glow
+  const g1 = ctx.createRadialGradient(W * 0.2, H * 0.15, 0, W * 0.2, H * 0.15, W * 0.7);
+  g1.addColorStop(0, glowColor);
+  g1.addColorStop(1, "transparent");
+  ctx.fillStyle = g1;
+  ctx.fillRect(0, 0, W, H);
+  // Bottom-right glow
+  const g2 = ctx.createRadialGradient(W * 0.8, H * 0.75, 0, W * 0.8, H * 0.75, W * 0.6);
+  g2.addColorStop(0, glowColor);
+  g2.addColorStop(1, "transparent");
+  ctx.fillStyle = g2;
+  ctx.fillRect(0, 0, W, H);
+  // Center subtle glow
+  const g3 = ctx.createRadialGradient(W * 0.5, H * 0.4, 0, W * 0.5, H * 0.4, W * 0.9);
+  g3.addColorStop(0, glowColor);
+  g3.addColorStop(1, "transparent");
+  ctx.globalAlpha = 0.5;
+  ctx.fillStyle = g3;
+  ctx.fillRect(0, 0, W, H);
+  ctx.globalAlpha = 1;
 
   // Football emoji
   ctx.textAlign = "center";
