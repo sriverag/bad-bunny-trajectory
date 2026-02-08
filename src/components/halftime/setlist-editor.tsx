@@ -74,13 +74,13 @@ function SetlistItem({
       {track.previewUrl && (
         <button
           onClick={(e) => onPlayPause(e, track)}
-          className="shrink-0 p-1.5 rounded-full hover:bg-primary/20 transition-colors"
+          className="shrink-0 p-2 rounded-full hover:bg-primary/20 transition-colors"
           aria-label={isPlaying ? `Pause ${track.title}` : `Play preview of ${track.title}`}
         >
           {isPlaying ? (
-            <Pause className="h-3.5 w-3.5 text-primary" fill="currentColor" />
+            <Pause className="h-4 w-4 text-primary" fill="currentColor" />
           ) : (
-            <Play className="h-3.5 w-3.5 text-primary" fill="currentColor" />
+            <Play className="h-4 w-4 text-primary" fill="currentColor" />
           )}
         </button>
       )}

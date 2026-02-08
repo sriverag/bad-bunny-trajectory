@@ -202,33 +202,33 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center shrink-0">
                   {hasPreview && (
                     <button
                       onClick={(e) => handlePlayPause(e, track)}
-                      className="p-1.5 rounded-full hover:bg-primary/20 transition-colors"
+                      className="p-2 rounded-full hover:bg-primary/20 transition-colors"
                       aria-label={isPlaying ? `Pause ${track.title}` : `Play preview of ${track.title}`}
                     >
                       {isPlaying ? (
-                        <Pause className="h-3.5 w-3.5 text-primary" fill="currentColor" />
+                        <Pause className="h-4 w-4 text-primary" fill="currentColor" />
                       ) : (
-                        <Play className="h-3.5 w-3.5 text-primary" fill="currentColor" />
+                        <Play className="h-4 w-4 text-primary" fill="currentColor" />
                       )}
                     </button>
                   )}
-                  <div className="p-1.5">
-                    {isAdded ? (
+                  {isAdded ? (
+                    <div className="p-2">
                       <Check className="h-4 w-4 text-green-500" />
-                    ) : (
-                      <button
-                        onClick={() => onAddTrack(track)}
-                        className="rounded-full hover:bg-primary/20 transition-colors"
-                        aria-label={`Add ${track.title}`}
-                      >
-                        <Plus className="h-4 w-4 text-primary" />
-                      </button>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => onAddTrack(track)}
+                      className="p-2 rounded-full hover:bg-primary/20 transition-colors"
+                      aria-label={`Add ${track.title}`}
+                    >
+                      <Plus className="h-4 w-4 text-primary" />
+                    </button>
+                  )}
                 </div>
               </motion.div>
             );
