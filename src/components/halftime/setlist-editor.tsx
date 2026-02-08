@@ -1,7 +1,8 @@
 "use client";
 
+import { useState, useRef, useCallback } from "react";
 import { Reorder, useDragControls } from "framer-motion";
-import { ChevronUp, ChevronDown, GripVertical, X } from "lucide-react";
+import { ChevronUp, ChevronDown, GripVertical, X, Play, Pause } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/use-language";
 import type { SetlistTrack } from "@/types/halftime";
@@ -12,17 +13,12 @@ interface SetlistEditorProps {
   onRemove: (trackId: string) => void;
 }
 
-function formatDuration(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
-
 function SetlistItem({
   track,
   index,
   total,
+  isPlaying,
+  onPlayPause,
   onRemove,
   onMoveUp,
   onMoveDown,
@@ -30,6 +26,8 @@ function SetlistItem({
   track: SetlistTrack;
   index: number;
   total: number;
+  isPlaying: boolean;
+  onPlayPause: (e: React.MouseEvent, track: SetlistTrack) => void;
   onRemove: (id: string) => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
@@ -59,7 +57,10 @@ function SetlistItem({
 
       {/* Track info */}
       <div className="flex-1 min-w-0">
-        <p className="truncate text-sm font-medium text-foreground">
+        <p className={cn(
+          "truncate text-sm font-medium",
+          isPlaying ? "text-primary" : "text-foreground",
+        )}>
           {track.title}
         </p>
         {track.featuring && (
@@ -69,10 +70,20 @@ function SetlistItem({
         )}
       </div>
 
-      {/* Duration */}
-      <span className="hidden shrink-0 text-xs text-muted-foreground tabular-nums sm:inline">
-        {formatDuration(track.durationMs)}
-      </span>
+      {/* Play preview */}
+      {track.previewUrl && (
+        <button
+          onClick={(e) => onPlayPause(e, track)}
+          className="shrink-0 p-1.5 rounded-full hover:bg-primary/20 transition-colors"
+          aria-label={isPlaying ? `Pause ${track.title}` : `Play preview of ${track.title}`}
+        >
+          {isPlaying ? (
+            <Pause className="h-3.5 w-3.5 text-primary" fill="currentColor" />
+          ) : (
+            <Play className="h-3.5 w-3.5 text-primary" fill="currentColor" />
+          )}
+        </button>
+      )}
 
       {/* Move up/down arrows */}
       <div className="flex shrink-0 items-center gap-1">
@@ -108,6 +119,35 @@ function SetlistItem({
 
 export function SetlistEditor({ setlist, onReorder, onRemove }: SetlistEditorProps) {
   const { t } = useLanguage();
+  const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handlePlayPause = useCallback(
+    (e: React.MouseEvent, track: SetlistTrack) => {
+      e.stopPropagation();
+
+      if (playingTrackId === track.id && audioRef.current) {
+        audioRef.current.pause();
+        setPlayingTrackId(null);
+        return;
+      }
+
+      if (!track.previewUrl) return;
+
+      if (!audioRef.current) {
+        const audio = new Audio();
+        audio.addEventListener("ended", () => setPlayingTrackId(null));
+        audio.addEventListener("error", () => setPlayingTrackId(null));
+        audioRef.current = audio;
+      }
+
+      const a = audioRef.current;
+      a.src = track.previewUrl;
+      a.play().catch(() => setPlayingTrackId(null));
+      setPlayingTrackId(track.id);
+    },
+    [playingTrackId],
+  );
 
   if (setlist.length === 0) {
     return (
@@ -135,6 +175,8 @@ export function SetlistEditor({ setlist, onReorder, onRemove }: SetlistEditorPro
           track={track}
           index={index}
           total={setlist.length}
+          isPlaying={playingTrackId === track.id}
+          onPlayPause={handlePlayPause}
           onRemove={onRemove}
           onMoveUp={() => {
             if (index === 0) return;

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Search, Plus, Check } from "lucide-react";
+import { useState, useMemo, useRef, useCallback } from "react";
+import { Search, Plus, Check, Play, Pause } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/use-language";
@@ -34,6 +34,35 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
   const { t } = useLanguage();
   const [selectedAlbumId, setSelectedAlbumId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handlePlayPause = useCallback(
+    (e: React.MouseEvent, track: SetlistTrack) => {
+      e.stopPropagation();
+
+      if (playingTrackId === track.id && audioRef.current) {
+        audioRef.current.pause();
+        setPlayingTrackId(null);
+        return;
+      }
+
+      if (!track.previewUrl) return;
+
+      if (!audioRef.current) {
+        const audio = new Audio();
+        audio.addEventListener("ended", () => setPlayingTrackId(null));
+        audio.addEventListener("error", () => setPlayingTrackId(null));
+        audioRef.current = audio;
+      }
+
+      const a = audioRef.current;
+      a.src = track.previewUrl;
+      a.play().catch(() => setPlayingTrackId(null));
+      setPlayingTrackId(track.id);
+    },
+    [playingTrackId],
+  );
 
   const selectedAlbum = selectedAlbumId ? albums.find((a) => a.id === selectedAlbumId) : null;
   const searchPlaceholder = selectedAlbum
@@ -59,7 +88,17 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
       const album = albums.find((a) => a.id === selectedAlbumId);
       tracks = album?.tracks ?? [];
     } else {
-      tracks = albums.flatMap((a) => a.tracks);
+      // Sort albums so Singles/Colaboraciones appear last
+      const sorted = [...albums].sort((a, b) => {
+        const special = ["Singles", "Colaboraciones"];
+        const aIdx = special.indexOf(a.title);
+        const bIdx = special.indexOf(b.title);
+        if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+        if (aIdx !== -1) return 1;
+        if (bIdx !== -1) return -1;
+        return 0;
+      });
+      tracks = sorted.flatMap((a) => a.tracks);
     }
 
     if (query) {
@@ -137,26 +176,31 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
         ) : (
           filteredTracks.map((track, index) => {
             const isAdded = setlistTrackIds.has(track.id);
+            const isPlaying = playingTrackId === track.id;
+            const hasPreview = !!track.previewUrl;
+
             return (
-              <motion.button
+              <motion.div
                 key={track.id}
-                onClick={() => !isAdded && onAddTrack(track)}
-                disabled={isAdded}
                 className={cn(
                   "flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left transition-colors",
                   index % 2 === 0 ? "bg-muted/20" : "bg-transparent",
-                  isAdded
-                    ? "opacity-40 cursor-not-allowed"
-                    : "hover:bg-primary/10 cursor-pointer",
+                  !isAdded && "hover:bg-primary/10",
                 )}
                 whileTap={isAdded ? undefined : { scale: 0.98 }}
               >
-                <div className="flex items-center gap-2 min-w-0 flex-1">
+                <div className={cn(
+                  "flex items-center gap-2 min-w-0 flex-1",
+                  isAdded && "opacity-40",
+                )}>
                   <span className="w-5 shrink-0 text-center text-xs text-muted-foreground">
                     {track.trackNumber}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-foreground">
+                    <p className={cn(
+                      "truncate text-sm font-medium",
+                      isPlaying ? "text-primary" : "text-foreground",
+                    )}>
                       {track.title}
                     </p>
                     <p className="truncate text-xs text-muted-foreground">
@@ -165,17 +209,35 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <span className="hidden text-xs text-muted-foreground sm:inline">
-                    {formatDuration(track.durationMs)}
-                  </span>
-                  {isAdded ? (
-                    <Check className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <Plus className="h-4 w-4 text-primary" />
+                <div className="flex items-center gap-1 shrink-0">
+                  {hasPreview && (
+                    <button
+                      onClick={(e) => handlePlayPause(e, track)}
+                      className="p-1.5 rounded-full hover:bg-primary/20 transition-colors"
+                      aria-label={isPlaying ? `Pause ${track.title}` : `Play preview of ${track.title}`}
+                    >
+                      {isPlaying ? (
+                        <Pause className="h-3.5 w-3.5 text-primary" fill="currentColor" />
+                      ) : (
+                        <Play className="h-3.5 w-3.5 text-primary" fill="currentColor" />
+                      )}
+                    </button>
                   )}
+                  <div className="p-1.5">
+                    {isAdded ? (
+                      <Check className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <button
+                        onClick={() => onAddTrack(track)}
+                        className="rounded-full hover:bg-primary/20 transition-colors"
+                        aria-label={`Add ${track.title}`}
+                      >
+                        <Plus className="h-4 w-4 text-primary" />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </motion.button>
+              </motion.div>
             );
           })
         )}

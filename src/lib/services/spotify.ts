@@ -198,6 +198,47 @@ export async function getAlbumPreviewUrls(
 }
 
 // ---------------------------------------------------------------------------
+// Spotify API: Individual Track Preview URLs (for Singles / Collaborations)
+// ---------------------------------------------------------------------------
+
+export async function getTrackPreviewUrls(
+  tracks: { trackNumber: number; spotifyId: string | null }[]
+): Promise<PreviewUrlResult[]> {
+  const tracksWithIds = tracks.filter((t) => t.spotifyId);
+  if (tracksWithIds.length === 0) return [];
+
+  const cacheKey = `spotify:track-previews:v1:${tracksWithIds.map((t) => t.spotifyId).join(",")}`;
+  const cached = await getCachedResponse(cacheKey);
+  if (cached) {
+    try {
+      return JSON.parse(cached);
+    } catch {
+      // corrupted cache, refetch
+    }
+  }
+
+  const results: PreviewUrlResult[] = [];
+  const batchSize = 5;
+  for (let i = 0; i < tracksWithIds.length; i += batchSize) {
+    const batch = tracksWithIds.slice(i, i + batchSize);
+    const previews = await Promise.all(
+      batch.map(async (t) => {
+        const previewUrl = await fetchPreviewFromEmbed(t.spotifyId!);
+        return {
+          spotifyTrackId: t.spotifyId!,
+          previewUrl,
+          trackNumber: t.trackNumber,
+        };
+      })
+    );
+    results.push(...previews);
+  }
+
+  await setCachedResponse(cacheKey, JSON.stringify(results));
+  return results;
+}
+
+// ---------------------------------------------------------------------------
 // Existing public API (unchanged)
 // ---------------------------------------------------------------------------
 
