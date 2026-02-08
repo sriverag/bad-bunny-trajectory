@@ -97,13 +97,11 @@ export function SpotifySaveButton({ playlistId }: SpotifySaveButtonProps) {
             "font-medium transition-colors hover:bg-[#1DB954]/25",
           )}
         >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          <SpotifyIcon className="h-5 w-5" />
+          <span>{t("Ir al Playlist", "Open Playlist")}</span>
+          <svg viewBox="0 0 24 24" className="ml-0.5 h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
           </svg>
-          <span>
-            {t("Guardado en Spotify!", "Saved to Spotify!")}
-          </span>
-          <SpotifyIcon className="ml-1 h-4 w-4" />
         </motion.a>
         {state.skipped > 0 && (
           <p className="mt-1.5 text-center text-xs text-muted-foreground">
