@@ -27,6 +27,7 @@ export const metadata: Metadata = {
 
 export default async function DiscographyPage() {
   const albums = await prisma.album.findMany({
+    where: { slug: { not: "collaborations" } },
     include: { tracks: true },
     orderBy: { year: "desc" },
   });

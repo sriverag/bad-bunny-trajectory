@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/sheet";
 
 // Desktop: split into primary (always visible) + secondary (under "More" dropdown)
-const PRIMARY_HREFS = new Set(["/", "/trajectory", "/discography", "/awards", "/trivia"]);
+const PRIMARY_HREFS = new Set(["/", "/trajectory", "/discography", "/awards", "/trivia", "/setlist"]);
 const DESKTOP_PRIMARY = NAV_LINKS.filter((l) => PRIMARY_HREFS.has(l.href));
 const DESKTOP_MORE = NAV_LINKS.filter((l) => !PRIMARY_HREFS.has(l.href));
 
@@ -178,7 +178,7 @@ export function Navbar() {
           <ThemeSwitcher />
           <button
             onClick={toggleLanguage}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all"
             aria-label={t("Cambiar idioma", "Toggle language")}
           >
             <Globe className="w-4 h-4" />
@@ -237,7 +237,7 @@ export function Navbar() {
 
                 <button
                   onClick={toggleLanguage}
-                  className="flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium text-accent-foreground bg-accent hover:bg-accent/80 transition-colors"
+                  className="flex items-center justify-between w-full px-4 py-3 rounded-lg text-sm font-medium text-foreground bg-accent/20 hover:bg-accent/40 transition-all border border-border"
                   aria-label={t("Cambiar idioma", "Toggle language")}
                 >
                   <span>{t("Idioma", "Language")}</span>
