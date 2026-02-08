@@ -186,7 +186,7 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
                   "flex items-center gap-2 min-w-0 flex-1",
                   isAdded && "opacity-40",
                 )}>
-                  <span className="w-5 shrink-0 text-center text-xs text-muted-foreground">
+                  <span className="hidden w-5 shrink-0 text-center text-xs text-muted-foreground sm:block">
                     {track.trackNumber}
                   </span>
                   <div className="min-w-0 flex-1">
