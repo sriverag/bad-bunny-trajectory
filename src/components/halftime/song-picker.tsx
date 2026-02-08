@@ -25,10 +25,19 @@ interface SongPickerProps {
 
 export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerProps) {
   const { t } = useLanguage();
-  const [selectedAlbumId, setSelectedAlbumId] = useState<string | null>(null);
+  const [selectedAlbumIds, setSelectedAlbumIds] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  function toggleAlbum(id: string) {
+    setSelectedAlbumIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   const handlePlayPause = useCallback(
     (e: React.MouseEvent, track: SetlistTrack) => {
@@ -57,16 +66,13 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
     [playingTrackId],
   );
 
-  const selectedAlbum = selectedAlbumId ? albums.find((a) => a.id === selectedAlbumId) : null;
-  const searchPlaceholder = selectedAlbum
+  const searchPlaceholder = selectedAlbumIds.size === 1
     ? (() => {
-        if (selectedAlbum.title === "Colaboraciones") {
-          return t("Buscar colaboraciones...", "Search collabs...");
-        }
-        if (selectedAlbum.title === "Singles") {
-          return t("Buscar sencillos...", "Search singles...");
-        }
-        const short = THEMES[selectedAlbum.themeId as ThemeId]?.albumTitleShort ?? selectedAlbum.title;
+        const album = albums.find((a) => selectedAlbumIds.has(a.id));
+        if (!album) return t("Buscar canciones...", "Search songs...");
+        if (album.title === "Colaboraciones") return t("Buscar colaboraciones...", "Search collabs...");
+        if (album.title === "Singles") return t("Buscar sencillos...", "Search singles...");
+        const short = THEMES[album.themeId as ThemeId]?.albumTitleShort ?? album.title;
         return t(`Buscar canciones de ${short}...`, `Search ${short} songs...`);
       })()
     : t("Buscar canciones...", "Search songs...");
@@ -75,24 +81,23 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
     const normalize = (s: string) =>
       s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     const query = normalize(searchQuery);
-    let tracks: SetlistTrack[] = [];
 
-    if (selectedAlbumId) {
-      const album = albums.find((a) => a.id === selectedAlbumId);
-      tracks = album?.tracks ?? [];
-    } else {
-      // Sort albums so Singles/Colaboraciones appear last
-      const sorted = [...albums].sort((a, b) => {
-        const special = ["Singles", "Colaboraciones"];
-        const aIdx = special.indexOf(a.title);
-        const bIdx = special.indexOf(b.title);
-        if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
-        if (aIdx !== -1) return 1;
-        if (bIdx !== -1) return -1;
-        return 0;
-      });
-      tracks = sorted.flatMap((a) => a.tracks);
-    }
+    // Sort albums so Singles/Colaboraciones appear last
+    const sorted = [...albums].sort((a, b) => {
+      const special = ["Singles", "Colaboraciones"];
+      const aIdx = special.indexOf(a.title);
+      const bIdx = special.indexOf(b.title);
+      if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+      if (aIdx !== -1) return 1;
+      if (bIdx !== -1) return -1;
+      return 0;
+    });
+
+    // Filter by selected albums (empty = show all)
+    const source = selectedAlbumIds.size > 0
+      ? sorted.filter((a) => selectedAlbumIds.has(a.id))
+      : sorted;
+    let tracks = source.flatMap((a) => a.tracks);
 
     if (query) {
       tracks = tracks.filter(
@@ -103,23 +108,12 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
     }
 
     return tracks;
-  }, [albums, selectedAlbumId, searchQuery]);
+  }, [albums, selectedAlbumIds, searchQuery]);
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Album filter pills */}
+      {/* Album filter pills (multi-select, none = show all) */}
       <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => setSelectedAlbumId(null)}
-          className={cn(
-            "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-            selectedAlbumId === null
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted/50 text-muted-foreground hover:bg-muted",
-          )}
-        >
-          {t("Todos", "All")}
-        </button>
         {[...albums].sort((a, b) => {
           const special = ["Singles", "Colaboraciones"];
           const aIdx = special.indexOf(a.title);
@@ -131,10 +125,10 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
         }).map((album) => (
           <button
             key={album.id}
-            onClick={() => setSelectedAlbumId(album.id)}
+            onClick={() => toggleAlbum(album.id)}
             className={cn(
               "rounded-full px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
-              selectedAlbumId === album.id
+              selectedAlbumIds.has(album.id)
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted/50 text-muted-foreground hover:bg-muted",
             )}
