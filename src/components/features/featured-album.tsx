@@ -110,7 +110,10 @@ export function FeaturedAlbum() {
       <div className="max-w-7xl mx-auto">
         <FadeIn delay={0.1}>
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-6">
-            {t("Álbum Destacado", "Featured Album")}
+            {t("Flow del Site", "Website Flow")}
+            <span className="block text-primary text-2xl md:text-3xl mt-2 font-semibold">
+              {album.title}
+            </span>
           </h2>
           <div className="flex justify-center mb-16">
             <div className="max-w-md w-full">
