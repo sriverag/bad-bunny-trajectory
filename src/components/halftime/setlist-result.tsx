@@ -8,6 +8,7 @@ import { useLanguage } from "@/hooks/use-language";
 import { useTheme } from "@/components/layout/theme-provider";
 import { THEMES, THEME_IDS, type ThemeId } from "@/types/theme";
 import { HalftimeShareButtons } from "./halftime-share-buttons";
+import { SpotifySaveButton } from "./spotify-save-button";
 import type { SetlistTrack } from "@/types/halftime";
 
 interface SetlistResultProps {
@@ -136,6 +137,11 @@ export function SetlistResult({
           day: "numeric",
         })}
       </p>
+
+      {/* Save to Spotify */}
+      <div className="w-full max-w-md mb-4">
+        <SpotifySaveButton playlistId={playlistId} />
+      </div>
 
       {/* Share buttons */}
       <div className="w-full max-w-md mb-6">

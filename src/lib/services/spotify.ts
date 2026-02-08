@@ -106,7 +106,7 @@ interface SpotifyTrackItem {
   preview_url: string | null;
 }
 
-async function fetchSpotifyAlbumTracks(
+export async function fetchSpotifyAlbumTracks(
   albumSpotifyId: string
 ): Promise<SpotifyTrackItem[] | null> {
   const token = await getAccessToken();
