@@ -161,7 +161,7 @@ export function HalftimeBuilder({ albums, isOpen: initialIsOpen }: HalftimeBuild
       {/* Two-column layout */}
       <div className="grid gap-8 lg:grid-cols-2">
         {/* Left: Song Picker */}
-        <div>
+        <div className="min-w-0">
           <h2 className="mb-4 text-lg font-semibold text-foreground">
             {t("Canciones", "Songs")}
           </h2>
@@ -173,7 +173,7 @@ export function HalftimeBuilder({ albums, isOpen: initialIsOpen }: HalftimeBuild
         </div>
 
         {/* Right: Setlist Editor */}
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <h2 className="text-lg font-semibold text-foreground">
             {t("Tu Setlist", "Your Setlist")}
           </h2>

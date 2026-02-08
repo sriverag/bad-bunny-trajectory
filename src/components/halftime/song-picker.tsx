@@ -41,6 +41,9 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
         if (selectedAlbum.title === "Colaboraciones") {
           return t("Buscar colaboraciones...", "Search collabs...");
         }
+        if (selectedAlbum.title === "Singles") {
+          return t("Buscar sencillos...", "Search singles...");
+        }
         const short = THEMES[selectedAlbum.themeId as ThemeId]?.albumTitleShort ?? selectedAlbum.title;
         return t(`Buscar canciones de ${short}...`, `Search ${short} songs...`);
       })()
@@ -77,7 +80,7 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
         <button
           onClick={() => setSelectedAlbumId(null)}
           className={cn(
-            "shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+            "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
             selectedAlbumId === null
               ? "bg-primary text-primary-foreground"
               : "bg-muted/50 text-muted-foreground hover:bg-muted",
@@ -85,12 +88,20 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
         >
           {t("Todos", "All")}
         </button>
-        {[...albums].sort((a, b) => (a.title === "Colaboraciones" ? 1 : b.title === "Colaboraciones" ? -1 : 0)).map((album) => (
+        {[...albums].sort((a, b) => {
+          const special = ["Singles", "Colaboraciones"];
+          const aIdx = special.indexOf(a.title);
+          const bIdx = special.indexOf(b.title);
+          if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+          if (aIdx !== -1) return 1;
+          if (bIdx !== -1) return -1;
+          return 0;
+        }).map((album) => (
           <button
             key={album.id}
             onClick={() => setSelectedAlbumId(album.id)}
             className={cn(
-              "shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
+              "rounded-full px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap",
               selectedAlbumId === album.id
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted/50 text-muted-foreground hover:bg-muted",
@@ -98,7 +109,9 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
           >
             {album.title === "Colaboraciones"
               ? t("Colaboraciones", "Collabs")
-              : `${album.title} (${album.year})`}
+              : album.title === "Singles"
+                ? t("Sencillos", "Singles")
+                : `${album.title} (${album.year})`}
           </button>
         ))}
       </div>
@@ -138,11 +151,11 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
                 )}
                 whileTap={isAdded ? undefined : { scale: 0.98 }}
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="w-6 shrink-0 text-center text-xs text-muted-foreground">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span className="w-5 shrink-0 text-center text-xs text-muted-foreground">
                     {track.trackNumber}
                   </span>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-foreground">
                       {track.title}
                     </p>
@@ -152,8 +165,8 @@ export function SongPicker({ albums, setlistTrackIds, onAddTrack }: SongPickerPr
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-xs text-muted-foreground">
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="hidden text-xs text-muted-foreground sm:inline">
                     {formatDuration(track.durationMs)}
                   </span>
                   {isAdded ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { Reorder, useDragControls } from "framer-motion";
-import { GripVertical, X } from "lucide-react";
+import { ChevronUp, ChevronDown, GripVertical, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/use-language";
 import type { SetlistTrack } from "@/types/halftime";
@@ -22,11 +22,17 @@ function formatDuration(ms: number): string {
 function SetlistItem({
   track,
   index,
+  total,
   onRemove,
+  onMoveUp,
+  onMoveDown,
 }: {
   track: SetlistTrack;
   index: number;
+  total: number;
   onRemove: (id: string) => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
 }) {
   const dragControls = useDragControls();
 
@@ -35,7 +41,7 @@ function SetlistItem({
       value={track}
       dragListener={false}
       dragControls={dragControls}
-      className="flex items-center gap-2 rounded-xl border border-border/50 bg-card/80 px-3 py-2.5 select-none"
+      className="flex items-center gap-1.5 rounded-xl border border-border/50 bg-card/80 px-2 py-2.5 select-none sm:gap-2 sm:px-3"
     >
       {/* Drag handle */}
       <button
@@ -47,7 +53,7 @@ function SetlistItem({
       </button>
 
       {/* Position number */}
-      <span className="w-6 shrink-0 text-center text-sm font-bold tabular-nums text-muted-foreground">
+      <span className="w-5 shrink-0 text-center text-sm font-bold tabular-nums text-muted-foreground sm:w-6">
         {index + 1}
       </span>
 
@@ -64,9 +70,29 @@ function SetlistItem({
       </div>
 
       {/* Duration */}
-      <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
+      <span className="hidden shrink-0 text-xs text-muted-foreground tabular-nums sm:inline">
         {formatDuration(track.durationMs)}
       </span>
+
+      {/* Move up/down arrows */}
+      <div className="flex shrink-0 items-center gap-1">
+        <button
+          onClick={onMoveUp}
+          disabled={index === 0}
+          className="p-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-20"
+          aria-label="Move up"
+        >
+          <ChevronUp className="h-4 w-4" />
+        </button>
+        <button
+          onClick={onMoveDown}
+          disabled={index === total - 1}
+          className="p-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-20"
+          aria-label="Move down"
+        >
+          <ChevronDown className="h-4 w-4" />
+        </button>
+      </div>
 
       {/* Remove button */}
       <button
@@ -108,7 +134,20 @@ export function SetlistEditor({ setlist, onReorder, onRemove }: SetlistEditorPro
           key={track.id}
           track={track}
           index={index}
+          total={setlist.length}
           onRemove={onRemove}
+          onMoveUp={() => {
+            if (index === 0) return;
+            const next = [...setlist];
+            [next[index - 1], next[index]] = [next[index], next[index - 1]];
+            onReorder(next);
+          }}
+          onMoveDown={() => {
+            if (index === setlist.length - 1) return;
+            const next = [...setlist];
+            [next[index], next[index + 1]] = [next[index + 1], next[index]];
+            onReorder(next);
+          }}
         />
       ))}
     </Reorder.Group>

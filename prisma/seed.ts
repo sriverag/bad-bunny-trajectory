@@ -323,12 +323,38 @@ export async function main() {
           { title: "Con Altura", trackNumber: 13, durationMs: 161000, featuring: "Rosalía, El Guincho" },
           { title: "Contra La Pared", trackNumber: 14, durationMs: 199000, featuring: "J Balvin" },
           { title: "Satisfacción", trackNumber: 15, durationMs: 224000, featuring: "Nicky Jam" },
+          { title: "KPOP", trackNumber: 16, durationMs: 171000, featuring: "Travis Scott" },
         ],
       },
     },
   });
 
-  console.log(`Created ${8} albums with tracks`);
+  // --- Singles (standalone tracks not on any album) ---
+  const singles = await prisma.album.create({
+    data: {
+      slug: "singles",
+      title: "Singles",
+      year: 2025,
+      themeId: "debi-tirar",
+      coverUrl: "/images/albums/singles.jpg",
+      description:
+        "Sencillos y lanzamientos independientes de Bad Bunny que no pertenecen a ningún álbum.",
+      descriptionEn:
+        "Bad Bunny's standalone singles and independent releases not on any album.",
+      tracks: {
+        create: [
+          { title: "Soy Peor", trackNumber: 1, durationMs: 247000 },
+          { title: "Chambea", trackNumber: 2, durationMs: 210000 },
+          { title: "Tu No Metes Cabra", trackNumber: 3, durationMs: 198000 },
+          { title: "Amorfoda", trackNumber: 4, durationMs: 245000 },
+          { title: "Yonaguni", trackNumber: 5, durationMs: 206000 },
+          { title: "Alambre Púa", trackNumber: 6, durationMs: 199000 },
+        ],
+      },
+    },
+  });
+
+  console.log(`Created ${9} albums with tracks`);
 
   // ============================================================
   // AWARDS (~50+)
