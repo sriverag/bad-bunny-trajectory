@@ -16,7 +16,7 @@ export const NAV_LINKS = [
 
   { href: "/concerts", labelEs: "Conciertos", labelEn: "Concerts" },
   { href: "/trivia", labelEs: "Trivia", labelEn: "Trivia" },
-  { href: "/setlist", labelEs: "SB LX Setlist", labelEn: "SB LX Setlist" },
+  { href: "/setlist/official", labelEs: "SB LX Setlist", labelEn: "SB LX Setlist" },
   { href: "/about", labelEs: "Sobre", labelEn: "About" },
 ] as const;
 
