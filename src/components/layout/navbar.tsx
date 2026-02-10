@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/sheet";
 
 // Desktop: split into primary (always visible) + secondary (under "More" dropdown)
-const PRIMARY_HREFS = new Set(["/", "/trajectory", "/discography", "/awards", "/trivia", "/setlist"]);
+const PRIMARY_HREFS = new Set(["/", "/trajectory", "/discography", "/awards", "/trivia", "/setlist/official"]);
 const DESKTOP_PRIMARY = NAV_LINKS.filter((l) => PRIMARY_HREFS.has(l.href));
 const DESKTOP_MORE = NAV_LINKS.filter((l) => !PRIMARY_HREFS.has(l.href));
 
