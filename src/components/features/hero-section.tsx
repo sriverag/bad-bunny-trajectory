@@ -181,7 +181,7 @@ export function HeroSection() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-4 py-12">
             <StatCounter value={6} label={t("Álbumes", "Albums")} />
             <StatCounter value={100} label={t("Canciones", "Songs")} suffix="+" />
-            <StatCounter value={3} label="Grammys" />
+            <StatCounter value={6} label="Grammys" />
             <StatCounter value={17} label="Latin Grammys" />
             <div className="col-span-2 md:col-span-1">
               <StatCounter value={60} label="Streams" suffix="B+" />
