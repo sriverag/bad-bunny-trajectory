@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import prisma from "@/lib/prisma";
 import { THEME_IDS, type ThemeId } from "@/types/theme";
 import { getThemeColors } from "@/lib/theme-color-map";
+import { scorePrediction } from "@/lib/halftime/score-prediction";
 
 export const runtime = "nodejs";
 export const alt = "Super Bowl Halftime Predicted Setlist";
@@ -43,15 +44,13 @@ export default async function OGImage({
     : "debi-tirar";
   const colors = getThemeColors(themeId);
 
-  // Get first 6 track titles
   const trackIds: string[] = JSON.parse(playlist.trackIds);
-  const tracks = await prisma.track.findMany({
-    where: { id: { in: trackIds.slice(0, 6) } },
-    select: { id: true, title: true },
-  });
-  const trackMap = new Map(tracks.map((t) => [t.id, t.title]));
-  const displayTracks = trackIds.slice(0, 6).map((id) => trackMap.get(id) ?? "");
-  const remaining = trackIds.length - displayTracks.length;
+  const score = scorePrediction(trackIds);
+
+  const gradeColors: Record<string, string> = {
+    S: "#eab308", A: "#22c55e", B: "#3b82f6", C: "#f97316", D: "#ef4444", F: "#b91c1c",
+  };
+  const gradeColor = gradeColors[score.grade] ?? gradeColors.F;
 
   return new ImageResponse(
     (
@@ -107,63 +106,54 @@ export default async function OGImage({
               display: "flex",
             }}
           >
-            Predicted Setlist
+            Prediction Scorecard
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Grade + Stats */}
         <div
           style={{
             display: "flex",
+            alignItems: "center",
             gap: "32px",
             marginBottom: "24px",
-            fontSize: 20,
-            color: colors.foreground,
           }}
         >
-          <div style={{ display: "flex", gap: "8px" }}>
-            <span style={{ fontWeight: 700 }}>{playlist.songCount}</span>
-            <span style={{ opacity: 0.7 }}>songs</span>
+          {/* Grade circle */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "90px",
+              height: "90px",
+              borderRadius: "50%",
+              border: `4px solid ${gradeColor}`,
+              backgroundColor: `${gradeColor}22`,
+              fontSize: 48,
+              fontWeight: 900,
+              color: gradeColor,
+            }}
+          >
+            {score.grade}
           </div>
-        </div>
 
-        {/* Song list */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "6px",
-            fontSize: 16,
-          }}
-        >
-          {displayTracks.map((title, i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                gap: "12px",
-                color: colors.foreground,
-              }}
-            >
-              <span style={{ opacity: 0.5, width: "24px", textAlign: "right" }}>
-                {i + 1}.
-              </span>
-              <span>{title}</span>
+          {/* Stats column */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "4px",
+            }}
+          >
+            <div style={{ display: "flex", fontSize: 32, fontWeight: 700, color: colors.foreground }}>
+              {score.percentage}%
             </div>
-          ))}
-          {remaining > 0 && (
-            <div
-              style={{
-                display: "flex",
-                gap: "12px",
-                color: colors.accent1,
-                fontStyle: "italic",
-              }}
-            >
-              <span style={{ width: "24px" }} />
-              <span>...and {remaining} more</span>
+            <div style={{ display: "flex", fontSize: 16, color: colors.accent2, gap: "16px" }}>
+              <span>{score.stats.songMatches}/13 songs</span>
+              <span>{score.totalPoints}/{score.maxPossiblePoints} pts</span>
             </div>
-          )}
+          </div>
         </div>
 
         {/* Bottom URL */}

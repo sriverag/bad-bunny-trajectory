@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { exchangeCodeForToken, getSpotifyUser, createSpotifyPlaylist, addTracksToPlaylist } from "@/lib/services/spotify-user";
 import { resolveSpotifyTrackUris } from "@/lib/services/spotify-track-resolver";
+import { OFFICIAL_SETLIST } from "@/lib/halftime/official-setlist";
 
 export async function GET(request: NextRequest) {
   const origin = request.nextUrl.origin;
@@ -25,8 +26,9 @@ export async function GET(request: NextRequest) {
   }
 
   function redirectWithError(pid: string, errorType: string) {
+    const path = pid === "official" ? "/setlist/official" : `/setlist/${pid}`;
     const response = NextResponse.redirect(
-      new URL(`/setlist/${pid}?spotify_error=${errorType}`, origin)
+      new URL(`${path}?spotify_error=${errorType}`, origin)
     );
     response.cookies.delete("spotify_oauth_state");
     return response;
@@ -59,26 +61,40 @@ export async function GET(request: NextRequest) {
     // 2. Get user's Spotify profile
     const spotifyUser = await getSpotifyUser(accessToken);
 
-    // 3. Load the playlist and resolve tracks
-    const playlist = await prisma.halftimePlaylist.findUnique({
-      where: { id: playlistId },
-    });
+    let validUris: string[];
+    let skippedCount: number;
+    let playlistName: string;
+    let redirectPath: string;
 
-    if (!playlist) {
-      return redirectWithError(playlistId, "not_found");
+    if (playlistId === "official") {
+      // Build Spotify URIs directly from the official setlist
+      validUris = OFFICIAL_SETLIST.map((e) => `spotify:track:${e.spotifyId}`);
+      skippedCount = 0;
+      playlistName = "Bad Bunny Super Bowl LX Halftime — Official Setlist";
+      redirectPath = "/setlist/official";
+    } else {
+      // 3. Load the playlist and resolve tracks
+      const playlist = await prisma.halftimePlaylist.findUnique({
+        where: { id: playlistId },
+      });
+
+      if (!playlist) {
+        return redirectWithError(playlistId, "not_found");
+      }
+
+      const trackIds: string[] = JSON.parse(playlist.trackIds);
+      const resolved = await resolveSpotifyTrackUris(trackIds);
+
+      validUris = resolved
+        .map((r) => r.spotifyUri)
+        .filter((uri): uri is string => uri !== null);
+      skippedCount = resolved.length - validUris.length;
+      playlistName = `${playlist.nickname}'s Super Bowl LX Setlist Prediction`;
+      redirectPath = `/setlist/${playlistId}`;
     }
 
-    const trackIds: string[] = JSON.parse(playlist.trackIds);
-    const resolved = await resolveSpotifyTrackUris(trackIds);
-
-    const validUris = resolved
-      .map((r) => r.spotifyUri)
-      .filter((uri): uri is string => uri !== null);
-    const skippedCount = resolved.length - validUris.length;
-
     // 4. Create the playlist
-    const playlistName = `${playlist.nickname}'s Super Bowl LX Setlist Prediction`;
-    const description = "Created with thisisbadbunny.com — Bad Bunny Super Bowl LX Halftime Show setlist predictor";
+    const description = "Created with thisisbadbunny.com — Bad Bunny Super Bowl LX Halftime Show";
 
     const createdPlaylist = await createSpotifyPlaylist(
       accessToken,
@@ -102,7 +118,7 @@ export async function GET(request: NextRequest) {
     }
 
     const response = NextResponse.redirect(
-      new URL(`/setlist/${playlistId}?${successParams.toString()}`, origin)
+      new URL(`${redirectPath}?${successParams.toString()}`, origin)
     );
     response.cookies.delete("spotify_oauth_state");
     return response;

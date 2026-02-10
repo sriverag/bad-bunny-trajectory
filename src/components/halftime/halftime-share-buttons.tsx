@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/use-language";
 import { THEME_IDS, type ThemeId } from "@/types/theme";
 import type { SetlistTrack } from "@/types/halftime";
+import type { PredictionScore } from "@/lib/halftime/score-prediction";
 
 interface HalftimeShareButtonsProps {
   playlistId: string;
@@ -13,9 +14,25 @@ interface HalftimeShareButtonsProps {
   themeId: string;
   tracks: SetlistTrack[];
   songCount: number;
+  score?: PredictionScore;
 }
 
 const BASE_URL = "https://thisisbadbunny.com";
+
+const THEME_PALETTE: Record<string, {
+  primary: string; background: string; foreground: string;
+  card: string; border: string; muted: string; glow: string;
+}> = {
+  "debi-tirar": { primary: "#2d6a4f", background: "#faf8f5", foreground: "#2d1f14", card: "#f2ede6", border: "#ddd5c8", muted: "#6b5d52", glow: "rgba(45, 106, 79, 0.15)" },
+  "nadie-sabe": { primary: "#ffffff", background: "#050505", foreground: "#d4d4d4", card: "#111111", border: "#222222", muted: "#808080", glow: "rgba(255, 255, 255, 0.1)" },
+  verano: { primary: "#2a9d8f", background: "#faf7f2", foreground: "#1a2a3a", card: "#f0ebe3", border: "#b8b0a4", muted: "#3a4a5a", glow: "rgba(78, 205, 196, 0.2)" },
+  "ultimo-tour": { primary: "#e63946", background: "#0d0907", foreground: "#e8e0d8", card: "#1a1410", border: "#2a201a", muted: "#a89888", glow: "rgba(230, 57, 70, 0.25)" },
+  yhlqmdlg: { primary: "#ff2d95", background: "#0a0a12", foreground: "#f8f8ff", card: "#12121f", border: "#3a2040", muted: "#b0b0c8", glow: "rgba(255, 45, 149, 0.3)" },
+  oasis: { primary: "#00d4aa", background: "#0c0c14", foreground: "#f0f0f5", card: "#14141e", border: "#1a2a28", muted: "#a0a0b8", glow: "rgba(0, 212, 170, 0.2)" },
+  x100pre: { primary: "#ff6b35", background: "#120a1e", foreground: "#f5f0eb", card: "#1e1230", border: "#2a1a3e", muted: "#c8b8d8", glow: "rgba(255, 107, 53, 0.3)" },
+};
+
+const MATCH_COLORS = { exact: "#22c55e", song: "#f59e0b", miss: "#6b7280" };
 
 function getShareUrl(playlistId: string) {
   return `${BASE_URL}/setlist/${playlistId}`;
@@ -54,19 +71,6 @@ async function generateHalftimeStoryImage(
     ? (themeId as ThemeId)
     : "debi-tirar";
 
-  // Theme palette matching CSS variables from each theme file
-  const THEME_PALETTE: Record<string, {
-    primary: string; background: string; foreground: string;
-    card: string; border: string; muted: string; glow: string;
-  }> = {
-    "debi-tirar": { primary: "#2d6a4f", background: "#faf8f5", foreground: "#2d1f14", card: "#f2ede6", border: "#ddd5c8", muted: "#6b5d52", glow: "rgba(45, 106, 79, 0.15)" },
-    "nadie-sabe": { primary: "#ffffff", background: "#050505", foreground: "#d4d4d4", card: "#111111", border: "#222222", muted: "#808080", glow: "rgba(255, 255, 255, 0.1)" },
-    verano: { primary: "#2a9d8f", background: "#faf7f2", foreground: "#1a2a3a", card: "#f0ebe3", border: "#b8b0a4", muted: "#3a4a5a", glow: "rgba(78, 205, 196, 0.2)" },
-    "ultimo-tour": { primary: "#e63946", background: "#0d0907", foreground: "#e8e0d8", card: "#1a1410", border: "#2a201a", muted: "#a89888", glow: "rgba(230, 57, 70, 0.25)" },
-    yhlqmdlg: { primary: "#ff2d95", background: "#0a0a12", foreground: "#f8f8ff", card: "#12121f", border: "#3a2040", muted: "#b0b0c8", glow: "rgba(255, 45, 149, 0.3)" },
-    oasis: { primary: "#00d4aa", background: "#0c0c14", foreground: "#f0f0f5", card: "#14141e", border: "#1a2a28", muted: "#a0a0b8", glow: "rgba(0, 212, 170, 0.2)" },
-    x100pre: { primary: "#ff6b35", background: "#120a1e", foreground: "#f5f0eb", card: "#1e1230", border: "#2a1a3e", muted: "#c8b8d8", glow: "rgba(255, 107, 53, 0.3)" },
-  };
   const palette = THEME_PALETTE[validThemeId] ?? THEME_PALETTE["debi-tirar"];
 
   // Background
@@ -203,19 +207,196 @@ async function generateHalftimeStoryImage(
   });
 }
 
+/**
+ * Generates a 1080x1920 (9:16) scorecard PNG image using Canvas API.
+ */
+async function generateScorecardImage(
+  nickname: string,
+  themeId: string,
+  score: PredictionScore,
+  trackTitles: Record<string, string>,
+): Promise<File> {
+  const W = 1080;
+  const H = 1920;
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d")!;
+
+  const logo = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = "/images/logo.png";
+  });
+
+  const validThemeId = THEME_IDS.includes(themeId as ThemeId)
+    ? (themeId as ThemeId)
+    : "debi-tirar";
+  const palette = THEME_PALETTE[validThemeId] ?? THEME_PALETTE["debi-tirar"];
+
+  // Background
+  ctx.fillStyle = palette.background;
+  ctx.fillRect(0, 0, W, H);
+
+  // Radial glow overlays
+  const glowColor = palette.glow;
+  const g1 = ctx.createRadialGradient(W * 0.2, H * 0.15, 0, W * 0.2, H * 0.15, W * 0.7);
+  g1.addColorStop(0, glowColor);
+  g1.addColorStop(1, "transparent");
+  ctx.fillStyle = g1;
+  ctx.fillRect(0, 0, W, H);
+  const g2 = ctx.createRadialGradient(W * 0.8, H * 0.75, 0, W * 0.8, H * 0.75, W * 0.6);
+  g2.addColorStop(0, glowColor);
+  g2.addColorStop(1, "transparent");
+  ctx.fillStyle = g2;
+  ctx.fillRect(0, 0, W, H);
+
+  // Football emoji
+  ctx.textAlign = "center";
+  ctx.font = "120px system-ui, -apple-system, sans-serif";
+  ctx.fillText("🏈", W / 2, 160);
+
+  // "{NAME}'S SCORECARD"
+  ctx.fillStyle = palette.foreground;
+  ctx.font = "bold 56px system-ui, -apple-system, sans-serif";
+  ctx.fillText(`${nickname.toUpperCase()}'S`, W / 2, 280);
+  ctx.fillStyle = palette.primary;
+  ctx.font = "bold 56px system-ui, -apple-system, sans-serif";
+  ctx.fillText("PREDICTION SCORECARD", W / 2, 350);
+
+  // Grade badge
+  const gradeColors: Record<string, string> = {
+    S: "#eab308", A: "#22c55e", B: "#3b82f6", C: "#f97316", D: "#ef4444", F: "#b91c1c",
+  };
+  const gradeColor = gradeColors[score.grade] ?? gradeColors.F;
+  const gradeCenterX = W / 2;
+  const gradeCenterY = 500;
+  ctx.beginPath();
+  ctx.arc(gradeCenterX, gradeCenterY, 80, 0, Math.PI * 2);
+  ctx.fillStyle = gradeColor + "33";
+  ctx.fill();
+  ctx.strokeStyle = gradeColor;
+  ctx.lineWidth = 4;
+  ctx.stroke();
+  ctx.fillStyle = gradeColor;
+  ctx.font = "bold 80px system-ui, -apple-system, sans-serif";
+  ctx.fillText(score.grade, gradeCenterX, gradeCenterY + 28);
+
+  // Percentage + points
+  ctx.fillStyle = palette.foreground;
+  ctx.font = "bold 48px system-ui, -apple-system, sans-serif";
+  ctx.fillText(`${score.percentage}%`, W / 2, 640);
+  ctx.fillStyle = palette.muted;
+  ctx.font = "32px system-ui, -apple-system, sans-serif";
+  ctx.fillText(`${score.stats.songMatches}/13 correct · ${score.totalPoints}/${score.maxPossiblePoints} pts`, W / 2, 690);
+
+  // Song result cards
+  const cardMarginX = 60;
+  const cardWidth = W - cardMarginX * 2;
+  const cardHeight = 70;
+  const cardGap = 10;
+  const cardRadius = 16;
+  const maxSongs = Math.min(score.songResults.length, 13);
+  const cardsStartY = 740;
+
+  function roundRect(x: number, y: number, w: number, h: number, r: number) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  for (let i = 0; i < maxSongs; i++) {
+    const result = score.songResults[i];
+    const y = cardsStartY + i * (cardHeight + cardGap);
+    const matchColor = MATCH_COLORS[result.matchType];
+
+    // Card background
+    roundRect(cardMarginX, y, cardWidth, cardHeight, cardRadius);
+    ctx.fillStyle = matchColor + "18";
+    ctx.fill();
+    ctx.strokeStyle = matchColor + "40";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Status indicator dot
+    ctx.beginPath();
+    ctx.arc(cardMarginX + 35, y + cardHeight / 2, 10, 0, Math.PI * 2);
+    ctx.fillStyle = matchColor;
+    ctx.fill();
+
+    // Song title
+    ctx.fillStyle = palette.foreground;
+    ctx.font = "30px system-ui, -apple-system, sans-serif";
+    ctx.textAlign = "left";
+    const title = trackTitles[result.trackId] ?? result.trackId;
+    const maxTextWidth = cardWidth - 180;
+    let displayTitle = title;
+    if (ctx.measureText(displayTitle).width > maxTextWidth) {
+      while (ctx.measureText(displayTitle + "...").width > maxTextWidth && displayTitle.length > 0) {
+        displayTitle = displayTitle.slice(0, -1);
+      }
+      displayTitle += "...";
+    }
+    ctx.fillText(displayTitle, cardMarginX + 60, y + cardHeight / 2 + 10);
+
+    // Points
+    ctx.textAlign = "right";
+    ctx.fillStyle = result.points > 0 ? palette.foreground : palette.muted;
+    ctx.font = "bold 28px system-ui, -apple-system, sans-serif";
+    ctx.fillText(`+${result.points}`, cardMarginX + cardWidth - 20, y + cardHeight / 2 + 10);
+    ctx.textAlign = "center";
+  }
+
+  // Bottom branding
+  const logoHeight = 100;
+  const logoWidth = logoHeight * (logo.naturalWidth / logo.naturalHeight);
+  const offscreen = document.createElement("canvas");
+  offscreen.width = Math.ceil(logoWidth);
+  offscreen.height = Math.ceil(logoHeight);
+  const oCtx = offscreen.getContext("2d")!;
+  oCtx.drawImage(logo, 0, 0, logoWidth, logoHeight);
+  oCtx.globalCompositeOperation = "source-in";
+  oCtx.fillStyle = palette.primary;
+  oCtx.fillRect(0, 0, logoWidth, logoHeight);
+  ctx.drawImage(offscreen, (W - logoWidth) / 2, H - logoHeight - 50);
+
+  return new Promise((resolve) => {
+    canvas.toBlob(
+      (blob) => {
+        resolve(new File([blob!], "halftime-scorecard.png", { type: "image/png" }));
+      },
+      "image/png",
+    );
+  });
+}
+
 export function HalftimeShareButtons({
   playlistId,
   nickname,
   themeId,
   tracks,
   songCount,
+  score,
 }: HalftimeShareButtonsProps) {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const [sharing, setSharing] = useState(false);
 
   const shareUrl = getShareUrl(playlistId);
-  const shareText = getShareText();
+  const trackTitles = Object.fromEntries(tracks.map((t) => [t.id, t.title]));
+
+  const shareText = score
+    ? `🏈 I got ${score.stats.songMatches}/13 songs right on my Super Bowl LX halftime prediction! Grade: ${score.grade} (${score.percentage}%)`
+    : getShareText();
 
   const copyToClipboard = useCallback(
     async () => {
@@ -236,13 +417,18 @@ export function HalftimeShareButtons({
     [shareUrl],
   );
 
+  async function generateImage() {
+    if (score) {
+      return generateScorecardImage(nickname, themeId, score, trackTitles);
+    }
+    return generateHalftimeStoryImage(nickname, themeId, tracks, songCount, playlistId);
+  }
+
   async function shareToX() {
     // Generate and download the story image so user can attach it to their tweet
     setSharing(true);
     try {
-      const imageFile = await generateHalftimeStoryImage(
-        nickname, themeId, tracks, songCount, playlistId,
-      );
+      const imageFile = await generateImage();
       const blobUrl = URL.createObjectURL(imageFile);
       const a = document.createElement("a");
       a.href = blobUrl;
@@ -265,9 +451,7 @@ export function HalftimeShareButtons({
   async function downloadImage() {
     setSharing(true);
     try {
-      const imageFile = await generateHalftimeStoryImage(
-        nickname, themeId, tracks, songCount, playlistId,
-      );
+      const imageFile = await generateImage();
 
       // Use Web Share API if available — on iOS this shows "Save Image" to Photos
       if (navigator.share && navigator.canShare?.({ files: [imageFile] })) {

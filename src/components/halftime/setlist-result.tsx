@@ -9,7 +9,9 @@ import { useTheme } from "@/components/layout/theme-provider";
 import { THEMES, THEME_IDS, type ThemeId } from "@/types/theme";
 import { HalftimeShareButtons } from "./halftime-share-buttons";
 import { SpotifySaveButton } from "./spotify-save-button";
+import { PredictionScorecard } from "./prediction-scorecard";
 import type { SetlistTrack } from "@/types/halftime";
+import type { PredictionScore } from "@/lib/halftime/score-prediction";
 
 interface SetlistResultProps {
   playlistId: string;
@@ -18,6 +20,7 @@ interface SetlistResultProps {
   tracks: SetlistTrack[];
   songCount: number;
   createdAt: string;
+  score?: PredictionScore;
 }
 
 const THEME_GRADIENTS: Record<ThemeId, string> = {
@@ -37,6 +40,7 @@ export function SetlistResult({
   tracks,
   songCount,
   createdAt,
+  score,
 }: SetlistResultProps) {
   const { t } = useLanguage();
   const { theme, setTheme } = useTheme();
@@ -50,6 +54,8 @@ export function SetlistResult({
     }
   }, [initialThemeId, setTheme]);
 
+  const trackTitles = Object.fromEntries(tracks.map((t) => [t.id, t.title]));
+
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center px-4 py-12">
       {/* Header */}
@@ -57,28 +63,36 @@ export function SetlistResult({
         <span className="text-5xl md:text-6xl">🏈</span>
         <h1 className="text-2xl font-heading text-foreground md:text-3xl">
           {nickname}&apos;s{" "}
-          <span className="text-primary">Predicted Setlist</span>
+          <span className="text-primary">
+            {score ? t("Scorecard", "Scorecard") : t("Predicted Setlist", "Predicted Setlist")}
+          </span>
         </h1>
         <p className="text-sm text-muted-foreground">
           {songCount} {t(songCount === 1 ? "cancion" : "canciones", songCount === 1 ? "song" : "songs")}
         </p>
       </div>
 
-      {/* Numbered song list */}
-      <div className="mb-8 w-full max-w-md space-y-2">
-        {tracks.map((track) => (
-          <div
-            key={track.id}
-            className="flex items-center justify-center rounded-xl border border-border/50 bg-card/80 px-4 py-3"
-          >
-            <div className="min-w-0 text-center">
-              <p className="truncate text-sm font-medium text-foreground">
-                {track.title}
-              </p>
+      {/* Scorecard or plain song list */}
+      {score ? (
+        <div className="mb-8 w-full flex justify-center">
+          <PredictionScorecard score={score} trackTitles={trackTitles} />
+        </div>
+      ) : (
+        <div className="mb-8 w-full max-w-md space-y-2">
+          {tracks.map((track) => (
+            <div
+              key={track.id}
+              className="flex items-center justify-center rounded-xl border border-border/50 bg-card/80 px-4 py-3"
+            >
+              <div className="min-w-0 text-center">
+                <p className="truncate text-sm font-medium text-foreground">
+                  {track.title}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Theme style picker */}
       <div className="mb-6 w-full max-w-md">
@@ -151,15 +165,18 @@ export function SetlistResult({
           themeId={theme}
           tracks={tracks}
           songCount={songCount}
+          score={score}
         />
       </div>
 
       {/* CTA */}
       <Link
-        href="/setlist"
+        href={score ? "/setlist/official" : "/setlist"}
         className="rounded-full bg-primary px-8 py-3 font-semibold text-primary-foreground shadow-lg transition-shadow hover:shadow-xl"
       >
-        {t("Arma Otro Setlist", "Build Another Setlist")}
+        {score
+          ? t("Ver Setlist Oficial", "See Official Setlist")
+          : t("Arma Otro Setlist", "Build Another Setlist")}
       </Link>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -117,7 +118,7 @@ export function HalftimeBuilder({ albums, isOpen: initialIsOpen }: HalftimeBuild
     }
   }, [nickname, setlist, theme, t, router]);
 
-  // Submissions closed state
+  // Submissions closed — keep message + add links to post-show features
   if (!isOpen) {
     return (
       <div className="container flex min-h-[60vh] flex-col items-center justify-center px-4 py-16">
@@ -132,6 +133,26 @@ export function HalftimeBuilder({ albums, isOpen: initialIsOpen }: HalftimeBuild
               "Halftime predictions closed on February 8, 2026 at 4:30 PM PDT.",
             )}
           </p>
+          <div className="flex flex-col gap-3 pt-4">
+            <Link
+              href="/setlist/official"
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-lg transition-shadow hover:shadow-xl"
+            >
+              {t("Ver Setlist Oficial", "See Official Setlist")}
+            </Link>
+            <Link
+              href="/setlist/leaderboard"
+              className="flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 py-3 font-semibold text-foreground transition-colors hover:bg-card/80"
+            >
+              {t("Leaderboard", "Leaderboard")}
+            </Link>
+            <Link
+              href="/setlist/stats"
+              className="flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 py-3 font-semibold text-foreground transition-colors hover:bg-card/80"
+            >
+              {t("Estadisticas de la Comunidad", "Community Stats")}
+            </Link>
+          </div>
         </div>
       </div>
     );

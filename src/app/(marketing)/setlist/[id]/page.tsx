@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SetlistResult } from "@/components/halftime/setlist-result";
+import { scorePrediction } from "@/lib/halftime/score-prediction";
 import type { SetlistTrack } from "@/types/halftime";
 
 interface Props {
@@ -40,6 +41,8 @@ async function getPlaylist(id: string) {
     })
     .filter(Boolean) as SetlistTrack[];
 
+  const score = scorePrediction(trackIds);
+
   return {
     id: playlist.id,
     nickname: playlist.nickname,
@@ -47,6 +50,7 @@ async function getPlaylist(id: string) {
     tracks: orderedTracks,
     songCount: playlist.songCount,
     createdAt: playlist.createdAt.toISOString(),
+    score,
   };
 }
 
@@ -89,6 +93,7 @@ export default async function HalftimeResultPage({ params }: Props) {
         tracks={playlist.tracks}
         songCount={playlist.songCount}
         createdAt={playlist.createdAt}
+        score={playlist.score}
       />
     </PageTransition>
   );

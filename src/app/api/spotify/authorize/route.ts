@@ -11,16 +11,18 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Validate playlist exists
-  const playlist = await prisma.halftimePlaylist.findUnique({
-    where: { id: playlistId },
-  });
+  // "official" is a special sentinel — skip DB lookup
+  if (playlistId !== "official") {
+    const playlist = await prisma.halftimePlaylist.findUnique({
+      where: { id: playlistId },
+    });
 
-  if (!playlist) {
-    return NextResponse.json(
-      { error: "Playlist not found" },
-      { status: 404 }
-    );
+    if (!playlist) {
+      return NextResponse.json(
+        { error: "Playlist not found" },
+        { status: 404 }
+      );
+    }
   }
 
   const clientId = process.env.SPOTIFY_CLIENT_ID;
