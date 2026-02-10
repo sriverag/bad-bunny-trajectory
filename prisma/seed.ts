@@ -833,11 +833,21 @@ export async function main() {
       {
         title: "Super Bowl LX Halftime Show",
         titleEn: "Super Bowl LX Halftime Show",
-        description: "Bad Bunny encabeza el Apple Music Super Bowl LX Halftime Show en el Levi's Stadium en Santa Clara, California, convirtiéndose en el primer artista latino en encabezar el espectáculo del medio tiempo del Super Bowl. Récords: 135M de espectadores (el halftime más visto de la historia), +470% de aumento en Spotify EE.UU. (el mayor registrado), 34 canciones en los charts de Spotify simultáneamente, 7X aumento de oyentes en Apple Music, +981% de aumento en ventas (el mayor en la era del streaming), álbum en 155 países (#1 en 46), +400% de aumento en Shazam (el mayor día para un artista latino).",
-        descriptionEn: "Bad Bunny headlines the Apple Music Super Bowl LX Halftime Show at Levi's Stadium in Santa Clara, California, becoming the first Latino artist to headline the Super Bowl halftime show. Records: 135M viewers (most-watched halftime ever), +470% U.S. Spotify surge (highest ever recorded), 34 songs charting simultaneously on Spotify, 7X Apple Music listener increase, +981% sales increase (highest in streaming era), album in 155 countries (#1 in 46), +400% Shazam increase (biggest day for a Latin artist).",
+        description: "Bad Bunny encabeza el Apple Music Super Bowl LX Halftime Show en el Levi's Stadium en Santa Clara, California, convirtiéndose en el primer artista latino en encabezar el espectáculo del medio tiempo del Super Bowl.",
+        descriptionEn: "Bad Bunny headlines the Apple Music Super Bowl LX Halftime Show at Levi's Stadium in Santa Clara, California, becoming the first Latino artist to headline the Super Bowl halftime show.",
         date: new Date("2026-02-08"),
         era: "debi-tirar",
         type: "CONCERT",
+        importance: 5,
+      },
+      {
+        title: "Récords del Super Bowl LX Halftime Show",
+        titleEn: "Super Bowl LX Halftime Show Records",
+        description: "135M de espectadores (el halftime más visto de la historia). +470% de aumento en Spotify EE.UU. (el mayor registrado). 34 canciones en los charts de Spotify simultáneamente. 7X aumento de oyentes en Apple Music. +981% de aumento en ventas (el mayor en la era del streaming). Álbum en 155 países (#1 en 46). +400% de aumento en Shazam (el mayor día para un artista latino).",
+        descriptionEn: "135M viewers (most-watched halftime ever). +470% U.S. Spotify surge (highest ever recorded). 34 songs charting simultaneously on Spotify. 7X Apple Music listener increase. +981% sales increase (highest in streaming era). Album in 155 countries (#1 in 46). +400% Shazam increase (biggest day for a Latin artist).",
+        date: new Date("2026-02-09"),
+        era: "debi-tirar",
+        type: "MILESTONE",
         importance: 5,
       },
       {
