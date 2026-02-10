@@ -6,19 +6,8 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/use-language";
 import { useTheme } from "@/components/layout/theme-provider";
-import { THEMES, THEME_IDS, type ThemeId } from "@/types/theme";
 import { OFFICIAL_SETLIST } from "@/lib/halftime/official-setlist";
 import { HalftimeShareButtons } from "./halftime-share-buttons";
-
-const THEME_GRADIENTS: Record<ThemeId, string> = {
-  "debi-tirar": "linear-gradient(135deg, #2d6a4f 0%, #c17840 50%, #b8960c 100%)",
-  "nadie-sabe": "linear-gradient(135deg, #050505 0%, #a0a0a0 50%, #c9a84c 100%)",
-  verano: "linear-gradient(135deg, #4ecdc4 0%, #ff6b35 50%, #ff8a80 100%)",
-  "ultimo-tour": "linear-gradient(135deg, #e63946 0%, #ff8c42 50%, #ffba08 100%)",
-  yhlqmdlg: "linear-gradient(135deg, #ff2d95 0%, #a855f7 50%, #ffd700 100%)",
-  oasis: "linear-gradient(135deg, #00d4aa 0%, #ff6b9d 50%, #ffd93d 100%)",
-  x100pre: "linear-gradient(135deg, #ff6b35 0%, #ff1493 50%, #39ff14 100%)",
-};
 
 export function OfficialSetlist() {
   const { t } = useLanguage();
@@ -98,54 +87,6 @@ export function OfficialSetlist() {
             )}
           </motion.div>
         ))}
-      </div>
-
-      {/* Theme picker */}
-      <div className="mb-6 w-full max-w-md">
-        <p className="mb-3 text-center text-xs text-muted-foreground">
-          {t("Elige un estilo", "Choose a style")}
-        </p>
-        <div className="flex justify-center gap-2">
-          {THEME_IDS.map((id) => {
-            const isActive = theme === id;
-            return (
-              <button
-                key={id}
-                onClick={() => setTheme(id)}
-                className={cn(
-                  "relative h-10 w-10 rounded-full transition-all duration-200",
-                  "hover:scale-110 active:scale-95",
-                  isActive && "scale-110",
-                )}
-                aria-label={`Switch to ${THEMES[id].albumTitleShort} theme`}
-                title={`${THEMES[id].albumTitleShort} (${THEMES[id].year})`}
-              >
-                <div
-                  className={cn(
-                    "h-full w-full rounded-full border-2 flex items-center justify-center transition-all duration-200",
-                    isActive ? "border-primary" : "border-border/50",
-                  )}
-                  style={{ background: THEME_GRADIENTS[id] }}
-                >
-                  <span
-                    className="text-white text-xs font-bold"
-                    style={{ textShadow: "0 1px 3px rgba(0,0,0,0.6), 0 0px 6px rgba(0,0,0,0.4)" }}
-                  >
-                    &apos;{THEMES[id].year.toString().slice(2)}
-                  </span>
-                </div>
-                {isActive && (
-                  <motion.div
-                    layoutId="activeOfficialTheme"
-                    className="absolute inset-0 rounded-full border-2 border-primary"
-                    initial={false}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
       </div>
 
       {/* Listen buttons */}
