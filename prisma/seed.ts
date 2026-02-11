@@ -394,39 +394,56 @@ export async function main() {
       { title: "Best Recording Package - DeBí TiRAR MáS FOToS", ceremony: "GRAMMY", category: "Best Recording Package", year: 2026, result: "NOMINATED" },
 
       // ── Latin Grammy Awards ────────────────────────────────────
-      // 19th Latin Grammy Awards (2018)
+      // 19th Latin Grammy Awards (2018) — 2 nominations
       { title: "Best Urban Song - Sensualidad", ceremony: "LATIN_GRAMMY", category: "Best Urban Song", year: 2018, result: "NOMINATED" },
       { title: "Best Urban Fusion/Performance - Si Tu Novio Te Deja Sola", ceremony: "LATIN_GRAMMY", category: "Best Urban Fusion/Performance", year: 2018, result: "NOMINATED" },
-      // 20th Latin Grammy Awards (2019)
+      // 20th Latin Grammy Awards (2019) — 1 win, 2 nominations
       { title: "Best Urban Music Album - X 100PRE", ceremony: "LATIN_GRAMMY", category: "Best Urban Music Album", year: 2019, result: "WON" },
-      // 21st Latin Grammy Awards (2020)
+      { title: "Best Urban Fusion/Performance - Tenemos Que Hablar", ceremony: "LATIN_GRAMMY", category: "Best Urban Fusion/Performance", year: 2019, result: "NOMINATED" },
+      { title: "Best Urban Song - La Canción", ceremony: "LATIN_GRAMMY", category: "Best Urban Song", year: 2019, result: "NOMINATED" },
+      // 21st Latin Grammy Awards (2020) — 2 wins, 7 nominations
       { title: "Album of the Year - YHLQMDLG", ceremony: "LATIN_GRAMMY", category: "Album of the Year", year: 2020, result: "NOMINATED" },
+      { title: "Album of the Year - Oasis", ceremony: "LATIN_GRAMMY", category: "Album of the Year", year: 2020, result: "NOMINATED" },
       { title: "Record of the Year - Vete", ceremony: "LATIN_GRAMMY", category: "Record of the Year", year: 2020, result: "NOMINATED" },
       { title: "Best Urban Music Album - YHLQMDLG", ceremony: "LATIN_GRAMMY", category: "Best Urban Music Album", year: 2020, result: "WON" },
+      { title: "Best Urban Music Album - Oasis", ceremony: "LATIN_GRAMMY", category: "Best Urban Music Album", year: 2020, result: "NOMINATED" },
       { title: "Best Reggaeton Performance - Yo Perreo Sola", ceremony: "LATIN_GRAMMY", category: "Best Reggaeton Performance", year: 2020, result: "WON" },
-      // 22nd Latin Grammy Awards (2021)
+      { title: "Best Urban Fusion/Performance - Hablamos Mañana", ceremony: "LATIN_GRAMMY", category: "Best Urban Fusion/Performance", year: 2020, result: "NOMINATED" },
+      { title: "Best Urban Fusion/Performance - Cántalo", ceremony: "LATIN_GRAMMY", category: "Best Urban Fusion/Performance", year: 2020, result: "NOMINATED" },
+      { title: "Best Urban Song - Yo x Ti, Tu x Mi", ceremony: "LATIN_GRAMMY", category: "Best Urban Song", year: 2020, result: "NOMINATED" },
+      // 22nd Latin Grammy Awards (2021) — 3 wins, 2 nominations
       { title: "Album of the Year - El Último Tour Del Mundo", ceremony: "LATIN_GRAMMY", category: "Album of the Year", year: 2021, result: "NOMINATED" },
       { title: "Best Urban Music Album - El Último Tour Del Mundo", ceremony: "LATIN_GRAMMY", category: "Best Urban Music Album", year: 2021, result: "WON" },
-      { title: "Best Reggaeton Performance - Dákiti", ceremony: "LATIN_GRAMMY", category: "Best Reggaeton Performance", year: 2021, result: "WON" },
       { title: "Best Rap/Hip-Hop Song - Booker T", ceremony: "LATIN_GRAMMY", category: "Best Rap/Hip-Hop Song", year: 2021, result: "WON" },
-      { title: "Best Urban Song - Dákiti", ceremony: "LATIN_GRAMMY", category: "Best Urban Song", year: 2021, result: "NOMINATED" },
-      // 23rd Latin Grammy Awards (2022)
+      { title: "Best Urban Song - Dákiti", ceremony: "LATIN_GRAMMY", category: "Best Urban Song", year: 2021, result: "WON" },
+      { title: "Best Urban Fusion/Performance - Dákiti", ceremony: "LATIN_GRAMMY", category: "Best Urban Fusion/Performance", year: 2021, result: "NOMINATED" },
+      // 23rd Latin Grammy Awards (2022) — 5 wins, 5 nominations
       { title: "Album of the Year - Un Verano Sin Ti", ceremony: "LATIN_GRAMMY", category: "Album of the Year", year: 2022, result: "NOMINATED" },
       { title: "Record of the Year - Ojitos Lindos", ceremony: "LATIN_GRAMMY", category: "Record of the Year", year: 2022, result: "NOMINATED" },
       { title: "Best Urban Music Album - Un Verano Sin Ti", ceremony: "LATIN_GRAMMY", category: "Best Urban Music Album", year: 2022, result: "WON" },
       { title: "Best Urban Fusion/Performance - Tití Me Preguntó", ceremony: "LATIN_GRAMMY", category: "Best Urban Fusion/Performance", year: 2022, result: "WON" },
       { title: "Best Urban Song - Tití Me Preguntó", ceremony: "LATIN_GRAMMY", category: "Best Urban Song", year: 2022, result: "WON" },
-      // 24th Latin Grammy Awards (2023)
+      { title: "Best Rap/Hip-Hop Song - De Museo", ceremony: "LATIN_GRAMMY", category: "Best Rap/Hip-Hop Song", year: 2022, result: "WON" },
+      { title: "Best Reggaeton Performance - Lo Siento BB:/", ceremony: "LATIN_GRAMMY", category: "Best Reggaeton Performance", year: 2022, result: "WON" },
+      { title: "Best Reggaeton Performance - Yonaguni", ceremony: "LATIN_GRAMMY", category: "Best Reggaeton Performance", year: 2022, result: "NOMINATED" },
+      { title: "Best Urban Fusion/Performance - Volví", ceremony: "LATIN_GRAMMY", category: "Best Urban Fusion/Performance", year: 2022, result: "NOMINATED" },
+      { title: "Best Urban Song - Lo Siento BB:/", ceremony: "LATIN_GRAMMY", category: "Best Urban Song", year: 2022, result: "NOMINATED" },
+      // 24th Latin Grammy Awards (2023) — 2 wins, 3 nominations
       { title: "Best Regional Mexican Song - Un x100to", ceremony: "LATIN_GRAMMY", category: "Best Regional Mexican Song", year: 2023, result: "WON" },
+      { title: "Best Rap/Hip-Hop Song - Coco Chanel", ceremony: "LATIN_GRAMMY", category: "Best Rap/Hip-Hop Song", year: 2023, result: "WON" },
       { title: "Song of the Year - Un x100to", ceremony: "LATIN_GRAMMY", category: "Song of the Year", year: 2023, result: "NOMINATED" },
-      // 25th Latin Grammy Awards (2024)
+      { title: "Best Urban Song - La Jumpa", ceremony: "LATIN_GRAMMY", category: "Best Urban Song", year: 2023, result: "NOMINATED" },
+      { title: "Best Urban Fusion/Performance - La Jumpa", ceremony: "LATIN_GRAMMY", category: "Best Urban Fusion/Performance", year: 2023, result: "NOMINATED" },
+      // 25th Latin Grammy Awards (2024) — 1 win, 7 nominations
       { title: "Record of the Year - Monaco", ceremony: "LATIN_GRAMMY", category: "Record of the Year", year: 2024, result: "NOMINATED" },
       { title: "Best Urban Music Album - Nadie Sabe Lo Que Va a Pasar Mañana", ceremony: "LATIN_GRAMMY", category: "Best Urban Music Album", year: 2024, result: "NOMINATED" },
       { title: "Best Urban Fusion/Performance - Nadie Sabe", ceremony: "LATIN_GRAMMY", category: "Best Urban Fusion/Performance", year: 2024, result: "NOMINATED" },
-      { title: "Best Reggaeton Performance - Perro Negro", ceremony: "LATIN_GRAMMY", category: "Best Reggaeton Performance", year: 2024, result: "NOMINATED" },
+      { title: "Best Reggaeton Performance - Perro Negro", ceremony: "LATIN_GRAMMY", category: "Best Reggaeton Performance", year: 2024, result: "WON" },
       { title: "Best Reggaeton Performance - Un Preview", ceremony: "LATIN_GRAMMY", category: "Best Reggaeton Performance", year: 2024, result: "NOMINATED" },
       { title: "Best Short Form Music Video - Baticano", ceremony: "LATIN_GRAMMY", category: "Best Short Form Music Video", year: 2024, result: "NOMINATED" },
-      // 26th Latin Grammy Awards (2025)
+      { title: "Best Rap/Hip-Hop Song - Teléfono Nuevo", ceremony: "LATIN_GRAMMY", category: "Best Rap/Hip-Hop Song", year: 2024, result: "NOMINATED" },
+      { title: "Best Rap/Hip-Hop Song - Thunder y Lightning", ceremony: "LATIN_GRAMMY", category: "Best Rap/Hip-Hop Song", year: 2024, result: "NOMINATED" },
+      // 26th Latin Grammy Awards (2025) — 5 wins, 7 nominations
       { title: "Album of the Year - DeBí TiRAR MáS FOToS", ceremony: "LATIN_GRAMMY", category: "Album of the Year", year: 2025, result: "WON" },
       { title: "Best Urban Music Album - DeBí TiRAR MáS FOToS", ceremony: "LATIN_GRAMMY", category: "Best Urban Music Album", year: 2025, result: "WON" },
       { title: "Best Urban Song - DtMF", ceremony: "LATIN_GRAMMY", category: "Best Urban Song", year: 2025, result: "WON" },
@@ -434,6 +451,11 @@ export async function main() {
       { title: "Best Reggaeton Performance - Voy a Llevarte Pa' PR", ceremony: "LATIN_GRAMMY", category: "Best Reggaeton Performance", year: 2025, result: "WON" },
       { title: "Record of the Year - DtMF", ceremony: "LATIN_GRAMMY", category: "Record of the Year", year: 2025, result: "NOMINATED" },
       { title: "Record of the Year - Baile Inolvidable", ceremony: "LATIN_GRAMMY", category: "Record of the Year", year: 2025, result: "NOMINATED" },
+      { title: "Song of the Year - Baile Inolvidable", ceremony: "LATIN_GRAMMY", category: "Song of the Year", year: 2025, result: "NOMINATED" },
+      { title: "Song of the Year - DtMF", ceremony: "LATIN_GRAMMY", category: "Song of the Year", year: 2025, result: "NOMINATED" },
+      { title: "Best Urban Song - La Mudanza", ceremony: "LATIN_GRAMMY", category: "Best Urban Song", year: 2025, result: "NOMINATED" },
+      { title: "Best Raíces Song - Lo Que Le Pasó a Hawaii", ceremony: "LATIN_GRAMMY", category: "Best Raíces Song", year: 2025, result: "NOMINATED" },
+      { title: "Best Short Form Music Video - El Club", ceremony: "LATIN_GRAMMY", category: "Best Short Form Music Video", year: 2025, result: "NOMINATED" },
 
       // ── Billboard Latin Music Awards ───────────────────────────
       { title: "Top Latin Artist", ceremony: "BILLBOARD", category: "Top Latin Artist", year: 2019, result: "WON" },
