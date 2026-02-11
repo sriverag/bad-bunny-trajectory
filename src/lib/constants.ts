@@ -13,6 +13,7 @@ export const NAV_LINKS = [
   { href: "/discography", labelEs: "Discografía", labelEn: "Discography" },
   { href: "/awards", labelEs: "Premios", labelEn: "Awards" },
   { href: "/interviews", labelEs: "Entrevistas", labelEn: "Interviews" },
+  { href: "/benito-feed", labelEs: "Feed de Benito", labelEn: "Benito Feed" },
 
   { href: "/concerts", labelEs: "Conciertos", labelEn: "Concerts" },
   { href: "/trivia", labelEs: "Trivia", labelEn: "Trivia" },

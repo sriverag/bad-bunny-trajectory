@@ -170,3 +170,27 @@ model HalftimePlaylist {
   @@index([createdAt])
   @@map("halftime_playlists")
 }
+
+model NewsStory {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  titleEn     String
+  summary     String
+  summaryEn   String
+  category    String
+  tags        String
+  sources     String   // JSON array: [{ url, title, outlet, publishedAt }]
+  imageUrl    String?
+  publishedAt DateTime
+  importance  Int      @default(3)
+  status      String   @default("published")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@index([category])
+  @@index([publishedAt])
+  @@index([status])
+  @@map("news_stories")
+}
