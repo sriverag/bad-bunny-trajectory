@@ -1,12 +1,9 @@
-import Parser from "rss-parser";
 import {
   RSS_FEEDS,
   NEWSAPI_BASE,
   NEWSAPI_QUERY,
   type RawArticle,
 } from "./sources";
-
-const parser = new Parser();
 
 const BAD_BUNNY_PATTERN = /bad\s*bunny|benito.*mart[ií]nez/i;
 const FORTY_EIGHT_HOURS = 48 * 60 * 60 * 1000;
@@ -20,34 +17,82 @@ function isRecentEnough(dateStr: string | undefined): boolean {
 
 function truncate(text: string, max = 500): string {
   if (!text) return "";
-  // Strip HTML tags
   const clean = text.replace(/<[^>]*>/g, "").trim();
   return clean.length <= max ? clean : clean.slice(0, max);
+}
+
+// Extract text content between XML tags (simple, no dependencies)
+function extractTag(xml: string, tag: string): string {
+  // Handle CDATA sections
+  const cdataPattern = new RegExp(
+    `<${tag}[^>]*>\\s*<!\\[CDATA\\[([\\s\\S]*?)\\]\\]>\\s*</${tag}>`,
+    "i"
+  );
+  const cdataMatch = xml.match(cdataPattern);
+  if (cdataMatch) return cdataMatch[1].trim();
+
+  const pattern = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, "i");
+  const match = xml.match(pattern);
+  return match ? match[1].trim() : "";
+}
+
+function extractAttr(xml: string, tag: string, attr: string): string {
+  const pattern = new RegExp(`<${tag}[^>]*${attr}="([^"]*)"`, "i");
+  const match = xml.match(pattern);
+  return match ? match[1] : "";
 }
 
 async function fetchRSSFeed(feed: {
   name: string;
   url: string;
 }): Promise<RawArticle[]> {
-  const result = await parser.parseURL(feed.url);
+  const res = await fetch(feed.url, {
+    headers: { "User-Agent": "BenitoFeedBot/1.0" },
+    signal: AbortSignal.timeout(10000),
+  });
+  if (!res.ok) {
+    throw new Error(`RSS fetch failed: ${res.status} ${res.statusText}`);
+  }
+
+  const xml = await res.text();
   const articles: RawArticle[] = [];
 
-  for (const item of result.items ?? []) {
-    if (!item.link || !item.title) continue;
+  // Split into items (works for both RSS <item> and Atom <entry>)
+  const items = xml.split(/<item[\s>]/i).slice(1);
+  const entries = xml.split(/<entry[\s>]/i).slice(1);
+  const allItems = items.length > 0 ? items : entries;
 
-    // Pre-filter: only keep articles mentioning Bad Bunny in title or content
-    const text = `${item.title} ${item.contentSnippet ?? ""} ${item.content ?? ""}`;
+  for (const itemXml of allItems) {
+    const title = extractTag(itemXml, "title");
+    const link =
+      extractTag(itemXml, "link") || extractAttr(itemXml, "link", "href");
+    const pubDate =
+      extractTag(itemXml, "pubDate") ||
+      extractTag(itemXml, "published") ||
+      extractTag(itemXml, "updated");
+    const description =
+      extractTag(itemXml, "description") ||
+      extractTag(itemXml, "summary") ||
+      extractTag(itemXml, "content");
+    const enclosureUrl = extractAttr(itemXml, "enclosure", "url");
+
+    if (!link || !title) continue;
+
+    const text = `${title} ${description}`;
     if (!BAD_BUNNY_PATTERN.test(text)) continue;
+    if (!isRecentEnough(pubDate)) continue;
 
-    if (!isRecentEnough(item.pubDate ?? item.isoDate)) continue;
+    const parsedDate = pubDate ? new Date(pubDate) : new Date();
 
     articles.push({
-      url: item.link,
-      title: item.title,
-      snippet: truncate(item.contentSnippet ?? item.content ?? ""),
+      url: link,
+      title: truncate(title, 300),
+      snippet: truncate(description),
       outlet: feed.name,
-      publishedAt: item.isoDate ?? item.pubDate ?? new Date().toISOString(),
-      imageUrl: item.enclosure?.url ?? undefined,
+      publishedAt: isNaN(parsedDate.getTime())
+        ? new Date().toISOString()
+        : parsedDate.toISOString(),
+      imageUrl: enclosureUrl || undefined,
     });
   }
 
@@ -76,7 +121,9 @@ async function fetchNewsAPI(): Promise<RawArticle[]> {
       apiKey,
     });
 
-    const res = await fetch(`${NEWSAPI_BASE}?${params}`);
+    const res = await fetch(`${NEWSAPI_BASE}?${params}`, {
+      signal: AbortSignal.timeout(10000),
+    });
     if (!res.ok) {
       console.error(
         `[benito-feed] NewsAPI ${lang} failed: ${res.status} ${res.statusText}`

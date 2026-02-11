@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { PageTransition } from "@/components/layout/page-transition";
 import { SectionHeader } from "@/components/shared/section-header";
 import { BenitoFeed } from "@/components/benito-feed/benito-feed";
@@ -14,7 +15,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BenitoFeedPage() {
+export default async function BenitoFeedPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const params = await searchParams;
+  if (params.enable_benito_feed !== "1") {
+    redirect("/");
+  }
+
   return (
     <PageTransition>
       <div className="container py-12 space-y-12">

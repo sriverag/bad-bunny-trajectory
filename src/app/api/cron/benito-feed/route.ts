@@ -216,8 +216,10 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("[benito-feed] Cron error:", error);
+    const message =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", message },
       { status: 500 }
     );
   }
