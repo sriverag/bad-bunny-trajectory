@@ -7,7 +7,7 @@ import {
   generateStorySummary,
   type StoryAssignment,
 } from "@/lib/benito-feed/ai-pipeline";
-import type { RawArticle } from "@/lib/benito-feed/sources";
+import { normalizeUrl, type RawArticle } from "@/lib/benito-feed/sources";
 
 function slugify(text: string): string {
   return text
@@ -51,9 +51,46 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // 1b. Cross-run dedupe: remove articles whose URLs are already stored
+    const recentStoriesForDedupe = await prisma.newsStory.findMany({
+      where: {
+        publishedAt: {
+          gte: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+        },
+      },
+      select: { sources: true },
+    });
+
+    const knownUrls = new Set<string>();
+    for (const story of recentStoriesForDedupe) {
+      try {
+        const sources = JSON.parse(story.sources) as Array<{ url: string }>;
+        for (const s of sources) {
+          knownUrls.add(normalizeUrl(s.url));
+        }
+      } catch {
+        // skip malformed sources
+      }
+    }
+
+    const newArticles = rawArticles.filter(
+      (a) => !knownUrls.has(normalizeUrl(a.url))
+    );
+    console.log(
+      `[benito-feed] ${rawArticles.length - newArticles.length} articles already ingested, ${newArticles.length} new`
+    );
+
+    if (newArticles.length === 0) {
+      return NextResponse.json({
+        newStories: 0,
+        updatedStories: 0,
+        totalProcessed: rawArticles.length,
+      });
+    }
+
     // 2. Classify relevance
     console.log("[benito-feed] Classifying relevance...");
-    const relevantArticles = await classifyRelevance(rawArticles);
+    const relevantArticles = await classifyRelevance(newArticles);
     console.log(
       `[benito-feed] ${relevantArticles.length} relevant articles`
     );
@@ -132,12 +169,12 @@ export async function GET(request: NextRequest) {
         );
         const summaryData = await generateStorySummary(group.articles);
         const sources = group.articles.map(buildSourceEntry);
-        const earliestDate = group.articles.reduce(
-          (earliest, a) => {
+        const latestDate = group.articles.reduce(
+          (latest, a) => {
             const d = new Date(a.publishedAt);
-            return d < earliest ? d : earliest;
+            return d > latest ? d : latest;
           },
-          new Date()
+          new Date(0)
         );
         const bestImage = group.articles.find((a) => a.imageUrl)?.imageUrl;
 
@@ -156,7 +193,7 @@ export async function GET(request: NextRequest) {
             tags: summaryData.tags,
             sources: JSON.stringify(sources),
             imageUrl: bestImage,
-            publishedAt: earliestDate,
+            publishedAt: latestDate,
             importance: summaryData.importance,
           },
         });
@@ -180,9 +217,11 @@ export async function GET(request: NextRequest) {
         const existingSources = JSON.parse(story.sources) as Array<{
           url: string;
         }>;
-        const existingUrls = new Set(existingSources.map((s) => s.url));
+        const existingUrls = new Set(
+          existingSources.map((s) => normalizeUrl(s.url))
+        );
         const newSources = group.articles
-          .filter((a) => !existingUrls.has(a.url))
+          .filter((a) => !existingUrls.has(normalizeUrl(a.url)))
           .map(buildSourceEntry);
 
         if (newSources.length > 0) {

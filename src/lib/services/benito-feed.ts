@@ -45,7 +45,7 @@ export async function getNewsStories(filters?: {
   const [rows, total] = await Promise.all([
     prisma.newsStory.findMany({
       where,
-      orderBy: { publishedAt: "desc" },
+      orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
       take: filters?.limit ?? 20,
       skip: filters?.offset ?? 0,
     }),
