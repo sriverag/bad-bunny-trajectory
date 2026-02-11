@@ -132,12 +132,12 @@ export async function GET(request: NextRequest) {
         );
         const summaryData = await generateStorySummary(group.articles);
         const sources = group.articles.map(buildSourceEntry);
-        const earliestDate = group.articles.reduce(
-          (earliest, a) => {
+        const latestDate = group.articles.reduce(
+          (latest, a) => {
             const d = new Date(a.publishedAt);
-            return d < earliest ? d : earliest;
+            return d > latest ? d : latest;
           },
-          new Date()
+          new Date(0)
         );
         const bestImage = group.articles.find((a) => a.imageUrl)?.imageUrl;
 
@@ -156,7 +156,7 @@ export async function GET(request: NextRequest) {
             tags: summaryData.tags,
             sources: JSON.stringify(sources),
             imageUrl: bestImage,
-            publishedAt: earliestDate,
+            publishedAt: latestDate,
             importance: summaryData.importance,
           },
         });

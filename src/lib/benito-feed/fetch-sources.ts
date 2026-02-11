@@ -5,14 +5,15 @@ import {
   type RawArticle,
 } from "./sources";
 
-const BAD_BUNNY_PATTERN = /bad\s*bunny|benito.*mart[ií]nez/i;
-const FORTY_EIGHT_HOURS = 48 * 60 * 60 * 1000;
+const BAD_BUNNY_PATTERN =
+  /bad\s*bunny|benito\s*(antonio\s*)?mart[ií]nez|el\s+conejo\s+malo|#badbunny|benito\s+ocasio/i;
+const SEVENTY_TWO_HOURS = 72 * 60 * 60 * 1000;
 
 function isRecentEnough(dateStr: string | undefined): boolean {
   if (!dateStr) return false;
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) return false;
-  return Date.now() - date.getTime() < FORTY_EIGHT_HOURS;
+  return Date.now() - date.getTime() < SEVENTY_TWO_HOURS;
 }
 
 function truncate(text: string, max = 500): string {
@@ -107,7 +108,7 @@ async function fetchNewsAPI(): Promise<RawArticle[]> {
   }
 
   const articles: RawArticle[] = [];
-  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000)
+  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000)
     .toISOString()
     .split("T")[0];
 
@@ -115,9 +116,9 @@ async function fetchNewsAPI(): Promise<RawArticle[]> {
     const params = new URLSearchParams({
       q: NEWSAPI_QUERY,
       language: lang,
-      from: yesterday,
+      from: twoDaysAgo,
       sortBy: "publishedAt",
-      pageSize: "20",
+      pageSize: "100",
       apiKey,
     });
 
