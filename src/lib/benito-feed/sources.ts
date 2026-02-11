@@ -33,3 +33,37 @@ export interface RawArticle {
 export const NEWSAPI_BASE = "https://newsapi.org/v2/everything";
 export const NEWSAPI_QUERY =
   '"bad bunny" OR "Bad Bunny" OR "Benito Martínez" OR "benito martinez" OR "el conejo malo"';
+
+const TRACKING_PARAMS = new Set([
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "ref",
+  "fbclid",
+  "gclid",
+  "mc_cid",
+  "mc_eid",
+]);
+
+/** Normalize a URL for deduplication: strips www, tracking params, fragments, forces https, removes trailing slash. */
+export function normalizeUrl(raw: string): string {
+  try {
+    const url = new URL(raw);
+    url.protocol = "https:";
+    url.hostname = url.hostname.replace(/^www\./, "");
+    url.hash = "";
+    for (const key of [...url.searchParams.keys()]) {
+      if (TRACKING_PARAMS.has(key.toLowerCase())) {
+        url.searchParams.delete(key);
+      }
+    }
+    // Sort remaining params for consistency
+    url.searchParams.sort();
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    // Fallback for malformed URLs
+    return raw.replace(/\/$/, "").toLowerCase();
+  }
+}

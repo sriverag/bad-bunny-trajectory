@@ -2,6 +2,7 @@ import {
   RSS_FEEDS,
   NEWSAPI_BASE,
   NEWSAPI_QUERY,
+  normalizeUrl,
   type RawArticle,
 } from "./sources";
 
@@ -174,15 +175,15 @@ export async function fetchAllSources(): Promise<RawArticle[]> {
     console.error("[benito-feed] NewsAPI fetch failed:", err);
   }
 
-  // Combine and deduplicate by URL
+  // Combine and deduplicate by normalized URL
   const allArticles = [...rssArticles, ...newsApiArticles];
   const seen = new Set<string>();
   const deduped: RawArticle[] = [];
 
   for (const article of allArticles) {
-    const normalizedUrl = article.url.replace(/\/$/, "").toLowerCase();
-    if (seen.has(normalizedUrl)) continue;
-    seen.add(normalizedUrl);
+    const key = normalizeUrl(article.url);
+    if (seen.has(key)) continue;
+    seen.add(key);
     deduped.push(article);
   }
 
